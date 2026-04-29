@@ -1,0 +1,6 @@
+{
+  "name": "GM-3000",
+  "description": "Play classic chess against the powerful Stockfish engine. Includes AI vs AI mode and an analysis module.",
+  "requestFramePermissions": [],
+  "majorCapabilities": []
+}

@@ -1,0 +1,15 @@
+const { Chess } = require('chess.js');
+const g = new Chess();
+g.move('e4');
+g.move('a6');
+g.move('e5');
+g.move('d5');
+const m = g.move({from: 'e5', to: 'd6'});
+console.log('Without promotion:', !!m);
+const g2 = new Chess();
+g2.move('e4');
+g2.move('a6');
+g2.move('e5');
+g2.move('d5');
+const m2 = g2.move({from: 'e5', to: 'd6', promotion: undefined});
+console.log('With explicit undefined:', !!m2);

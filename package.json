@@ -1,0 +1,118 @@
+{
+  "name": "gm3000",
+  "private": true,
+  "version": "1.1.0",
+  "main": ".vite/build/electron-main.js",
+  "scripts": {
+    "dev": "vite --port=3000 --host=0.0.0.0",
+    "server": "npx tsx server/lanServer.ts",
+    "build": "vite build",
+    "preview": "vite preview",
+    "electron:start": "electron-forge start",
+    "make": "electron-forge make",
+    "package": "electron-forge package",
+    "clean": "powershell -Command \"Remove-Item -Recurse -Force dist, out -ErrorAction SilentlyContinue\"",
+    "lint": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@tailwindcss/vite": "^4.1.14",
+    "@vitejs/plugin-react": "^5.0.4",
+    "chess.js": "^1.4.0",
+    "clsx": "^2.1.1",
+    "dotenv": "^17.2.3",
+    "electron-squirrel-startup": "^1.0.1",
+    "lucide-react": "^0.546.0",
+    "motion": "^12.23.24",
+    "react": "^19.0.0",
+    "react-chessboard": "^5.10.0",
+    "react-dom": "^19.0.0",
+    "react-rnd": "^10.5.3",
+    "recharts": "^3.8.1",
+    "stockfish.js": "^10.0.2",
+    "tailwind-merge": "^3.5.0",
+    "vite": "^6.2.0"
+  },
+  "devDependencies": {
+    "@electron-forge/cli": "^7.11.1",
+    "@electron-forge/maker-deb": "^7.11.1",
+    "@electron-forge/maker-rpm": "^7.11.1",
+    "@electron-forge/maker-squirrel": "^7.11.1",
+    "@electron-forge/maker-zip": "^7.11.1",
+    "@electron-forge/plugin-vite": "^7.11.1",
+    "@types/express": "^4.17.21",
+    "@types/node": "^22.14.0",
+    "autoprefixer": "^10.4.21",
+    "electron": "^41.3.0",
+    "tailwindcss": "^4.1.14",
+    "tsx": "^4.21.0",
+    "typescript": "~5.8.2",
+    "vite": "^6.2.0"
+  },
+  "config": {
+    "forge": {
+      "packagerConfig": {
+        "name": "gm3000",
+        "executableName": "gm3000",
+        "icon": "./src/assets/dark_cat"
+      },
+      "rebuildConfig": {},
+      "makers": [
+        {
+          "name": "@electron-forge/maker-squirrel",
+          "config": {
+            "name": "gm3000",
+            "authors": "GM3000 Team",
+            "description": "GM3000 Chess Engine",
+            "setupIcon": "src/assets/dark_cat.ico",
+            "setupExe": "gm3000-setup.exe",
+            "loadingGif": "src/assets/dark_cat.gif",
+            "createDesktopShortcut": true,
+            "createStartMenuShortcut": true
+          }
+        },
+        {
+          "name": "@electron-forge/maker-zip",
+          "platforms": [
+            "win32",
+            "linux"
+          ]
+        },
+        {
+          "name": "@electron-forge/maker-deb",
+          "config": {
+            "options": {
+              "icon": "./src/assets/dark_cat.png"
+            }
+          }
+        },
+        {
+          "name": "@electron-forge/maker-rpm",
+          "config": {}
+        }
+      ],
+      "plugins": [
+        {
+          "name": "@electron-forge/plugin-vite",
+          "config": {
+            "build": [
+              {
+                "entry": "src/electron-main.js",
+                "config": "vite.main.config.ts"
+              }
+            ],
+            "renderer": [
+              {
+                "name": "main_window",
+                "config": "vite.config.ts"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "description": "GM-3000 Chess Engine",
+  "keywords": [],
+  "author": "GM-3000 Team",
+  "license": "ISC"
+}
