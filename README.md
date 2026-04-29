@@ -1,7 +1,7 @@
 # GM-3000 — Board de Auto-Entrenamiento
 
 <div align="center">
-  <img src="https://github.com/ElalChico/GM-3000/blob/main/LOGO.png" alt="GM-3000 Logo" width="800">
+  <img src="https://github.com/ElalChico/GM-3000/blob/main/LOGO.png" alt="GM-3000 Logo" width="600">
 </div>
 
 **GM-3000** (sucesor evolutivo de la anterior versión gm-2000) es una plataforma de ajedrez avanzada desarrollada con tecnologías modernas. Su objetivo es ofrecer una experiencia de juego fluida, analítica y competitiva, diseñada tanto para el estudio profundo como para el juego casual.
