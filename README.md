@@ -15,7 +15,7 @@ La aplicación integra potentes motores de análisis, análisis con inteligencia
 
 ## 🌐 Versión Online (Demo Web)
 
-> **🎉 Versión 3.2.0 ya disponible en [gm-3000.web.app](https://gm-3000.web.app)**  
+> **🎉 Versión 3.1.7 ya disponible en [gm-3000.web.app](https://gm-3000.web.app)**  
 > Prueba la aplicación directamente desde tu navegador con las últimas mejoras en interfaz, editor FEN, seguridad LAN y Modo Aventura.  
 > ⚠️ **Nota:** La funcionalidad de conexión LAN para jugar en red local, el análisis con IA en lenguaje natural y la lectura por voz del análisis con voces realistas **solo están disponibles en la versión de escritorio**. Para disfrutar de todas las funciones, descarga el instalador.
 
@@ -29,10 +29,10 @@ Si desea utilizar todas las funciones, incluyendo el modo LAN y los motores loca
 
 | Tipo de Instalador | Enlace de Descarga (MEGA) | Enlace de Descarga (GitHub) | Descripción |
 | :--- | :--- | :--- | :--- |
-| **Portable (.ZIP)** | [Descargar ZIP](https://mega.nz/file/ufh0RC5b#QPdjML20E8f4wkWwVzNbAdnR2BvTScpSjD8DzEApEz4) | [GitHub Release](https://github.com/ElalChico/GM-3000/releases/download/v3.1.7/GM-3000-win32-x64-3.1.7.zip) | No requiere instalación. Descomprimir y ejecutar. Ideal para USB o pruebas rápidas. |
-| **Instalador (.EXE 64-bit)** | [Descargar Setup](https://mega.nz/file/bap1XThJ#N7y7oh6hL2b0ihxH5skK23NCgOSzKim93lizC64DioU) | [GitHub Release](https://github.com/ElalChico/GM-3000/releases/download/v3.1.7/GM-3000+Setup.exe) | Instalador tradicional para Windows. Integra accesos directos y configuraciones de sistema. |
+| **Portable (.ZIP)** | [Descargar ZIP](https://mega.nz/file/6aIWHJBb#Ur6K9u6RxJmItqZAp8HOXTBYq5Mq7xRqK809lzrlj9s) | [GitHub Release](https://github.com/ElalChico/GM-3000/releases/download/v3.1.7/GM-3000-win32-x64-3.1.7.zip) | No requiere instalación. Descomprimir y ejecutar. Ideal para USB o pruebas rápidas. |
+| **Instalador (.EXE 64-bit)** | [Descargar Setup](https://mega.nz/file/eOQyyBTQ#EX3YfNgEyurcCFXm05_LsmyCFG8uaRIq2X9gcNOfNrA) | [GitHub Release](https://github.com/ElalChico/GM-3000/releases/download/v3.1.7/GM-3000+Setup.exe) | Instalador tradicional para Windows. Integra accesos directos y configuraciones de sistema. |
 
-### 📦 Versión Anterior 3.1.9
+### 📦 Versión Anterior 2.1.9
 
 | Tipo de Instalador | Enlace de Descarga | Descripción |
 | :--- | :--- | :--- |
