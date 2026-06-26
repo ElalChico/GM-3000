@@ -27,10 +27,10 @@ Si desea utilizar todas las funciones, incluyendo el modo LAN y los motores loca
 
 ### ✨ Última Versión 3.1.7
 
-| Tipo de Instalador | Enlace de Descarga | Descripción |
-| :--- | :--- | :--- |
-| **Portable (.ZIP)** | [Descargar ZIP](https://mega.nz/file/ufh0RC5b#QPdjML20E8f4wkWwVzNbAdnR2BvTScpSjD8DzEApEz4) | No requiere instalación. Descomprimir y ejecutar. Ideal para USB o pruebas rápidas. |
-| **Instalador (.EXE 64-bit)** | [Descargar Setup](https://mega.nz/file/bap1XThJ#N7y7oh6hL2b0ihxH5skK23NCgOSzKim93lizC64DioU) | Instalador tradicional para Windows. Integra accesos directos y configuraciones de sistema. |
+| Tipo de Instalador | Enlace de Descarga (MEGA) | Enlace de Descarga (GitHub) | Descripción |
+| :--- | :--- | :--- | :--- |
+| **Portable (.ZIP)** | [Descargar ZIP](https://mega.nz/file/ufh0RC5b#QPdjML20E8f4wkWwVzNbAdnR2BvTScpSjD8DzEApEz4) | [GitHub Release](https://github.com/ElalChico/GM-3000/releases/download/v3.1.7/GM-3000-win32-x64-3.1.7.zip) | No requiere instalación. Descomprimir y ejecutar. Ideal para USB o pruebas rápidas. |
+| **Instalador (.EXE 64-bit)** | [Descargar Setup](https://mega.nz/file/bap1XThJ#N7y7oh6hL2b0ihxH5skK23NCgOSzKim93lizC64DioU) | [GitHub Release](https://github.com/ElalChico/GM-3000/releases/download/v3.1.7/GM-3000+Setup.exe) | Instalador tradicional para Windows. Integra accesos directos y configuraciones de sistema. |
 
 ### 📦 Versión Anterior 3.1.9
 
