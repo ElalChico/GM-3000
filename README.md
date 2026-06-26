@@ -39,7 +39,7 @@ Si desea utilizar todas las funciones, incluyendo el modo LAN y los motores loca
 | **Portable (.ZIP)** | [Descargar ZIP](https://mega.nz/file/XKQW2JRZ#Pt5n7T9i-KM2Rd0lFsX89aa03cUvZ31y6sw339NXYkw) | No requiere instalación. Descomprimir y ejecutar. Ideal para USB o pruebas rápidas. |
 | **Instalador (.EXE)** | [Descargar Setup](https://mega.nz/file/iGIWVbwY#D1Ok5OoriBrv6ZEs_09nfnRpEDrGEOqVL21FpUIFoIA) | Instalador tradicional para Windows. Integra accesos directos y configuraciones de sistema. |
 
-IMPORTANTE: Si desea probar la version minimalista anterior en la web (version 3.1) esta disponible en [gm-2000.web.app](https://gm-2000.web.app/)
+IMPORTANTE: Si desea probar la version minimalista anterior en la web (version 2.1.9) esta disponible en [gm-2000.web.app](https://gm-2000.web.app/)
 
 ---
 
