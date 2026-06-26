@@ -1,0 +1,337 @@
+@import url('https://fonts.googleapis.com/css2?family=MedievalSharp&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700;800&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+}
+
+html, body {
+  overflow-x: hidden;
+  max-width: 100vw;
+  overscroll-behavior-y: none;
+}
+
+@media (max-width: 768px) {
+  html, body {
+    overflow-x: auto;
+    overflow-y: auto;
+    overscroll-behavior-y: auto;
+    max-width: none;
+  }
+  
+  /* Ocultar el panel de historial en móviles */
+  .mobile-hide-history {
+    display: none !important;
+  }
+}
+
+select option {
+  background-color: #0a0d12;
+  color: rgba(255, 255, 255, 0.6);
+  padding: 4px 8px;
+}
+
+select optgroup {
+  background-color: #0a0d12;
+  color: rgba(255, 255, 255, 0.35);
+  font-weight: 600;
+  font-size: 10px;
+}
+
+select {
+  color-scheme: dark;
+}
+
+@layer utilities {
+  .custom-scrollbar::-webkit-scrollbar,
+  ::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-track,
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb,
+  ::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 10px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover,
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.3);
+  }
+
+  .custom-scrollbar, * {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.15) transparent;
+  }
+
+  .scrollbar-hide {
+    -ms-overflow-style: none;  /* Internet Explorer 10+ */
+    scrollbar-width: none;  /* Firefox */
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;  /* Safari and Chrome */
+  }
+
+  /* Barra de desplazamiento ultra delgada para el historial de movimientos */
+  .history-scrollbar::-webkit-scrollbar {
+    width: 2px;
+  }
+  .history-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .history-scrollbar::-webkit-scrollbar-thumb {
+    background: rgba(100, 116, 139, 0.25);
+    border-radius: 2px;
+  }
+  .history-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: rgba(100, 116, 139, 0.5);
+  }
+  .history-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(100, 116, 139, 0.25) transparent;
+  }
+
+
+  .invisible-pieces [data-piece] {
+    opacity: 0.01 !important;
+  }
+
+  .board-style-spin .chess-board-inner {
+     transition: transform var(--rotate-duration, 700ms) ease;
+  }
+  .board-rotated.board-style-spin .chess-board-inner {
+     transform: rotate(180deg);
+  }
+  .board-style-spin [data-piece] > svg,
+  .board-style-spin [data-piece] > img {
+     transition: transform var(--rotate-duration, 700ms) ease;
+  }
+  .board-rotated.board-style-spin [data-piece] > svg,
+  .board-rotated.board-style-spin [data-piece] > img {
+     transform: rotate(180deg);
+  }
+
+  .board-style-flip {
+     perspective: 1000px;
+  }
+  .board-style-flip .chess-board-inner {
+     transition: transform var(--rotate-duration, 700ms) ease;
+     transform-style: preserve-3d;
+  }
+  .board-rotated.board-style-flip .chess-board-inner {
+     transform: rotateX(180deg);
+  }
+  .board-style-flip [data-piece] > svg,
+  .board-style-flip [data-piece] > img {
+     transition: transform var(--rotate-duration, 700ms) ease;
+  }
+  .board-rotated.board-style-flip [data-piece] > svg,
+  .board-rotated.board-style-flip [data-piece] > img {
+     transform: rotateX(-180deg);
+  }
+
+  .medieval-panel {
+    background: radial-gradient(circle at center, #0a0a0a 0%, #000000 100%);
+    box-shadow: 0 0 40px rgba(0,0,0,0.8);
+    position: relative;
+  }
+
+  .medieval-panel::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-image: url("https://www.transparenttextures.com/patterns/dark-leather.png");
+    opacity: 0.1;
+    pointer-events: none;
+  }
+
+  .gothic-text {
+    font-family: 'MedievalSharp', cursive, serif;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+  }
+
+  .master-analysis-overlay {
+    backdrop-filter: blur(8px) saturate(50%);
+    background: rgba(0,0,0,0.85);
+    /* Evitar animaciones o transformaciones heredadas que provoquen "ultra zoom" */
+    transform: none !important;
+    animation: none !important;
+  }
+
+  .classification-brilliant { color: #00ebff; text-shadow: 0 0 10px rgba(0, 235, 255, 0.5); }
+  .classification-great { color: #00aaff; }
+  .classification-best { color: #00ffaa; }
+  .classification-good { color: #ffffff; }
+  .classification-book { color: #d4af37; }
+  .classification-inaccuracy { color: #ffff00; }
+  .classification-mistake { color: #ff8800; }
+  .classification-blunder { color: #ff0000; text-shadow: 0 0 8px rgba(255, 0, 0, 0.5); }
+
+  @keyframes pulse-teal {
+    0% { box-shadow: 0 0 0 0 rgba(20, 184, 166, 0.4); }
+    70% { box-shadow: 0 0 0 10px rgba(20, 184, 166, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(20, 184, 166, 0); }
+  }
+
+  .pulse-teal {
+    animation: pulse-teal 2s infinite;
+  }
+
+  /* Estilos personalizados para todos los selectores — elimina selección azul del sistema */
+  select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%2394a3b8' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 8px center;
+    padding-right: 24px !important;
+  }
+
+  /* Elimina el fondo celeste del sistema en las opciones del selector — aqui no funciona, hay que revisar. */
+  select option {
+    background-color: #0f172a;
+    color: #e2e8f0;
+  }
+
+  /* Focus del selector sin outline azul del navegador */
+  select:focus {
+    outline: none;
+    box-shadow: 0 0 0 1px rgba(52, 211, 153, 0.4);
+  }
+
+  /* Selección de texto personalizada */
+  ::selection {
+    background-color: rgba(52, 211, 153, 0.25);
+    color: #ecfdf5;
+  }
+
+  ::-moz-selection {
+    background-color: rgba(52, 211, 153, 0.25);
+    color: #ecfdf5;
+  }
+
+  .premium-creator-box {
+    background: linear-gradient(135deg, rgba(15, 23, 42, 0.9) 0%, rgba(30, 41, 59, 0.8) 100%);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(148, 163, 184, 0.1);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    position: relative;
+    overflow: hidden;
+  }
+  .premium-creator-box::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(52, 211, 153, 0.05) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  @keyframes progress-loading {
+    0% { transform: translateX(-100%); }
+    50% { transform: translateX(0%); }
+    100% { transform: translateX(100%); }
+  }
+
+  .animate-progress-loading {
+    animation: progress-loading 2s ease-in-out infinite;
+  }
+
+  @keyframes cloud-move {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  .bg-cloud-gradient {
+    background: linear-gradient(-45deg, rgba(20,30,48,1), rgba(36,59,85,1), rgba(15,32,39,1), rgba(32,58,67,1), rgba(44,83,100,1));
+    background-size: 400% 400%;
+    animation: cloud-move 30s ease infinite;
+  }
+
+  .bg-cloud-sunset {
+    background: linear-gradient(-45deg, #2b1055, #7597de, #eb6b9d, #e3a982);
+    background-size: 400% 400%;
+    animation: cloud-move 25s ease infinite;
+  }
+
+  .bg-nebula {
+    background: linear-gradient(-45deg, #0f0c29, #302b63, #24243e);
+    background-size: 400% 400%;
+    animation: cloud-move 35s ease infinite;
+  }
+
+  .bg-crimson-smoke {
+    background: linear-gradient(-45deg, #2a0808, #450a0a, #1a0404, #3f0909);
+    background-size: 400% 400%;
+    animation: cloud-move 20s ease infinite;
+    filter: contrast(1.2) saturate(1.2);
+  }
+
+  @keyframes black-color-shift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  .bg-color-shift-black {
+    /* Fondo de color ultra negro con brillo tenue, sin malla y más acorde a la estética de la app */
+    background:
+      radial-gradient(circle at 15% 20%, rgba(218, 165, 32, 0.08), transparent 18%),
+      radial-gradient(circle at 80% 25%, rgba(16, 185, 129, 0.06), transparent 20%),
+      radial-gradient(circle at 50% 80%, rgba(59, 130, 246, 0.05), transparent 22%),
+      linear-gradient(135deg, #020202 0%, #050505 25%, #090806 50%, #020202 75%, #000000 100%);
+    background-size: 100% 100%, 80% 80%, 120% 120%, 400% 400%;
+    animation: black-color-shift 35s ease infinite;
+  }
+
+  @keyframes logo-float {
+    0% { transform: translateY(0px) scale(1); filter: drop-shadow(0 0 20px rgba(148, 163, 184, 0.3)); }
+    50% { transform: translateY(-10px) scale(1.02); filter: drop-shadow(0 0 35px rgba(203, 213, 225, 0.5)); }
+    100% { transform: translateY(0px) scale(1); filter: drop-shadow(0 0 20px rgba(148, 163, 184, 0.3)); }
+  }
+
+
+  @keyframes logo-intro {
+    0% { transform: translateY(30vh); opacity: 1; }
+    20% { transform: translateY(30vh); opacity: 1; }
+    100% { transform: translateY(0); opacity: 1; }
+  }
+
+  .animate-logo-intro {
+    animation: logo-intro 2.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  .animate-logo-float {
+    animation: logo-float 4s ease-in-out infinite;
+  }
+
+  /* Reflejo de luz roja detrás del logo de home */
+  .logo-red-reflection {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    background: radial-gradient(circle at right center, rgba(239, 68, 68, 0.35) 0%, rgba(220, 38, 38, 0.2) 30%, transparent 70%);
+    border-radius: 50%;
+    filter: blur(40px);
+    opacity: 0.85;
+    animation: pulse-reflection 4s ease-in-out infinite;
+  }
+
+  @keyframes pulse-reflection {
+    0%, 100% { opacity: 0.75; }
+    50% { opacity: 0.95; }
+  }
+}

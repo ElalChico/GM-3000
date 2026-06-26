@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+  <title>♔GM-3000♛</title>
+  <style>
+    body {
+      background-color: #000000;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+      overflow: auto;
+      color: #fbbf24;
+      font-family: 'Georgia', serif;
+    }
+    #loading-screen {
+      position: fixed;
+      inset: 0;
+      background-color: #000000;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      transition: background-color 0.8s ease-out, opacity 0.4s ease-out;
+    }
+    .loader {
+      width: 60px;
+      height: 60px;
+      border: 3px solid transparent;
+      border-top-color: #d97706;
+      border-radius: 50%;
+      animation: spin 1.5s linear infinite;
+      position: relative;
+    }
+    .loader::before {
+      content: '';
+      position: absolute;
+      inset: 5px;
+      border: 3px solid transparent;
+      border-top-color: #b45309;
+      border-radius: 50%;
+      animation: spin 3s linear infinite;
+    }
+    .loader::after {
+      content: '';
+      position: absolute;
+      inset: 12px;
+      border: 3px solid transparent;
+      border-top-color: #78350f;
+      border-radius: 50%;
+      animation: spin 2s linear infinite;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    .orbital-container {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 40px;
+    }
+    .ring-1 {
+      position: absolute;
+      width: 140%;
+      height: 140%;
+      border-radius: 50%;
+      border: 1px solid rgba(20, 184, 166, 0.3);
+      box-shadow: 0 0 30px rgba(20, 184, 166, 0.1), inset 0 0 20px rgba(20, 184, 166, 0.05);
+      animation: spin 12s linear infinite;
+    }
+    .ring-2 {
+      position: absolute;
+      width: 160%;
+      height: 160%;
+      border-radius: 50%;
+      border: 1px solid rgba(217, 119, 6, 0.2);
+      box-shadow: 0 0 30px rgba(217, 119, 6, 0.1), inset 0 0 20px rgba(217, 119, 6, 0.05);
+      animation: spin-reverse 18s linear infinite;
+    }
+    .glow-bg {
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      background-color: rgba(0, 0, 0, 0.4);
+      filter: blur(25px);
+      z-index: 1;
+    }
+    .dot-1-container {
+      position: absolute;
+      width: 140%;
+      height: 140%;
+      animation: spin 8s linear infinite;
+      z-index: 5;
+    }
+    .dot-1 {
+      position: absolute;
+      top: -3px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background-color: rgba(20, 184, 166, 0.8);
+      box-shadow: 0 0 15px rgba(20, 184, 166, 1), 0 0 30px rgba(20, 184, 166, 0.6);
+    }
+    .dot-2-container {
+      position: absolute;
+      width: 160%;
+      height: 160%;
+      animation: spin-reverse 14s linear infinite;
+      z-index: 5;
+    }
+    .dot-2 {
+      position: absolute;
+      bottom: -2px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background-color: rgba(217, 119, 6, 0.8);
+      box-shadow: 0 0 12px rgba(217, 119, 6, 1), 0 0 25px rgba(217, 119, 6, 0.6);
+    }
+    .loading-logo {
+      width: 450px;
+      max-width: 90vw;
+      animation: pulse-glow 3s ease-in-out infinite, float 6s ease-in-out infinite;
+      filter: drop-shadow(0 0 30px rgba(0, 0, 0, 0.9));
+      position: relative;
+      z-index: 10;
+    }
+    @keyframes pulse-glow {
+      0%, 100% { filter: drop-shadow(0 0 30px rgba(0,0,0,0.9)); }
+      50% { filter: drop-shadow(0 0 50px rgba(20,184,166,0.5)); }
+    }
+    @keyframes float {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+      100% { transform: translateY(0px); }
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    @keyframes spin-reverse {
+      to { transform: rotate(-360deg); }
+    }
+    .loading-text {
+      margin-top: 10px;
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 0.4em;
+      font-weight: bold;
+      color: rgba(45, 212, 191, 0.8);
+      text-shadow: 0 0 10px rgba(20, 184, 166, 0.4);
+      animation: pulse 2s ease-in-out infinite;
+      text-align: center;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 0.5; }
+      50% { opacity: 1; }
+    }
+    .index-logo-container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding-top: 2.5rem;
+    }
+    @media (min-width: 768px) {
+      .index-logo-container { padding-top: 5rem; }
+    }
+    .index-logo {
+      height: 24vh;
+      max-height: 20rem;
+      object-fit: contain;
+      transform: translateY(30vh);
+      filter: drop-shadow(0 0 30px rgba(0,0,0,0.9));
+    }
+    @media (min-width: 640px) { .index-logo { height: 30vh; } }
+    @media (min-width: 768px) { .index-logo { height: 40vh; } }
+    .progress-bar-container {
+      width: 250px;
+      height: 4px;
+      background-color: rgba(255, 255, 255, 0.1);
+      border-radius: 4px;
+      margin-top: 30px;
+      overflow: hidden;
+      position: relative;
+    }
+    .progress-bar {
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(20, 184, 166, 1), transparent);
+      width: 50%;
+      border-radius: 4px;
+      animation: loading-bar 2s ease-in-out infinite;
+    }
+    @keyframes loading-bar {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(200%); }
+    }
+  </style>
+</head>
+
+<body>
+  <div id="loading-screen">
+    <div class="index-logo-container">
+      <img src="./src/assets/fondos/fondohome/logo-home.webp" alt="GM-3000 Logo" class="index-logo" />
+      
+      <div class="loading-text-elem" style="color: rgba(255,255,255,0.4); font-size: 11px; letter-spacing: 0.3em; font-family: monospace; text-shadow: 0 0 5px rgba(255,255,255,0.2); margin-top: 36vh; transition: opacity 0.4s ease-out;">INICIALIZANDO MOTORES NEURONALES...</div>
+      
+      <div class="progress-bar-container" style="margin-top: 2rem; transition: opacity 0.4s ease-out;">
+        <div class="progress-bar"></div>
+      </div>
+    </div>
+  </div>
+  <div id="root"></div>
+  <script type="module" src="./src/main.tsx"></script>
+</body>
+
+</html>

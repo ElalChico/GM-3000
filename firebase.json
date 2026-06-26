@@ -1,0 +1,40 @@
+{
+  "hosting": {
+    "public": "dist",
+    "ignore": [
+      "firebase.json",
+      ".firebaserc",
+      "**/.*",
+      "**/node_modules/**",
+      "**/dist-electron/**",
+      "**/release/**",
+      "**/out/**",
+      "**/make/**",
+      "backup/**",
+      "backup_tests_temp/**",
+      "build/**",
+      "docs/**",
+      "engine_data/**",
+      "FONDO ESCRITORIO/**",
+      "motor_especial/**",
+      "otro-proyecto/**",
+      "scripts/**",
+      "server/**",
+      "arch-jl/**",
+      "resources/**",
+      "*.ps1",
+      "*.bat",
+      "diff.txt",
+      "ideas.txt",
+      "revisar.txt",
+      "*.md",
+      "LICENSE"
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ]
+  }
+}

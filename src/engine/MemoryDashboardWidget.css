@@ -1,0 +1,287 @@
+/* MemoryDashboardWidget.css — Terminal oscuro, sin neon ni bordes brillantes */
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600;700&display=swap');
+
+/* ─── Contenedor principal ─── */
+.dx47-widget {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  width: 380px;
+  height: 500px;
+  min-width: 300px;
+  min-height: 320px;
+  background: #0d1117;
+  border: 1px solid #21262d;
+  border-radius: 4px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.8);
+  color: #c9d1d9;
+  font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', 'Consolas', 'Courier New', monospace;
+  font-size: 11.5px;
+  line-height: 1.5;
+  display: none;
+  flex-direction: column;
+  overflow: hidden;
+  z-index: 9999;
+  user-select: none;
+}
+
+/* ─── Barra de título — terminal minimalista ─── */
+.dx47-widget-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 10px;
+  background: #161b22;
+  border-bottom: 1px solid #21262d;
+  cursor: move;
+  gap: 6px;
+}
+
+.dx47-term-prompt {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex: 1;
+  min-width: 0;
+}
+
+/* LED — solo un punto sin glow */
+.dx47-term-led {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #238636;
+  flex-shrink: 0;
+}
+
+.dx47-term-title {
+  color: #58a6ff;
+  font-weight: 600;
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.dx47-term-subtitle {
+  color: #484f58;
+  font-size: 9.5px;
+  font-weight: 300;
+}
+
+/* ─── Controles ─── */
+.dx47-widget-controls {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.dx47-widget-controls select {
+  background: #0d1117;
+  color: #8b949e;
+  border: 1px solid #21262d;
+  border-radius: 3px;
+  font-family: inherit;
+  font-size: 10px;
+  padding: 2px 4px;
+  cursor: pointer;
+  outline: none;
+}
+.dx47-widget-controls select:focus { border-color: #388bfd; }
+.dx47-widget-controls select option { background: #0d1117; }
+
+.dx47-widget-controls button {
+  background: none;
+  border: 1px solid transparent;
+  color: #484f58;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 11px;
+  padding: 1px 5px;
+  border-radius: 2px;
+  line-height: 1.4;
+  transition: color 0.1s, border-color 0.1s;
+}
+.dx47-widget-controls button:hover {
+  color: #8b949e;
+  border-color: #21262d;
+}
+
+/* ─── Cuerpo con scroll ─── */
+.dx47-widget-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: #0d1117;
+}
+
+/* ─── Sección — sin bordes llamativos ─── */
+.dx47-section {
+  background: #0d1117;
+  border: 1px solid #21262d;
+  border-radius: 3px;
+  padding: 6px 8px;
+}
+
+.dx47-section-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 6px;
+  color: #58a6ff;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border-bottom: 1px solid #21262d;
+  padding-bottom: 4px;
+}
+
+.dx47-section-icon {
+  flex-shrink: 0;
+  width: 13px;
+  height: 13px;
+  opacity: 0.8;
+}
+
+/* ─── Filas clave:valor — estilo código ─── */
+.dx47-stat-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 2px 0;
+}
+
+.dx47-stat-key {
+  color: #484f58;
+  font-size: 10.5px;
+}
+.dx47-stat-key::before { content: '  '; }
+
+.dx47-stat-val        { font-weight: 600; font-size: 11px; }
+.dx47-stat-val.num    { color: #e3b341; }   /* amarillo — números */
+.dx47-stat-val.str    { color: #7ee787; }   /* verde claro — strings */
+.dx47-stat-val.ok     { color: #3fb950; }   /* verde GitHub — ok */
+.dx47-stat-val.err    { color: #f85149; }   /* rojo GitHub — error */
+.dx47-stat-val.warn   { color: #d29922; }   /* naranja GitHub — advertencia */
+
+/* Línea de metadata tipo comentario */
+.dx47-prompt-line {
+  color: #484f58;
+  font-size: 9px;
+  margin-top: 5px;
+  padding-top: 4px;
+  border-top: 1px solid #21262d;
+  word-break: break-all;
+}
+
+/* ─── Historial ─── */
+.dx47-insight-list {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  max-height: 130px;
+  overflow-y: auto;
+}
+
+.dx47-insight {
+  padding: 3px 5px;
+  border-left: 2px solid #21262d;
+  border-radius: 0 2px 2px 0;
+  font-size: 10.5px;
+}
+.dx47-insight.pos { border-left-color: #3fb950; }
+.dx47-insight.neg { border-left-color: #f85149; }
+.dx47-insight.neu { border-left-color: #d29922; }
+
+.dx47-insight-move   { color: #58a6ff; font-weight: 700; }
+.dx47-insight-res    { color: #bc8cff; }
+.dx47-insight-score  { font-weight: 700; }
+.dx47-insight-score.pos { color: #3fb950; }
+.dx47-insight-score.neg { color: #f85149; }
+.dx47-insight-score.neu { color: #d29922; }
+.dx47-insight-meta   { color: #30363d; font-size: 9.5px; }
+
+/* ─── Movimientos aprendidos ─── */
+.dx47-cluster-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  max-height: 110px;
+  overflow-y: auto;
+}
+
+.dx47-cluster-row {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 2px 0;
+  font-size: 10.5px;
+}
+
+.dx47-cluster-move { color: #58a6ff; font-weight: 700; min-width: 56px; }
+.dx47-cluster-vis  { color: #484f58; font-size: 9.5px; min-width: 28px; text-align: right; }
+.dx47-cluster-net  { font-weight: 700; font-size: 10.5px; min-width: 40px; text-align: right; }
+.dx47-cluster-net.pos { color: #3fb950; }
+.dx47-cluster-net.neg { color: #f85149; }
+
+.dx47-bar-wrap {
+  flex: 1;
+  height: 2px;
+  background: #21262d;
+  border-radius: 1px;
+  overflow: hidden;
+}
+.dx47-bar-fill {
+  height: 100%;
+  border-radius: 1px;
+  transition: width 0.4s ease;
+}
+.dx47-bar-fill.ok  { background: #3fb950; }
+.dx47-bar-fill.err { background: #f85149; }
+
+/* ─── Estado vacío / comentario ─── */
+.dx47-empty {
+  color: #484f58;
+  font-size: 10.5px;
+  padding: 4px 0;
+  font-style: italic;
+}
+.dx47-empty::before { content: '// '; color: #30363d; }
+
+/* ─── Handle de resize ─── */
+.dx47-resize-handle {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 12px;
+  height: 12px;
+  cursor: nwse-resize;
+  background:
+    linear-gradient(135deg, transparent 45%, #30363d 45%, #30363d 55%, transparent 55%),
+    linear-gradient(135deg, transparent 65%, #30363d 65%, #30363d 75%, transparent 75%);
+}
+
+/* ─── Scrollbars mínimos ─── */
+.dx47-widget-body::-webkit-scrollbar,
+.dx47-insight-list::-webkit-scrollbar,
+.dx47-cluster-list::-webkit-scrollbar { width: 4px; }
+
+.dx47-widget-body::-webkit-scrollbar-track,
+.dx47-insight-list::-webkit-scrollbar-track,
+.dx47-cluster-list::-webkit-scrollbar-track { background: transparent; }
+
+.dx47-widget-body::-webkit-scrollbar-thumb,
+.dx47-insight-list::-webkit-scrollbar-thumb,
+.dx47-cluster-list::-webkit-scrollbar-thumb {
+  background: #21262d;
+  border-radius: 2px;
+}
+.dx47-widget-body::-webkit-scrollbar-thumb:hover,
+.dx47-insight-list::-webkit-scrollbar-thumb:hover,
+.dx47-cluster-list::-webkit-scrollbar-thumb:hover { background: #30363d; }

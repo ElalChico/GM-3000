@@ -1,0 +1,43 @@
+node_modules/
+dist/
+dist-electron/
+release/
+out/
+make/
+.vite/
+.firebase/
+*.log
+firebase-debug.log
+*.map
+.DS_Store
+Thumbs.db
+diff.txt
+Instrucciones-torneos-firebase.md
+*.local
+.env
+.env.development
+.env.production
+
+# Carpetas de referencia / backup (no código fuente)
+otro-proyecto/
+backup_tests_temp/
+arch-jl/
+edge-tts-master/
+
+# Mimocode compose artifacts (planes/reportes internos)
+.mimocode/
+docs/compose/
+
+# Archivos innecesarios / temporales
+nul
+out.mp3
+old_package.json
+tts-worker.spec
+build/tts-worker/
+backup/
+E.TransmisionesLive/
+motor_especial/
+engine_data/
+Bots/
+"FONDO ESCRITORIO"
+server/
