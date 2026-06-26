@@ -10445,7 +10445,7 @@ const triggerHomeAnimation = useCallback(() => {
                   <pre className="font-mono text-[10px] text-slate-300 overflow-x-auto custom-scrollbar leading-relaxed">
                     <span className="text-emerald-400">const</span> <span className="text-amber-400">project</span> = {'{\n'}
                     {'  '}<span className="text-sky-400">author</span>: <span className="text-emerald-300">'Elal Chico'</span>,<br />
-                    {'  '}<span className="text-sky-400">version</span>: <span className="text-emerald-300">'3.2.0'</span>,<br />
+                    {'  '}<span className="text-sky-400">version</span>: <span className="text-emerald-300">'3.1.7'</span>,<br />
                     {'  '}<span className="text-sky-400">purpose</span>: <span className="text-emerald-300">'Sistema de Estudio Ajedrecístico de Nueva Generación'</span><br />
                     {'}'};
                   </pre>
