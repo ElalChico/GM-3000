@@ -1,6 +1,6 @@
 # GM-3000 v3 — Board de Auto-Entrenamiento
 
-> ### 🔒 ESTA ES LA VERSIÓN ESTABLE
+> ### 🔒 ESTA ES LA VERSIÓN ESTABLE (3.1.7)
 > **GM-3000 v3** es la versión estable y de producción del proyecto. Todas las funcionalidades han sido probadas, validadas y están listas para uso cotidiano. Esta es la rama principal y la versión recomendada para todos los usuarios.
 
 <div align="center">
@@ -13,7 +13,7 @@ La aplicación integra potentes motores de análisis, análisis con inteligencia
 
 ---
 
-## 🌐 Versión Online (Demo Web)
+## 🌐 Versión Online (Demo Web) Puedes probarla via online.
 
 > **🎉 Versión 3.1.7 ya disponible en [gm-3000.web.app](https://gm-3000.web.app)**  
 > Prueba la aplicación directamente desde tu navegador con las últimas mejoras en interfaz, editor FEN, seguridad LAN y Modo Aventura.  
