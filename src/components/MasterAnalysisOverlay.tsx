@@ -8,6 +8,7 @@ import { generateSpanishMoveExplanation } from "../utils/analysisLLM";
 import { OpeningAnalyzer } from "./OpeningAnalyzer";
 import { speakText, stopSpeaking, isSpeaking, pauseSpeaking, resumeSpeaking, generateTtsCombined, listVoices, VoiceInfo, getAudioPosition, getAudioDuration, seekAudio, synthesizeTtsAudio, playFromBlob } from "../utils/tts";
 import { AI_PROVIDERS, getProviderById, getDefaultModel } from "../utils/aiProviders";
+import { CURRENT_VERSION } from "../version";
 
 interface MasterAnalysisOverlayProps {
   history: string[];
@@ -1588,7 +1589,7 @@ export const MasterAnalysisOverlay: React.FC<MasterAnalysisOverlayProps> = ({
 
         {/* Footer */}
         <div className="px-5 py-2.5 bg-black/60 border-t border-teal-900/30 flex justify-between items-center shrink-0">
-          <span className="text-[9px] text-teal-600/40 uppercase font-black tracking-[0.4em]">GM-3000 Master Analysis Engine v3.1</span>
+          <span className="text-[9px] text-teal-600/40 uppercase font-black tracking-[0.4em]">GM-3000 Master Analysis Engine v{CURRENT_VERSION}</span>
           <div className="flex items-center gap-3">
             <div className="flex gap-1.5">
               {currentEvalData ? (

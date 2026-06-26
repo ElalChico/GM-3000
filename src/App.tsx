@@ -203,7 +203,7 @@ const ADVENTURE_BGS = [bg1, bg2, bg3, bg4, bg5, bg6, bg7, bg8, bg9];
 const NORMAL_BGS = [normalBg0, normalBg1, normalBg2, normalBg3, normalBg4, normalBg5, normalBg6, normalBg7, normalBg8, normalBg9, normalBg10, normalBg11, normalBg12, normalBg13];
 import hoverModeSound from "./sounds/selec-mode.mp3";
 import introSound from "./sounds/intro.mp3";
-const CURRENT_VERSION = "3.1.7";
+import { CURRENT_VERSION } from "./version";
 
 // Exit guard and export utilities
 import { useExitGuard } from "./hooks/useExitGuard";
@@ -10445,7 +10445,7 @@ const triggerHomeAnimation = useCallback(() => {
                   <pre className="font-mono text-[10px] text-slate-300 overflow-x-auto custom-scrollbar leading-relaxed">
                     <span className="text-emerald-400">const</span> <span className="text-amber-400">project</span> = {'{\n'}
                     {'  '}<span className="text-sky-400">author</span>: <span className="text-emerald-300">'Elal Chico'</span>,<br />
-                    {'  '}<span className="text-sky-400">version</span>: <span className="text-emerald-300">'3.1.7'</span>,<br />
+                    {'  '}<span className="text-sky-400">version</span>: <span className="text-emerald-300">'{CURRENT_VERSION}'</span>,<br />
                     {'  '}<span className="text-sky-400">purpose</span>: <span className="text-emerald-300">'Sistema de Estudio Ajedrecístico de Nueva Generación'</span><br />
                     {'}'};
                   </pre>
