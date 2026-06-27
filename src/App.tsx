@@ -6462,7 +6462,7 @@ const triggerHomeAnimation = useCallback(() => {
       <header
         style={{ WebkitAppRegion: "drag" } as React.CSSProperties}
         className={cn(
-          "w-screen flex justify-between items-center border-b shrink-0 py-0.5 relative z-10 backdrop-blur-md transition-all duration-700 px-0",
+          "w-full flex justify-center items-center border-b shrink-0 py-0.5 relative z-10 backdrop-blur-md transition-all duration-700 px-10 overflow-hidden",
           (isFullscreen || !isHeaderVisible || showMainScreen || isAdventureModeOpen) && "hidden",
           currentGameMode === "adventure"
             ? "bg-black border-amber-900/50 shadow-[0_4px_20px_rgba(0,0,0,0.8)]"
@@ -6498,7 +6498,7 @@ const triggerHomeAnimation = useCallback(() => {
         )}
 
         {(!isFullscreen && isHeaderVisible && !activeAdventureEnemy) && (
-          <div className="flex-1 flex justify-center items-center w-[70vw] sm:w-full h-10 sm:h-14 relative">
+          <div className="flex-1 flex justify-center items-center w-full h-10 sm:h-14 relative">
             <img
               src={BannerImg}
               alt="GM-3000"
