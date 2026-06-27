@@ -1,6 +1,6 @@
 # GM-3000 v3 — Board de Auto-Entrenamiento
 
-> ### 🔒 ESTA ES LA VERSIÓN ESTABLE (3.1.7)
+> ### 🔒 ESTA ES LA VERSIÓN ESTABLE
 > **GM-3000 v3** es la versión estable y de producción del proyecto. Todas las funcionalidades han sido probadas, validadas y están listas para uso cotidiano. Esta es la rama principal y la versión recomendada para todos los usuarios.
 
 <div align="center">
@@ -13,7 +13,7 @@ La aplicación integra potentes motores de análisis, análisis con inteligencia
 
 ---
 
-## 🌐 Versión Online (Demo Web) Puedes probarla via online.
+## 🌐 Versión Online (Demo Web)
 
 > **🎉 Versión 3.1.7 ya disponible en [gm-3000.web.app](https://gm-3000.web.app)**  
 > Prueba la aplicación directamente desde tu navegador con las últimas mejoras en interfaz, editor FEN, seguridad LAN y Modo Aventura.  
@@ -30,7 +30,7 @@ Si desea utilizar todas las funciones, incluyendo el modo LAN y los motores loca
 | Tipo de Instalador | Enlace de Descarga (MEGA) | Enlace de Descarga (GitHub) | Descripción |
 | :--- | :--- | :--- | :--- |
 | **Portable (.ZIP)** | [Descargar ZIP](https://mega.nz/file/GCpwyKpa#5BO-c-rVpqUCWhMq9mynPeDuijJuwKVEoTFtKp6scdU) | [GitHub Release](https://github.com/ElalChico/GM-3000/releases/download/v3.1.7/GM-3000-win32-x64-3.1.7.zip) | No requiere instalación. Descomprimir y ejecutar. Ideal para USB o pruebas rápidas. |
-| **Instalador (.EXE 64-bit)** | [Descargar Setup](https://mega.nz/file/aKJVGDJQ#fIi63l1RYg3yvR4DS3A-ubGdl8a1mTXv41u3sBTVspc) | [GitHub Release](https://github.com/ElalChico/GM-3000/releases/download/v3.1.7/GM-3000.Setup.exe) | Instalador tradicional para Windows. Integra accesos directos y configuraciones de sistema. |
+| **Instalador (.EXE 64-bit)** | [Descargar Setup](https://mega.nz/file/aKJVGDJQ#fIi63l1RYg3yvR4DS3A-ubGdl8a1mTXv41u3sBTVspc) | [GitHub Release](https://github.com/ElalChico/GM-3000/releases/download/v3.1.7/GM-3000+Setup.exe) | Instalador tradicional para Windows. Integra accesos directos y configuraciones de sistema. |
 
 ### 📦 Versión Anterior 2.1.9
 

@@ -509,6 +509,16 @@ export default function App() {
   const [adventureAnimationsEnabled, setAdventureAnimationsEnabled] = useState(() => localStorage.getItem("chess_adventureAnimationsEnabled") !== "false");
   const [viewMode, setViewMode] = useState<"play">("play");
   const [showLanAdminOnly, setShowLanAdminOnly] = useState(false);
+  const [tournamentManagerHtml, setTournamentManagerHtml] = useState<string | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    fetch(encodeURI("./gestor de torneos.html"))
+      .then(r => r.text())
+      .then(html => { if (!cancelled) setTournamentManagerHtml(html); })
+      .catch(err => console.error("Failed to load tournament manager:", err));
+    return () => { cancelled = true; };
+  }, []);
 
   // Wake Lock para mantener pantalla encendida durante juego en móvil
   const [wakeLock, setWakeLock] = useState<WakeLockSentinel | null>(null);
@@ -1864,9 +1874,7 @@ const [adventureMusicVolume, setAdventureMusicVolume] = useState(() => {
 
   const [whiteStats, setWhiteStats] = useState<any>(null);
   const [blackStats, setBlackStats] = useState<any>(null);
-  const [expandedNeural, setExpandedNeural] = useState<
-    "none" | "white" | "black" | "current"
-  >("none");
+
 
   // Referencias a motores duales ⚡pueden contener motores locales propios o Stockfish
   const engineWhiteRef = useRef<StockfishEngineWhite | AtlasEngine | EDDEngine | ObsidianEngine | null>(null);
@@ -6047,7 +6055,7 @@ const triggerHomeAnimation = useCallback(() => {
   };
 
   return (
-    <div ref={appContainerRef} style={{ WebkitOverflowScrolling: 'touch' }} className={cn("flex flex-col min-h-[100vh] font-sans overflow-x-hidden overflow-y-auto relative transition-colors duration-500", currentGameMode === "adventure" ? "bg-[#0f1115]" : getThemeClasses())}>
+    <div ref={appContainerRef} style={{ WebkitOverflowScrolling: 'touch', scrollbarGutter: 'stable' } as React.CSSProperties} className={cn("flex flex-col min-h-[100vh] font-sans overflow-x-hidden overflow-y-auto relative transition-colors duration-500", currentGameMode === "adventure" ? "bg-[#0f1115]" : getThemeClasses())}>
       {/* Guest mode indicator bar */}
       {isGuestMode && (
         <div className="fixed top-0 left-0 right-0 z-[9999] flex items-center justify-center gap-3 py-2 px-4" style={{ background: "linear-gradient(90deg, rgba(180,120,30,0.15), rgba(180,120,30,0.25), rgba(180,120,30,0.15))", borderBottom: "1px solid rgba(180,120,30,0.3)" }}>
@@ -6462,24 +6470,15 @@ const triggerHomeAnimation = useCallback(() => {
       <header
         style={{ WebkitAppRegion: "drag" } as React.CSSProperties}
         className={cn(
-          "w-full flex justify-center items-center border-b shrink-0 py-0.5 relative z-10 backdrop-blur-md transition-all duration-700 px-10 overflow-hidden",
+          "w-full flex justify-center items-center border-b shrink-0 py-0.5 relative z-10 backdrop-blur-md transition-all duration-700 px-0",
           (isFullscreen || !isHeaderVisible || showMainScreen || isAdventureModeOpen) && "hidden",
           currentGameMode === "adventure"
             ? "bg-black border-amber-900/50 shadow-[0_4px_20px_rgba(0,0,0,0.8)]"
             : "bg-black/40 border-white/5"
         )}
       >
-        <button
-          style={{ WebkitAppRegion: "no-drag" } as React.CSSProperties}
-          onClick={() => setIsHeaderVisible(false)}
-          className="absolute left-4 sm:left-6 top-1/2 -translate-y-1/2 mt-2 flex items-center justify-center p-2 bg-slate-800/40 hover:bg-slate-700/60 text-slate-400 hover:text-white border border-slate-700/30 hover:border-slate-500/30 rounded-md transition-all shadow-sm z-20 group"
-          title={language === "es" ? "Cerrar cabecera" : "Close header"}
-        >
-          <X className="w-4 h-4 group-hover:scale-110 transition-transform" strokeWidth={3} />
-        </button>
-
         {(!isFullscreen && isHeaderVisible && activeAdventureEnemy) && (
-          <div className="flex-1 flex justify-center items-center w-full h-16 sm:h-22 relative">
+          <div className="flex-1 flex justify-center items-center w-[70vw] sm:w-full h-16 sm:h-22 relative">
             <div className="absolute inset-0 bg-[radial-gradient(circle,rgba(0,0,0,0.9)_0%,transparent_75%)] pointer-events-none" />
             <div className="absolute top-2 left-0 right-0 flex items-center justify-center gap-3 px-10 z-10">
               <div className="h-px flex-1 max-w-[80px] bg-gradient-to-r from-transparent via-red-900/40 to-transparent" />
@@ -6498,7 +6497,7 @@ const triggerHomeAnimation = useCallback(() => {
         )}
 
         {(!isFullscreen && isHeaderVisible && !activeAdventureEnemy) && (
-          <div className="flex-1 flex justify-center items-center w-full h-10 sm:h-14 relative">
+          <div className="flex-1 flex justify-center items-center w-[70vw] sm:w-full h-10 sm:h-14 relative">
             <img
               src={BannerImg}
               alt="GM-3000"
@@ -6510,6 +6509,16 @@ const triggerHomeAnimation = useCallback(() => {
         )}
       </header>
 
+      {/* X button for closing header - fixed position to stay visible regardless of header layout */}
+      {!isFullscreen && isHeaderVisible && !showMainScreen && !isAdventureModeOpen && (
+        <button
+          onClick={() => setIsHeaderVisible(false)}
+          className="fixed right-4 top-2 flex items-center justify-center p-1.5 bg-slate-900/80 hover:bg-red-900/60 text-slate-300 hover:text-red-400 border border-slate-600/50 hover:border-red-500/50 rounded-lg transition-all shadow-md z-50 group"
+          title={language === "es" ? "Cerrar cabecera" : "Close header"}
+        >
+          <X className="w-4 h-4 group-hover:scale-110 transition-transform" strokeWidth={3} />
+        </button>
+      )}
 
       {/* Assist Toast at Bottom-Left */}
       {assistMessage && (
@@ -6640,7 +6649,7 @@ const triggerHomeAnimation = useCallback(() => {
           !isHeaderVisible && "py-3 md:py-4",
           isHeaderVisible && !isFullscreen && "pt-4 pb-2 sm:pt-6 sm:pb-4 lg:pt-6 lg:pb-4",
           isHeaderVisible && isFullscreen && "pt-2 pb-2",
-          (currentGameMode === "tournament" || currentGameMode === "live_station") ? "flex-col p-4" : "flex-col md:flex-row px-1 sm:px-3 lg:px-4 gap-2 sm:gap-4 lg:gap-6",
+          (currentGameMode === "tournament" || currentGameMode === "live_station") ? "flex-col p-4" : "flex-col md:flex-row px-1 sm:px-3 lg:px-4 gap-1 sm:gap-2 lg:gap-4",
           boardAlign === "center" && "justify-between",
           boardAlign === "right" && "justify-end",
           (isFullscreen && !isRightPanelOpen) ? "bg-[#0f1115]" : "bg-transparent",
@@ -6674,7 +6683,8 @@ const triggerHomeAnimation = useCallback(() => {
               </div>
             )}
             <iframe
-              src={currentGameMode === "tournament" ? "../gestor de torneos.html" : "./transmisiones/index.html"}
+              src={currentGameMode === "tournament" ? undefined : "./transmisiones/index.html"}
+              srcDoc={currentGameMode === "tournament" ? (tournamentManagerHtml ?? undefined) : undefined}
               className="w-full h-full border-0"
               allowFullScreen
             />
@@ -6686,7 +6696,6 @@ const triggerHomeAnimation = useCallback(() => {
             <div className={cn(
               "flex gap-2 items-start shrink justify-center min-w-0",
               boardAlign === "center" ? "mx-auto" : (boardAlign === "right" ? "ml-auto" : "ml-0"),
-              !isFullscreen && isHeaderVisible && "ml-[-1%]",
               isFullscreen ? "max-w-full" : boardSizeClassWrapper,
               isFullscreen
                 ? "max-h-[calc(100vh-40px)]"
@@ -7158,7 +7167,7 @@ const triggerHomeAnimation = useCallback(() => {
                   ? "ml-0 pl-2 sm:pl-4"
                   : boardAlign === "right"
                     ? "mr-0 md:order-first pr-2 sm:pr-4"
-                    : "w-[380px] sm:w-[420px] lg:w-[460px] xl:w-[520px] shrink-0 ml-auto pl-2 sm:pl-4"
+                    : "w-[380px] sm:w-[420px] lg:w-[460px] xl:w-[520px] shrink-0 ml-auto pl-1 sm:pl-2"
             )}>
               <div className={cn(
                 "flex flex-col gap-2 mt-4 p-4 rounded-xl relative overflow-hidden group w-full medieval-panel shrink-0",
@@ -7569,7 +7578,7 @@ const triggerHomeAnimation = useCallback(() => {
                     >
                       <Settings className="w-3.5 h-3.5" /> {language === "es" ? "Ajustes" : "Settings"}
                     </button>
-                    {isRightPanelOpen && (
+                    {isRightPanelOpen && isFullscreen && (
                       <button
                         onClick={() => setIsRightPanelOpen(false)}
                         title={language === "es" ? "Ocultar Panel" : "Hide Panel"}
@@ -7654,8 +7663,7 @@ const triggerHomeAnimation = useCallback(() => {
                       language={language}
                       whiteStats={whiteStats}
                       blackStats={blackStats}
-                      expandedNeural={expandedNeural}
-                      setExpandedNeural={setExpandedNeural}
+
                       whitePlayer={whitePlayer}
                       blackPlayer={blackPlayer}
                       viewingMoveIndex={viewingMoveIndex}
@@ -7691,12 +7699,12 @@ const triggerHomeAnimation = useCallback(() => {
         <button
           onClick={() => setIsRightPanelOpen(true)}
           className={cn(
-            "fixed right-1.5 md:right-2 bottom-4 md:top-1/2 md:-translate-y-1/2 md:bottom-auto flex items-center justify-center w-10 h-12 md:h-16 rounded-xl transition-all shadow-lg group backdrop-blur-sm z-50",
-            "bg-slate-800/80 hover:bg-slate-700 text-slate-400 hover:text-white border border-slate-600"
+            "fixed left-1.5 md:left-2 bottom-4 md:top-1/2 md:-translate-y-1/2 md:bottom-auto flex items-center justify-center w-10 h-12 md:h-16 rounded-xl transition-all shadow-lg group backdrop-blur-sm z-50",
+            "bg-teal-800/80 hover:bg-teal-600 text-teal-300 hover:text-white border border-teal-600/50 hover:border-teal-400 shadow-[0_0_15px_rgba(20,184,166,0.15)]"
           )}
           title={language === "es" ? "Mostrar Panel" : "Show Panel"}
         >
-          <ChevronLeft className="w-6 h-6 group-hover:-translate-x-1 transition-transform" />
+          <ChevronRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
         </button>
       )}
 
@@ -10138,10 +10146,9 @@ const triggerHomeAnimation = useCallback(() => {
             </div>
             <div className="flex-1 w-full bg-slate-900 relative">
               <iframe
-                src={encodeURI("./gestor de torneos.html")}
+                srcDoc={tournamentManagerHtml ?? undefined}
                 className="w-full h-full border-0 absolute inset-0"
                 title="Tournament Manager"
-                loading="eager"
               />
             </div>
           </div>
@@ -10222,51 +10229,6 @@ const triggerHomeAnimation = useCallback(() => {
         </div>
       )}
 
-      {/* Expanded Neural Overlay - always at root level */}
-      {expandedNeural !== "none" && lanStatus !== "connected" && (
-        <div className="fixed inset-4 z-[100] bg-[#020617] border border-slate-700 rounded-2xl overflow-hidden flex flex-col animate-in zoom-in-95 duration-300">
-          <div className="flex justify-between items-center p-4 border-b border-slate-800 bg-slate-900/50 shrink-0">
-            <span className="text-xs font-black uppercase tracking-widest text-emerald-400">
-              VISUALIZACIÓN NEURONAL EXPANDIDA
-            </span>
-            <button
-              onClick={() => setExpandedNeural("none")}
-              className="p-2 bg-slate-800 hover:bg-slate-700 text-white rounded-full transition-colors"
-            >
-              <X className="w-5 h-5" />
-            </button>
-          </div>
-          <div className="flex-1 relative overflow-hidden bg-black">
-            {expandedNeural === "white" && (
-              <NeuralTree
-                variations={whiteVariations}
-                turnColor="w"
-                stats={whiteStats}
-                style={neuralStyle}
-                language={language}
-              />
-            )}
-            {expandedNeural === "black" && (
-              <NeuralTree
-                variations={blackVariations}
-                turnColor="b"
-                stats={blackStats}
-                style={neuralStyle}
-                language={language}
-              />
-            )}
-            {expandedNeural === "current" && (
-              <NeuralTree
-                variations={currentVariations}
-                turnColor={game.turn()}
-                stats={game.turn() === "w" ? whiteStats : blackStats}
-                style={neuralStyle}
-                language={language}
-              />
-            )}
-          </div>
-        </div>
-      )}
       {isMasterAnalysisOpen && (
         <MasterAnalysisOverlay
           history={history}
@@ -10896,8 +10858,6 @@ function HistoryNeuralPanel({
   blackStats,
   neuralStyle,
   language,
-  expandedNeural,
-  setExpandedNeural,
   whitePlayer,
   blackPlayer,
   viewingMoveIndex,
@@ -11101,8 +11061,7 @@ function HistoryNeuralPanel({
             <div className={cn("flex w-full h-full gap-2", boardOrientation === "white" ? "flex-col-reverse" : "flex-col")}>
               {(neuralViewMode === "both" || neuralViewMode === "white") && (
                 <div
-                  onClick={() => setExpandedNeural("white")}
-                  className="flex-1 relative rounded-xl overflow-hidden border border-teal-900/30 shadow-[0_0_15px_rgba(20,184,166,0.08)] bg-gradient-to-b from-slate-950 to-black cursor-zoom-in hover:border-teal-500/40 hover:shadow-[0_0_20px_rgba(20,184,166,0.15)] transition-all duration-300"
+                  className="flex-1 relative rounded-xl overflow-hidden border border-teal-900/30 shadow-[0_0_15px_rgba(20,184,166,0.08)] bg-gradient-to-b from-slate-950 to-black hover:border-teal-500/40 hover:shadow-[0_0_20px_rgba(20,184,166,0.15)] transition-all duration-300"
                 >
                   <div className="absolute top-0 right-0 bg-slate-800 px-2 py-1 text-[8px] font-bold text-slate-300 z-10 border-b border-l border-slate-700 uppercase tracking-widest rounded-bl-lg">
                     #{language === "es" ? "1 Blancas" : "1 White"}
@@ -11118,8 +11077,7 @@ function HistoryNeuralPanel({
               )}
               {(neuralViewMode === "both" || neuralViewMode === "black") && (
                 <div
-                  onClick={() => setExpandedNeural("black")}
-                  className="flex-1 relative rounded-xl overflow-hidden border border-slate-600/50 shadow-lg bg-slate-900/30 cursor-zoom-in hover:border-emerald-400/60 transition-all duration-200"
+                  className="flex-1 relative rounded-xl overflow-hidden border border-slate-600/50 shadow-lg bg-slate-900/30 hover:border-emerald-400/60 transition-all duration-200"
                 >
                   <div className="absolute top-0 right-0 bg-slate-800 px-2 py-1 text-[8px] font-bold text-slate-300 z-10 border-b border-l border-slate-700 uppercase tracking-widest rounded-bl-lg">
                     #{language === "es" ? "2 Negras" : "2 Black"}
@@ -11136,8 +11094,7 @@ function HistoryNeuralPanel({
             </div>
           ) : (
             <div
-              onClick={() => setExpandedNeural("current")}
-              className="flex-1 relative rounded-xl overflow-hidden border border-teal-900/30 shadow-[0_0_15px_rgba(20,184,166,0.08)] bg-gradient-to-b from-slate-950 to-black cursor-zoom-in hover:border-teal-500/40 hover:shadow-[0_0_20px_rgba(20,184,166,0.15)] transition-all duration-300"
+              className="flex-1 relative rounded-xl overflow-hidden border border-teal-900/30 shadow-[0_0_15px_rgba(20,184,166,0.08)] bg-gradient-to-b from-slate-950 to-black hover:border-teal-500/40 hover:shadow-[0_0_20px_rgba(20,184,166,0.15)] transition-all duration-300"
             >
               <NeuralTree
                 variations={currentVariations}
