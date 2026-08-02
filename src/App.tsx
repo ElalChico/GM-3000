@@ -6390,8 +6390,8 @@ const triggerHomeAnimation = useCallback(() => {
     const vw = window.innerWidth;
     const vh = window.innerHeight;
     const isMobile = vw <= 768;
-    // Player bars (~35px each = 70px) + header (~40px) + main padding (~4px) + border/padding (~16px)
-    const chrome = headerVisible ? 130 : 90;
+    // Player bars (~40px each = 80px) + header (~50px) + main padding (~8px)
+    const chrome = headerVisible ? 145 : 95;
     const availableH = vh - chrome;
     // On desktop with sidebar open, subtract sidebar width + gap
     const sidebarW = (!isMobile && isRightPanelOpen) ? 400 : 0;
@@ -7090,9 +7090,9 @@ const triggerHomeAnimation = useCallback(() => {
         ref={boardContainerRef}
         className={cn(
           "flex-1 flex w-full overflow-y-auto overflow-x-hidden relative z-10",
-          !isHeaderVisible && "py-0.5 md:py-1",
-          isHeaderVisible && !isFullscreen && "pt-0.5 pb-0.5 sm:pt-1 sm:pb-1 lg:pt-1 lg:pb-1",
-          isHeaderVisible && isFullscreen && "pt-1 pb-1",
+          !isHeaderVisible && "py-0",
+          isHeaderVisible && !isFullscreen && "pt-0 pb-0 sm:pt-0.5 sm:pb-0.5",
+          isHeaderVisible && isFullscreen && "pt-0 pb-0",
           isFullscreen ? "flex-col items-center justify-center" : ((currentGameMode === "tournament" || currentGameMode === "live_station") ? "flex-col p-4" : "flex-col md:flex-row px-0 sm:px-3 lg:px-4 gap-1 sm:gap-2 lg:gap-4"),
           !isFullscreen && boardAlign === "center" && "justify-between",
           !isFullscreen && boardAlign === "right" && "justify-end",
