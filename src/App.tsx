@@ -6953,6 +6953,17 @@ const triggerHomeAnimation = useCallback(() => {
         </button>
       )}
 
+      {/* Exit fullscreen button - fixed position bottom-right, always visible in fullscreen */}
+      {isFullscreen && !showMainScreen && (
+        <button
+          onClick={toggleFullScreen}
+          className="fixed bottom-4 right-4 flex items-center gap-1.5 px-3 py-1.5 bg-slate-800/90 hover:bg-slate-700 text-slate-300 border border-slate-700 rounded-lg transition-all text-[10px] font-bold uppercase tracking-wider shadow-lg z-[9999] backdrop-blur-sm"
+        >
+          <Minimize className="w-3.5 h-3.5" />
+          {language === "es" ? "Salir" : "Exit"}
+        </button>
+      )}
+
       {/* Assist Toast at Bottom-Left */}
       {assistMessage && (
         <div className="fixed bottom-4 left-4 z-[9999] bg-slate-900/95 backdrop-blur shadow-2xl rounded-xl border border-blue-500/30 p-4 flex items-center gap-4 animate-in slide-in-from-bottom-5">
@@ -7082,9 +7093,9 @@ const triggerHomeAnimation = useCallback(() => {
           !isHeaderVisible && "py-0.5 md:py-1",
           isHeaderVisible && !isFullscreen && "pt-0.5 pb-0.5 sm:pt-1 sm:pb-1 lg:pt-1 lg:pb-1",
           isHeaderVisible && isFullscreen && "pt-1 pb-1",
-          (currentGameMode === "tournament" || currentGameMode === "live_station") ? "flex-col p-4" : "flex-col md:flex-row px-0 sm:px-3 lg:px-4 gap-1 sm:gap-2 lg:gap-4",
-          boardAlign === "center" && "justify-between",
-          boardAlign === "right" && "justify-end",
+          isFullscreen ? "flex-col items-center justify-center" : ((currentGameMode === "tournament" || currentGameMode === "live_station") ? "flex-col p-4" : "flex-col md:flex-row px-0 sm:px-3 lg:px-4 gap-1 sm:gap-2 lg:gap-4"),
+          !isFullscreen && boardAlign === "center" && "justify-between",
+          !isFullscreen && boardAlign === "right" && "justify-end",
           (isFullscreen && !isRightPanelOpen) ? "bg-[#0f1115]" : "bg-transparent",
           (currentGameMode === "adventure" || isAdventureModeOpen) && "bg-transparent"
         )}
@@ -7124,7 +7135,7 @@ const triggerHomeAnimation = useCallback(() => {
           </div>
         ) : (
           <>
-            {isRightPanelOpen && boardAlign === "center" && <div className="hidden md:block w-[340px] sm:w-[360px] lg:w-[380px] xl:w-[420px] shrink pointer-events-none" />}
+            {!isFullscreen && isRightPanelOpen && boardAlign === "center" && <div className="hidden md:block w-[340px] sm:w-[360px] lg:w-[380px] xl:w-[420px] shrink pointer-events-none" />}
 
               <div className={cn(
               "flex gap-2 items-start shrink justify-center min-w-0",
@@ -7737,7 +7748,8 @@ const triggerHomeAnimation = useCallback(() => {
             <aside className={cn(
               "flex flex-col gap-4 transition-all duration-300 min-h-0 overflow-y-auto overflow-x-hidden self-stretch",
               !isRightPanelOpen && "hidden",
-              isRightPanelOpen && "flex-1",
+              isFullscreen && "hidden",
+              isRightPanelOpen && !isFullscreen && "flex-1",
               isHeaderVisible ? "max-h-[calc(100vh-120px)]" : "max-h-[calc(100vh-60px)]",
               boardAlign === "left"
                   ? "ml-0 pl-2 sm:pl-4"
