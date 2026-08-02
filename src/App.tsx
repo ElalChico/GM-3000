@@ -6389,10 +6389,13 @@ const triggerHomeAnimation = useCallback(() => {
   const calcBoardWidth = useCallback((size: string, fullscreen: boolean, gameMode?: string, headerVisible: boolean = true) => {
     const vw = window.innerWidth;
     const vh = window.innerHeight;
-    // Player bars (top + bottom ~35px each) + header + padding
-    const chrome = headerVisible ? 120 : 50;
+    const isMobile = vw <= 768;
+    // Player bars (~35px each) + header + padding
+    const chrome = headerVisible ? 110 : 40;
     const availableH = vh - chrome;
-    const availableW = vw * 0.95;
+    // On desktop with sidebar open, subtract sidebar width + gap
+    const sidebarW = (!isMobile && isRightPanelOpen) ? 400 : 0;
+    const availableW = vw - sidebarW - 20;
     const boardSize = Math.min(availableW, availableH);
     if (size === "fill") {
       return Math.round(boardSize);
@@ -6400,7 +6403,7 @@ const triggerHomeAnimation = useCallback(() => {
     const bases: Record<string, number> = { small: 320, medium: 360, large: 520, fill: 400 };
     const base = bases[size] || 480;
     return Math.round(Math.min(base, boardSize));
-  }, []);
+  }, [isRightPanelOpen]);
 
   const [boardWidthPx, setBoardWidthPx] = useState(() => calcBoardWidth(effectiveBoardSize, isFullscreen, currentGameMode, isHeaderVisible));
 
@@ -6440,7 +6443,7 @@ const triggerHomeAnimation = useCallback(() => {
   };
 
   return (
-    <div ref={appContainerRef} style={{ WebkitOverflowScrolling: 'touch', scrollbarGutter: 'stable' } as React.CSSProperties} className={cn("flex flex-col min-h-[100vh] font-sans overflow-x-hidden overflow-y-auto relative transition-colors duration-500", currentGameMode === "adventure" ? "bg-[#0f1115]" : getThemeClasses())}>
+    <div ref={appContainerRef} style={{ WebkitOverflowScrolling: 'touch', scrollbarGutter: 'stable' } as React.CSSProperties} className={cn("flex flex-col font-sans overflow-x-hidden relative transition-colors duration-500", showMainScreen ? "min-h-[100vh] overflow-y-auto" : "h-screen overflow-hidden", currentGameMode === "adventure" ? "bg-[#0f1115]" : getThemeClasses())}>
       {/* Guest mode indicator bar */}
       {isGuestMode && (
         <div className="fixed top-0 left-0 right-0 z-[9999] flex items-center justify-center gap-3 py-2 px-4" style={{ background: "linear-gradient(90deg, rgba(180,120,30,0.15), rgba(180,120,30,0.25), rgba(180,120,30,0.15))", borderBottom: "1px solid rgba(180,120,30,0.3)" }}>
@@ -7123,15 +7126,10 @@ const triggerHomeAnimation = useCallback(() => {
           <>
             {isRightPanelOpen && boardAlign === "center" && <div className="hidden md:block w-[340px] sm:w-[360px] lg:w-[380px] xl:w-[420px] shrink pointer-events-none" />}
 
-              <div className={cn(
+              <div style={isFullscreen ? undefined : { width: boardWidthPx, height: boardWidthPx, maxWidth: '100%', maxHeight: '100%' }} className={cn(
               "flex gap-2 items-start shrink justify-center min-w-0",
               boardAlign === "center" ? "mx-auto" : (boardAlign === "right" ? "ml-auto" : "ml-0"),
-              isFullscreen ? "max-w-full" : boardSizeClassWrapper,
-              isFullscreen
-                ? "max-h-[calc(100vh-40px)]"
-                : isHeaderVisible
-                  ? "max-h-[calc(100vh-80px)]"
-                  : "max-h-[calc(100dvh-30px)]"
+              isFullscreen && "max-w-full max-h-[calc(100vh-40px)]"
             )}>
               <ChessboardProvider options={chessboardConfig}>
               {/* Panel izquierdo: Perfiles LAN, EvalBar o Bandeja de piezas de Modo Estudio */}
@@ -7335,7 +7333,7 @@ const triggerHomeAnimation = useCallback(() => {
                 );
               })()}
 
-              <div className={cn("shrink relative min-h-0", boardSizeClassInner, !isRightPanelOpen ? "w-full h-full grid grid-cols-[auto_1fr] grid-rows-[auto_1fr_auto] gap-x-2 place-items-center" : cn("w-full h-full flex flex-col", isFullscreen ? "justify-center" : "justify-center"))}>
+              <div className={cn("w-full h-full shrink relative min-h-0", !isRightPanelOpen ? "grid grid-cols-[auto_1fr] grid-rows-[auto_1fr_auto] gap-x-2 place-items-center" : cn("flex flex-col justify-center"))}>
                 <div className={cn("mb-1 flex justify-between items-center bg-slate-800/80 px-2 py-0.5 rounded-t-lg border-b-2 border-slate-900 border-x border-t border-slate-700/50 overflow-visible", !isRightPanelOpen && "col-start-1 row-start-1 mb-0 w-auto rounded-lg border-x border-t border-b-0 border-slate-700/50 flex-col gap-1 px-1.5 py-1")}>
                   <div className="flex items-center gap-2">
                     {(() => {
@@ -7738,16 +7736,16 @@ const triggerHomeAnimation = useCallback(() => {
               </div>
 
             <aside className={cn(
-              "flex flex-col gap-4 transition-all duration-300 min-h-0 overflow-hidden self-stretch",
+              "flex flex-col gap-4 transition-all duration-300 min-h-0 overflow-y-auto overflow-x-hidden self-stretch",
               !isRightPanelOpen && "hidden",
-              isRightPanelOpen && "flex-1 min-w-[360px] sm:min-w-[420px] lg:min-w-[460px]",
+              isRightPanelOpen && "flex-1",
               isHeaderVisible ? "max-h-[calc(100vh-120px)]" : "max-h-[calc(100vh-60px)]",
               boardAlign === "left"
                   ? "ml-0 pl-2 sm:pl-4"
                   : boardAlign === "right"
                     ? "mr-0 md:order-first pr-2 sm:pr-4"
-                    : "w-[380px] sm:w-[420px] lg:w-[460px] xl:w-[520px] shrink-0 ml-auto pl-1 sm:pl-2",
-              isRightPanelOpen && "max-md:fixed max-md:inset-0 max-md:z-[4000] max-md:w-full max-md:min-w-0 max-md:bg-slate-950/98 max-md:backdrop-blur-md max-md:p-4 max-md:self-auto max-md:max-h-full"
+                    : "shrink ml-auto pl-1 sm:pl-2",
+              isRightPanelOpen && "max-md:fixed max-md:inset-0 max-md:z-[4000] max-md:w-full max-md:bg-slate-950/98 max-md:backdrop-blur-md max-md:p-4 max-md:self-auto max-md:max-h-full"
             )}>
               <div className={cn(
                 "flex flex-col gap-2 mt-4 p-4 rounded-xl relative overflow-hidden group w-full medieval-panel shrink-0",
