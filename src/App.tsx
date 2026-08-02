@@ -103,7 +103,8 @@ import {
   Brain,
   Loader2,
   CheckCircle2,
-  ArrowRight
+  ArrowRight,
+  Download
 } from "lucide-react";
 import SidebarProfileSummary from "./components/SidebarProfileSummary";
 import { Rnd } from "react-rnd";
@@ -6390,12 +6391,12 @@ const triggerHomeAnimation = useCallback(() => {
     const vw = window.innerWidth;
     const vh = window.innerHeight;
     const isMobile = vw <= 768;
-    // Player bars (~40px each = 80px) + header (~50px) + main padding (~8px)
-    const chrome = headerVisible ? 145 : 95;
+    // Player bars (~40px each = 80px) + header (~50px) + main padding (~4px)
+    const chrome = headerVisible ? 135 : 85;
     const availableH = vh - chrome;
     // On desktop with sidebar open, subtract sidebar width + gap
-    const sidebarW = (!isMobile && isRightPanelOpen) ? 400 : 0;
-    const availableW = vw - sidebarW - 20;
+    const sidebarW = (!isMobile && isRightPanelOpen) ? 320 : 0;
+    const availableW = vw - sidebarW - 40;
     const boardSize = Math.min(availableW, availableH);
     if (size === "fill") {
       return Math.round(boardSize);
@@ -7091,11 +7092,8 @@ const triggerHomeAnimation = useCallback(() => {
         className={cn(
           "flex-1 flex w-full overflow-y-auto overflow-x-hidden relative z-10",
           !isHeaderVisible && "py-0",
-          isHeaderVisible && !isFullscreen && "pt-0 pb-0 sm:pt-0.5 sm:pb-0.5",
-          isHeaderVisible && isFullscreen && "pt-0 pb-0",
-          isFullscreen ? "flex-col items-center justify-center" : ((currentGameMode === "tournament" || currentGameMode === "live_station") ? "flex-col p-4" : "flex-col md:flex-row px-0 sm:px-3 lg:px-4 gap-1 sm:gap-2 lg:gap-4"),
-          !isFullscreen && boardAlign === "center" && "justify-between",
-          !isFullscreen && boardAlign === "right" && "justify-end",
+          isHeaderVisible && "pt-0 pb-0 sm:pt-0.5 sm:pb-0.5",
+          (currentGameMode === "tournament" || currentGameMode === "live_station") ? "flex-col p-4" : "flex-col md:flex-row px-0 sm:px-3 lg:px-4 gap-1 sm:gap-2 lg:gap-4",
           (isFullscreen && !isRightPanelOpen) ? "bg-[#0f1115]" : "bg-transparent",
           (currentGameMode === "adventure" || isAdventureModeOpen) && "bg-transparent"
         )}
@@ -7135,12 +7133,9 @@ const triggerHomeAnimation = useCallback(() => {
           </div>
         ) : (
           <>
-            {!isFullscreen && isRightPanelOpen && boardAlign === "center" && <div className="hidden md:block w-[340px] sm:w-[360px] lg:w-[380px] xl:w-[420px] shrink pointer-events-none" />}
-
               <div className={cn(
-              "shrink min-w-0 relative",
-              boardAlign === "center" ? "mx-auto" : (boardAlign === "right" ? "ml-auto" : "ml-0"),
-              isFullscreen && "w-full h-full max-w-full max-h-full"
+              "shrink min-w-0 relative flex justify-center",
+              isFullscreen ? "flex-1" : "",
             )}>
               <ChessboardProvider options={chessboardConfig}>
               {/* Panel izquierdo: Perfiles LAN, EvalBar o Bandeja de piezas de Modo Estudio */}
@@ -7344,7 +7339,7 @@ const triggerHomeAnimation = useCallback(() => {
                 );
               })()}
 
-              <div style={isFullscreen ? undefined : { width: boardWidthPx, maxWidth: '100%' }} className={cn("w-full shrink flex flex-col items-stretch gap-0", !isRightPanelOpen ? "relative" : "justify-center", isFullscreen && "h-full max-w-[min(100%,calc(100vh-80px))] mx-auto")}>
+              <div style={isFullscreen ? undefined : { width: boardWidthPx, maxWidth: '100%' }} className="w-full shrink flex flex-col items-stretch gap-0">
                 <div className={cn("mb-1 flex justify-between items-center bg-slate-800/80 px-2 py-0.5 rounded-t-lg border-b-2 border-slate-900 border-x border-t border-slate-700/50 overflow-visible", !isRightPanelOpen && "mb-0 rounded-lg border-x border-t border-b-0 border-slate-700/50 flex-col gap-1 px-1.5 py-1")}>
                   <div className="flex items-center gap-2">
                     {(() => {
@@ -7748,15 +7743,8 @@ const triggerHomeAnimation = useCallback(() => {
             <aside className={cn(
               "flex flex-col gap-4 transition-all duration-300 min-h-0 overflow-y-auto overflow-x-hidden self-stretch",
               !isRightPanelOpen && "hidden",
-              isFullscreen && "hidden",
-              isRightPanelOpen && !isFullscreen && "flex-1",
-              isHeaderVisible ? "max-h-[calc(100vh-120px)]" : "max-h-[calc(100vh-60px)]",
-              boardAlign === "left"
-                  ? "ml-0 pl-2 sm:pl-4"
-                  : boardAlign === "right"
-                    ? "mr-0 md:order-first pr-2 sm:pr-4"
-                    : "shrink ml-auto pl-1 sm:pl-2",
-              isRightPanelOpen && "max-md:fixed max-md:inset-0 max-md:z-[4000] max-md:w-full max-md:bg-slate-950/98 max-md:backdrop-blur-md max-md:p-4 max-md:self-auto max-md:max-h-full"
+              isRightPanelOpen && "flex-1 min-w-[300px] max-w-[400px] pl-1 sm:pl-2",
+              isRightPanelOpen && "max-md:fixed max-md:inset-0 max-md:z-[4000] max-md:w-full max-md:min-w-0 max-md:max-w-full max-md:bg-slate-950/98 max-md:backdrop-blur-md max-md:p-4 max-md:self-auto max-md:max-h-full"
             )}>
               <div className={cn(
                 "flex flex-col gap-2 mt-4 p-4 rounded-xl relative overflow-hidden group w-full medieval-panel shrink-0",
@@ -8228,7 +8216,16 @@ const triggerHomeAnimation = useCallback(() => {
                       {language === "es" ? "Historial" : "History"}
                     </button>
                   </div>
-                  <div className="flex items-center ml-auto pr-2 mobile-hide-history">
+                  <div className="flex items-center ml-auto pr-2 gap-1 mobile-hide-history">
+                    {history.length > 0 && (
+                      <button
+                        onClick={downloadPgnApp}
+                        title={language === "es" ? "Descargar PGN" : "Download PGN"}
+                        className="p-1.5 text-slate-500 hover:text-emerald-400 hover:bg-slate-800/50 rounded-lg transition-all"
+                      >
+                        <Download className="w-3.5 h-3.5" />
+                      </button>
+                    )}
                     <button
                       onClick={copyPgnAsTxt}
                       title={language === "es" ? "Copiar PGN" : "Copy PGN"}
