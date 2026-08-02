@@ -6390,8 +6390,8 @@ const triggerHomeAnimation = useCallback(() => {
     const vw = window.innerWidth;
     const vh = window.innerHeight;
     const isMobile = vw <= 768;
-    // Player bars (~35px each) + header + padding
-    const chrome = headerVisible ? 110 : 40;
+    // Player bars (~35px each = 70px) + header (~40px) + main padding (~16-40px)
+    const chrome = headerVisible ? 160 : 90;
     const availableH = vh - chrome;
     // On desktop with sidebar open, subtract sidebar width + gap
     const sidebarW = (!isMobile && isRightPanelOpen) ? 400 : 0;
@@ -7126,10 +7126,10 @@ const triggerHomeAnimation = useCallback(() => {
           <>
             {isRightPanelOpen && boardAlign === "center" && <div className="hidden md:block w-[340px] sm:w-[360px] lg:w-[380px] xl:w-[420px] shrink pointer-events-none" />}
 
-              <div style={isFullscreen ? undefined : { width: boardWidthPx, height: boardWidthPx, maxWidth: '100%', maxHeight: '100%' }} className={cn(
+              <div style={isFullscreen ? undefined : { width: boardWidthPx, maxWidth: '100%' }} className={cn(
               "flex gap-2 items-start shrink justify-center min-w-0",
               boardAlign === "center" ? "mx-auto" : (boardAlign === "right" ? "ml-auto" : "ml-0"),
-              isFullscreen && "max-w-full max-h-[calc(100vh-40px)]"
+              isFullscreen && "w-full h-full max-w-full max-h-full"
             )}>
               <ChessboardProvider options={chessboardConfig}>
               {/* Panel izquierdo: Perfiles LAN, EvalBar o Bandeja de piezas de Modo Estudio */}
@@ -7321,7 +7321,7 @@ const triggerHomeAnimation = useCallback(() => {
                 }
                 return (
                   isEngineVisible && (
-                    <div className="hidden md:flex h-[280px] sm:h-[400px] md:h-[480px] lg:h-[580px] w-8 sm:w-10 shrink-0 flex-col items-center justify-center gap-2">
+                    <div className="hidden md:flex w-8 sm:w-10 shrink-0 flex-col items-center justify-center gap-2" style={{ height: boardWidthPx + 70 }}>
                       <EvalBar
                         score={evalScore}
                         mate={evalMate}
@@ -7333,8 +7333,8 @@ const triggerHomeAnimation = useCallback(() => {
                 );
               })()}
 
-              <div className={cn("w-full h-full shrink relative min-h-0", !isRightPanelOpen ? "grid grid-cols-[auto_1fr] grid-rows-[auto_1fr_auto] gap-x-2 place-items-center" : cn("flex flex-col justify-center"))}>
-                <div className={cn("mb-1 flex justify-between items-center bg-slate-800/80 px-2 py-0.5 rounded-t-lg border-b-2 border-slate-900 border-x border-t border-slate-700/50 overflow-visible", !isRightPanelOpen && "col-start-1 row-start-1 mb-0 w-auto rounded-lg border-x border-t border-b-0 border-slate-700/50 flex-col gap-1 px-1.5 py-1")}>
+              <div className={cn("w-full shrink flex flex-col items-stretch gap-0", !isRightPanelOpen ? "relative" : "justify-center", isFullscreen && "h-full max-w-[min(100%,calc(100vh-80px))] mx-auto")}>
+                <div className={cn("mb-1 flex justify-between items-center bg-slate-800/80 px-2 py-0.5 rounded-t-lg border-b-2 border-slate-900 border-x border-t border-slate-700/50 overflow-visible", !isRightPanelOpen && "mb-0 rounded-lg border-x border-t border-b-0 border-slate-700/50 flex-col gap-1 px-1.5 py-1")}>
                   <div className="flex items-center gap-2">
                     {(() => {
                       const topColor = boardOrientation === "white" ? "b" : "w";
@@ -7380,8 +7380,7 @@ const triggerHomeAnimation = useCallback(() => {
                 </div>
 
                     {!showMentalMode && <div className={cn(
-                      "h-full max-w-full aspect-square shadow-[0_25px_50px_-12px_rgba(0,0,0,0.5)] border-4 touch-none relative chess-container-wrapper mx-auto flex items-start justify-center p-1.5 sm:p-2",
-                      !isRightPanelOpen && "col-start-2 row-start-1 row-span-3",
+                      "w-full aspect-square shadow-[0_25px_50px_-12px_rgba(0,0,0,0.5)] border-4 touch-none relative chess-container-wrapper mx-auto flex items-start justify-center p-1.5 sm:p-2",
                       currentGameMode === "adventure" ? "border-amber-900/60 bg-transparent" : "border-[#2d3748] bg-[#2d3748]",
                       isInvisiblePieces && "invisible-pieces",
                       !hasStarted && !showFreeMode && freeModeStage !== 'config' && "pointer-events-none opacity-70"
@@ -7575,7 +7574,7 @@ const triggerHomeAnimation = useCallback(() => {
 
                 </div>}
 
-                <div className={cn("mt-1 flex justify-between items-center bg-slate-800/80 px-2 py-0.5 rounded-b-lg border-t-2 border-slate-900 border-x border-b border-slate-700/50", !isRightPanelOpen && "col-start-1 row-start-3 mt-0 w-auto rounded-lg border-x border-b border-t-0 border-slate-700/50 flex-col gap-1 px-1.5 py-1")}>
+                <div className={cn("mt-1 flex justify-between items-center bg-slate-800/80 px-2 py-0.5 rounded-b-lg border-t-2 border-slate-900 border-x border-b border-slate-700/50", !isRightPanelOpen && "mt-0 rounded-lg border-x border-b border-t-0 border-slate-700/50 flex-col gap-1 px-1.5 py-1")}>
                   <div className="flex items-center gap-2">
                     {(() => {
                       const botColor = boardOrientation === "white" ? "w" : "b";
