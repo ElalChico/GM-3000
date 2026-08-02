@@ -6390,8 +6390,8 @@ const triggerHomeAnimation = useCallback(() => {
     const vw = window.innerWidth;
     const vh = window.innerHeight;
     const isMobile = vw <= 768;
-    // Player bars (~35px each = 70px) + header (~40px) + main padding (~16-40px)
-    const chrome = headerVisible ? 160 : 90;
+    // Player bars (~35px each = 70px) + header (~40px) + main padding (~4px) + border/padding (~16px)
+    const chrome = headerVisible ? 130 : 90;
     const availableH = vh - chrome;
     // On desktop with sidebar open, subtract sidebar width + gap
     const sidebarW = (!isMobile && isRightPanelOpen) ? 400 : 0;
@@ -7079,9 +7079,9 @@ const triggerHomeAnimation = useCallback(() => {
         ref={boardContainerRef}
         className={cn(
           "flex-1 flex w-full overflow-y-auto overflow-x-hidden relative z-10",
-          !isHeaderVisible && "py-1 md:py-4",
-          isHeaderVisible && !isFullscreen && "pt-1 pb-1 sm:pt-6 sm:pb-4 lg:pt-6 lg:pb-4",
-          isHeaderVisible && isFullscreen && "pt-2 pb-2",
+          !isHeaderVisible && "py-0.5 md:py-1",
+          isHeaderVisible && !isFullscreen && "pt-0.5 pb-0.5 sm:pt-1 sm:pb-1 lg:pt-1 lg:pb-1",
+          isHeaderVisible && isFullscreen && "pt-1 pb-1",
           (currentGameMode === "tournament" || currentGameMode === "live_station") ? "flex-col p-4" : "flex-col md:flex-row px-0 sm:px-3 lg:px-4 gap-1 sm:gap-2 lg:gap-4",
           boardAlign === "center" && "justify-between",
           boardAlign === "right" && "justify-end",
@@ -7126,7 +7126,7 @@ const triggerHomeAnimation = useCallback(() => {
           <>
             {isRightPanelOpen && boardAlign === "center" && <div className="hidden md:block w-[340px] sm:w-[360px] lg:w-[380px] xl:w-[420px] shrink pointer-events-none" />}
 
-              <div style={isFullscreen ? undefined : { width: boardWidthPx, maxWidth: '100%' }} className={cn(
+              <div className={cn(
               "flex gap-2 items-start shrink justify-center min-w-0",
               boardAlign === "center" ? "mx-auto" : (boardAlign === "right" ? "ml-auto" : "ml-0"),
               isFullscreen && "w-full h-full max-w-full max-h-full"
@@ -7321,7 +7321,7 @@ const triggerHomeAnimation = useCallback(() => {
                 }
                 return (
                   isEngineVisible && (
-                    <div className="hidden md:flex w-8 sm:w-10 shrink-0 flex-col items-center justify-center gap-2" style={{ height: boardWidthPx + 70 }}>
+                    <div className="hidden md:flex w-8 sm:w-10 shrink-0 flex-col items-center justify-center gap-2" style={{ height: boardWidthPx + 60 }}>
                       <EvalBar
                         score={evalScore}
                         mate={evalMate}
@@ -7333,7 +7333,7 @@ const triggerHomeAnimation = useCallback(() => {
                 );
               })()}
 
-              <div className={cn("w-full shrink flex flex-col items-stretch gap-0", !isRightPanelOpen ? "relative" : "justify-center", isFullscreen && "h-full max-w-[min(100%,calc(100vh-80px))] mx-auto")}>
+              <div style={isFullscreen ? undefined : { width: boardWidthPx, maxWidth: '100%' }} className={cn("w-full shrink flex flex-col items-stretch gap-0", !isRightPanelOpen ? "relative" : "justify-center", isFullscreen && "h-full max-w-[min(100%,calc(100vh-80px))] mx-auto")}>
                 <div className={cn("mb-1 flex justify-between items-center bg-slate-800/80 px-2 py-0.5 rounded-t-lg border-b-2 border-slate-900 border-x border-t border-slate-700/50 overflow-visible", !isRightPanelOpen && "mb-0 rounded-lg border-x border-t border-b-0 border-slate-700/50 flex-col gap-1 px-1.5 py-1")}>
                   <div className="flex items-center gap-2">
                     {(() => {
