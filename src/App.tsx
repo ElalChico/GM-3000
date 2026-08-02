@@ -7138,7 +7138,7 @@ const triggerHomeAnimation = useCallback(() => {
             {!isFullscreen && isRightPanelOpen && boardAlign === "center" && <div className="hidden md:block w-[340px] sm:w-[360px] lg:w-[380px] xl:w-[420px] shrink pointer-events-none" />}
 
               <div className={cn(
-              "flex gap-2 items-start shrink justify-center min-w-0",
+              "shrink min-w-0 relative",
               boardAlign === "center" ? "mx-auto" : (boardAlign === "right" ? "ml-auto" : "ml-0"),
               isFullscreen && "w-full h-full max-w-full max-h-full"
             )}>
@@ -7331,8 +7331,8 @@ const triggerHomeAnimation = useCallback(() => {
                   );
                 }
                 return (
-                  isEngineVisible && (
-                    <div className="hidden md:flex w-8 sm:w-10 shrink-0 flex-col items-center justify-center gap-2" style={{ height: boardWidthPx + 60 }}>
+                  isEngineVisible && !isFullscreen && (
+                    <div className="hidden md:flex absolute right-full mr-1 top-0 w-8 sm:w-10 shrink-0 flex-col items-center justify-center gap-2" style={{ height: boardWidthPx + 60 }}>
                       <EvalBar
                         score={evalScore}
                         mate={evalMate}
