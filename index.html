@@ -27,6 +27,12 @@
       align-items: center;
       z-index: 9999;
       transition: background-color 0.8s ease-out, opacity 0.4s ease-out;
+      /* FALLBACK CSS: quitar el overlay después de 6 segundos sin JS */
+      animation: hideLoadingScreen 1s ease-out 6s forwards;
+    }
+    @keyframes hideLoadingScreen {
+      0% { opacity: 1; background-color: #000000; }
+      100% { opacity: 0; background-color: transparent; }
     }
     .loader {
       width: 60px;
@@ -223,6 +229,24 @@
     </div>
   </div>
   <div id="root"></div>
+  <script>
+    // FALLBACK DE EMERGENCIA: quitar #loading-screen después de 6 segundos
+    // No depende de React, Vite, ni ningún módulo. Garantiza que el overlay
+    // z-index:9999 nunca bloquee la app.
+    (function() {
+      var loader = document.getElementById('loading-screen');
+      if (!loader) return;
+      setTimeout(function() {
+        var l = document.getElementById('loading-screen');
+        if (l) {
+          l.style.transition = 'opacity 0.5s ease-out';
+          l.style.opacity = '0';
+          l.style.pointerEvents = 'none';
+          setTimeout(function() { l.style.display = 'none'; }, 600);
+        }
+      }, 6000);
+    })();
+  </script>
   <script type="module" src="./src/main.tsx"></script>
 </body>
 

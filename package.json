@@ -1,143 +1,147 @@
 {
-    "name": "gm-3000",
-    "private": true,
-    "version": "3.1.7",
-    "main": ".vite/build/main.js",
-    "scripts": {
-        "dev": "vite --port=3000 --host=0.0.0.0",
-        "server": "npx tsx server/lanServer.ts",
-        "build:renderer": "vite build",
-        "build:main": "vite build --config vite.main.config.ts",
-        "build:preload": "vite build --config vite.preload.config.ts",
-        "build": "npm run build:main && npm run build:preload && npm run build:renderer",
-        "electron:start": "electron-forge start",
-        "make": "electron-forge make",
-        "package": "electron-forge package",
-        "electron:dev": "node scripts/electron-dev.js",
-        "icons": "node scripts/generate-icons.js",
-        "clean": "powershell -Command \"Remove-Item -Recurse -Force dist, out, release -ErrorAction SilentlyContinue\"",
-        "lint": "tsc --noEmit",
-        "diagnose:tts": "node src/diagnose-tts.js",
-        "diagnose:tts:all": "node src/diagnose-tts.js --all",
-        "build:tts-worker": "python -m PyInstaller --onefile --name tts-worker --distpath resources --clean --noconfirm src/tts_worker.py"
-    },
-    "dependencies": {
-        "@andresaya/edge-tts": "^1.8.0",
-        "@emotion/is-prop-valid": "^1.4.0",
-        "@rive-app/react-canvas": "^4.28.5",
-        "@tailwindcss/vite": "^4.1.14",
-        "@vitejs/plugin-react": "^5.0.4",
-        "chess-openings": "^0.1.1",
-        "chess.js": "^1.4.0",
-        "chessground": "^9.2.1",
-        "clsx": "^2.1.1",
-        "dotenv": "^17.2.3",
-        "express": "^5.2.1",
-        "firebase": "^12.15.0",
-        "html2canvas": "^1.4.1",
-        "lucide-react": "^0.546.0",
-        "motion": "^12.23.24",
-        "react": "^19.0.0",
-        "react-chessboard": "^5.10.0",
-        "react-dom": "^19.0.0",
-        "react-rnd": "^10.5.3",
-        "recharts": "^3.8.1",
-        "stockfish": "^18.0.7",
-        "stockfish.js": "^10.0.2",
-        "tailwind-merge": "^3.5.0",
-        "vite": "^6.2.0"
-    },
-    "devDependencies": {
-        "@electron-forge/cli": "^7.11.1",
-        "@electron-forge/maker-deb": "^7.11.1",
-        "@electron-forge/maker-rpm": "^7.11.1",
-        "@electron-forge/maker-squirrel": "^7.11.2",
-        "@electron-forge/maker-zip": "^7.11.1",
-        "@electron-forge/plugin-vite": "^7.11.1",
-        "@rollup/plugin-terser": "^1.0.0",
-        "@rollup/plugin-typescript": "^12.3.0",
-        "@types/debug": "^4.1.12",
-        "@types/express": "^4.17.21",
-        "@types/ms": "^0.7.34",
-        "@types/node": "^22.14.0",
-        "@types/react": "^19.2.14",
-        "@types/react-dom": "^19.2.3",
-        "autoprefixer": "^10.4.21",
-        "cross-env": "^7.0.3",
-        "electron": "^41.8.0",
-        "electron-builder": "^26.15.3",
-        "png-to-ico": "^3.0.1",
-        "rollup": "^4.61.0",
-        "sharp": "^0.35.2",
-        "tailwindcss": "^4.1.14",
-        "tslib": "^2.8.1",
-        "tsx": "^4.21.0",
-        "typescript": "~5.8.2"
-    },
-    "config": {
-        "forge": {
-            "packagerConfig": {
-                "name": "GM-3000",
-                "executableName": "GM-3000",
-                "icon": "src/assets/Desktop.ico",
-                "extraResource": [
-                    "resources",
-                    "src/assets/Desktop.ico",
-                    "src/tts_worker.py"
-                ],
-                "asar": true
-            },
-            "rebuildConfig": {
-                "disableForProduction": true,
-                "onlyModules": []
-            },
-            "makers": [
-                {
-                    "name": "@electron-forge/maker-squirrel",
-                    "config": {
-                        "name": "GM_3000",
-                        "authors": "Elal Chico",
-                        "description": "GM-3000 Chess Engine",
-                        "iconUrl": "https://raw.githubusercontent.com/ElalChico/GM-3000/main/src/assets/Desktop.ico",
-                        "setupIcon": "src/assets/Desktop.ico",
-                        "setupExe": "GM-3000 Setup.exe"
-                    }
+    "name":  "gm-3000",
+    "private":  true,
+    "version":  "3.2.0",
+    "main":  ".vite/build/main.js",
+    "scripts":  {
+                    "dev":  "vite --port=3000 --host=0.0.0.0",
+                    "server":  "npx tsx server/lanServer.ts",
+                    "build:renderer":  "vite build",
+                    "build:main":  "vite build --config vite.main.config.ts",
+                    "build:preload":  "vite build --config vite.preload.config.ts",
+                    "build":  "npm run build:main \u0026\u0026 npm run build:preload \u0026\u0026 npm run build:renderer",
+                    "electron:start":  "electron-forge start",
+                    "make":  "electron-forge make",
+                    "package":  "electron-forge package",
+                    "electron:dev":  "node scripts/electron-dev.js",
+                    "icons":  "node scripts/generate-icons.js",
+                    "clean":  "powershell -Command \"Remove-Item -Recurse -Force dist, out, release -ErrorAction SilentlyContinue\"",
+                    "lint":  "tsc --noEmit",
+                    "diagnose:tts":  "node src/diagnose-tts.js",
+                    "diagnose:tts:all":  "node src/diagnose-tts.js --all",
+                    "build:tts-worker":  "python -m PyInstaller --onefile --name tts-worker --distpath resources --clean --noconfirm src/tts_worker.py"
                 },
-                {
-                    "name": "@electron-forge/maker-zip",
-                    "platforms": [
-                        "win32",
-                        "linux"
-                    ]
-                }
-            ],
-            "plugins": [
-                {
-                    "name": "@electron-forge/plugin-vite",
-                    "config": {
-                        "build": [
-                            {
-                                "entry": "src/electron-main.js",
-                                "config": "vite.main.config.ts"
-                            },
-                            {
-                                "entry": "src/electron-preload.js",
-                                "config": "vite.preload.config.ts"
-                            }
-                        ],
-                        "renderer": [
-                            {
-                                "name": "main_window",
-                                "config": "vite.config.ts"
-                            }
-                        ]
-                    }
-                }
-            ]
-        }
-    },
-    "description": "GM-3000 Chess Engine",
-    "keywords": [],
-    "author": "Elal Chico",
-    "license": "ISC"
+    "dependencies":  {
+                         "@andresaya/edge-tts":  "^1.8.0",
+                         "@emotion/is-prop-valid":  "^1.4.0",
+                         "@rive-app/react-canvas":  "^4.28.5",
+                         "@tailwindcss/vite":  "^4.1.14",
+                         "@vitejs/plugin-react":  "^5.0.4",
+                         "chess-openings":  "^0.1.1",
+                         "chess.js":  "^1.4.0",
+                         "chessground":  "^9.2.1",
+                         "clsx":  "^2.1.1",
+                         "dotenv":  "^17.2.3",
+                         "express":  "^5.2.1",
+                         "firebase":  "^12.15.0",
+                         "html2canvas":  "^1.4.1",
+                         "lucide-react":  "^0.546.0",
+                         "motion":  "^12.23.24",
+                         "react":  "^19.0.0",
+                         "react-chessboard":  "^5.10.0",
+                         "react-dom":  "^19.0.0",
+                         "react-rnd":  "^10.5.3",
+                         "recharts":  "^3.8.1",
+                         "stockfish":  "^18.0.7",
+                         "stockfish.js":  "^10.0.2",
+                         "tailwind-merge":  "^3.5.0",
+                         "vite":  "^6.2.0"
+                     },
+    "devDependencies":  {
+                            "@electron-forge/cli":  "^7.11.1",
+                            "@electron-forge/maker-deb":  "^7.11.1",
+                            "@electron-forge/maker-rpm":  "^7.11.1",
+                            "@electron-forge/maker-squirrel":  "^7.11.2",
+                            "@electron-forge/maker-zip":  "^7.11.1",
+                            "@electron-forge/plugin-vite":  "^7.11.1",
+                            "@rollup/plugin-terser":  "^1.0.0",
+                            "@rollup/plugin-typescript":  "^12.3.0",
+                            "@types/debug":  "^4.1.12",
+                            "@types/express":  "^4.17.21",
+                            "@types/ms":  "^0.7.34",
+                            "@types/node":  "^22.14.0",
+                            "@types/react":  "^19.2.14",
+                            "@types/react-dom":  "^19.2.3",
+                            "autoprefixer":  "^10.4.21",
+                            "cross-env":  "^7.0.3",
+                            "electron":  "^41.8.0",
+                            "electron-builder":  "^26.15.3",
+                            "png-to-ico":  "^3.0.1",
+                            "rollup":  "^4.61.0",
+                            "sharp":  "^0.35.2",
+                            "tailwindcss":  "^4.1.14",
+                            "tslib":  "^2.8.1",
+                            "tsx":  "^4.21.0",
+                            "typescript":  "~5.8.2"
+                        },
+    "config":  {
+                   "forge":  {
+                                 "packagerConfig":  {
+                                                        "name":  "GM-3000",
+                                                        "executableName":  "GM-3000",
+                                                        "icon":  "src/assets/Desktop.ico",
+                                                        "extraResource":  [
+                                                                              "resources",
+                                                                              "src/assets/Desktop.ico",
+                                                                              "src/tts_worker.py"
+                                                                          ],
+                                                        "asar":  true
+                                                    },
+                                 "rebuildConfig":  {
+                                                       "disableForProduction":  true,
+                                                       "onlyModules":  [
+
+                                                                       ]
+                                                   },
+                                 "makers":  [
+                                                {
+                                                    "name":  "@electron-forge/maker-squirrel",
+                                                    "config":  {
+                                                                   "name":  "GM_3000",
+                                                                   "authors":  "Elal Chico",
+                                                                   "description":  "GM-3000 Chess Engine",
+                                                                   "iconUrl":  "https://raw.githubusercontent.com/ElalChico/GM-3000/main/src/assets/Desktop.ico",
+                                                                   "setupIcon":  "src/assets/Desktop.ico",
+                                                                   "setupExe":  "GM-3000 Setup.exe"
+                                                               }
+                                                },
+                                                {
+                                                    "name":  "@electron-forge/maker-zip",
+                                                    "platforms":  [
+                                                                      "win32",
+                                                                      "linux"
+                                                                  ]
+                                                }
+                                            ],
+                                 "plugins":  [
+                                                 {
+                                                     "name":  "@electron-forge/plugin-vite",
+                                                     "config":  {
+                                                                    "build":  [
+                                                                                  {
+                                                                                      "entry":  "src/electron-main.js",
+                                                                                      "config":  "vite.main.config.ts"
+                                                                                  },
+                                                                                  {
+                                                                                      "entry":  "src/electron-preload.js",
+                                                                                      "config":  "vite.preload.config.ts"
+                                                                                  }
+                                                                              ],
+                                                                    "renderer":  [
+                                                                                     {
+                                                                                         "name":  "main_window",
+                                                                                         "config":  "vite.config.ts"
+                                                                                     }
+                                                                                 ]
+                                                                }
+                                                 }
+                                             ]
+                             }
+               },
+    "description":  "GM-3000 Chess Engine",
+    "keywords":  [
+
+                 ],
+    "author":  "Elal Chico",
+    "license":  "ISC"
 }

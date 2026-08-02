@@ -283,6 +283,8 @@ export class StockfishEngineWhite {
     this.stop();
     this.worker?.terminate();
     this.worker = null;
+    this.isReady = false;
+    this.initPromise = null;
   }
 }
 

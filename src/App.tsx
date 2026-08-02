@@ -43,7 +43,7 @@ Chess.prototype.isDraw = function() {
 import { generateTrainingFen, generateChess960Fen } from "./utils/fenGenerator";
 import { classifyMove, MoveClassification } from "./utils/analysisTemplates";
 import { cn } from "./lib/utils";
-import { Chessboard } from "react-chessboard";
+import { Chessboard, ChessboardProvider, SparePiece } from "react-chessboard";
 import { LanPlaceholder } from "./components/server_placeholder/LanPlaceholder";
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, LineChart, Line, XAxis, YAxis, CartesianGrid, Legend } from "recharts";
 import {
@@ -101,7 +101,8 @@ import {
   Lightbulb,
   Brain,
   Loader2,
-  CheckCircle2
+  CheckCircle2,
+  ArrowRight
 } from "lucide-react";
 import SidebarProfileSummary from "./components/SidebarProfileSummary";
 import { Rnd } from "react-rnd";
@@ -129,20 +130,21 @@ import { EvalBar } from "./components/EvalBar";
 import BannerImg from "./assets/Banner.webp";
 import RecursosJugadoresBtnImg from "./assets/RecursosJugadores/btn.png";
 import LogoHomeImg from "./assets/fondos/fondohome/logo-home.webp";
-// Carga dinámica de TODOS los archivos dentro de fondohome (cualquier extensión)
+// Carga dinámica de archivos dentro de fondohome (excluye videos del glob para evitar carga bloqueante)
 const _fondos1 = import.meta.glob('./assets/fondos/fondohome/*', { eager: true, import: 'default' }) as Record<string, string>;
 const _fondos2 = import.meta.glob('./assets/fondos/fondoshome/*', { eager: true, import: 'default' }) as Record<string, string>;
 const fondoHomeModules = { ..._fondos1, ..._fondos2 } as Record<string, string>;
-const fondoHomeImages = Object.entries(fondoHomeModules).map(([k, v]) => ({ path: k, url: v }));
+const fondoHomeImages = Object.entries(fondoHomeModules).filter(([k]) => !/\.(mp4|webm|ogg)$/i.test(k)).map(([k, v]) => ({ path: k, url: v }));
+
+// Import directo del video de home (Vite lo procesa y da URL correcta)
+import FhVideoDirect from "./assets/fondos/fondohome/fh.mp4";
 
 let FhImg: string = '';
-const fhCandidate = fondoHomeImages.find(f => {
-  const parts = f.path.split(/[\\/]/);
-  const name = parts[parts.length - 1];
-  return name.toLowerCase().startsWith('fh.');
-});
-if (fhCandidate) FhImg = fhCandidate.url;
-else if (fondoHomeImages.length > 0) FhImg = fondoHomeImages[0].url;
+if (FhVideoDirect) {
+  FhImg = FhVideoDirect;
+} else if (fondoHomeImages.length > 0) {
+  FhImg = fondoHomeImages[0].url;
+}
 import SelecNormalImg from "./assets/selec-normal.webp";
 import SelecAventuraImg from "./assets/selec-aventura.webp";
 import CabeceraAventuraImg from "./assets/cabecera modo aventura.webp";
@@ -392,13 +394,23 @@ export default function App() {
     return () => window.removeEventListener('resize', onResize);
   }, []);
 
-  // Limpiar procesos al ocultar pestaña o desmontar componente
+  // Al ocultar pestaña: solo pausar motores (NO destruir workers)
   useEffect(() => {
     const handleVisibility = () => {
       if (document.hidden) {
         if (isSpeaking()) stopSpeaking();
-        engineWhiteRef.current?.quit();
-        engineBlackRef.current?.quit();
+        engineWhiteRef.current?.stop();
+        engineBlackRef.current?.stop();
+      } else {
+        // Al volver a la pestaña, reactivar motor si es su turno
+        if (hasStartedRef.current && !gameRef.current.isGameOver()) {
+          const turn = gameRef.current.turn();
+          const isWhiteAi = turn === "w" && whitePlayerRef.current === "ai";
+          const isBlackAi = turn === "b" && blackPlayerRef.current === "ai";
+          if (isWhiteAi || isBlackAi) {
+            setTimeout(() => triggerEngineRef.current?.(gameRef.current), 300);
+          }
+        }
       }
     };
     document.addEventListener('visibilitychange', handleVisibility);
@@ -785,7 +797,11 @@ const [blackEngineType, setBlackEngineType] = useState<string>(() => {
       setAdventureBgIndex(stageIndex);
     }
   }, [adventureProgress.currentStage, currentGameMode]);
-  const [notificationConfig, setNotificationConfig] = useState<"all" | "adventure" | "normal" | "none">("all");
+  const [notificationConfig, setNotificationConfig] = useState<"all" | "adventure" | "normal" | "none">(() => {
+    const saved = localStorage.getItem("chess_notificationConfig");
+    if (saved && ["all", "adventure", "normal", "none"].includes(saved)) return saved as any;
+    return "all";
+  });
   const [systemNotification, setSystemNotification] = useState<string | null>(null);
   const [aliasSavedDialog, setAliasSavedDialog] = useState(false);
 
@@ -1131,8 +1147,67 @@ const [blackEngineType, setBlackEngineType] = useState<string>(() => {
 
   const [hasStarted, setHasStarted] = useState(false);
   const [initialFen, setInitialFen] = useState("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+  const [customFen, setCustomFen] = useState<string | null>(null);
+  const [positionEditorFen, setPositionEditorFen] = useState("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+  const [selectedSparePiece, setSelectedSparePiece] = useState<string | null>(null);
+  const [showFreeMode, setShowFreeMode] = useState(false);
+  const [freeModeStage, setFreeModeStage] = useState<'config' | 'board' | 'playing'>('config');
+  const [freeModeEngineType, setFreeModeEngineType] = useState<string>("stockfish");
+  const [freeModeElo, setFreeModeElo] = useState<number>(10);
+  const [freeModeColor, setFreeModeColor] = useState<"white" | "black">("white");
+  const [studyPanelExpanded, setStudyPanelExpanded] = useState(true);
+  const isStartingGameRef = useRef(false);
+  // Permite cancelar la secuencia de inicio (sync + countdown) si se detiene la partida
+  const startSequenceAbortRef = useRef(false);
 
+  // Auto-expandir el panel de Modo Estudio al activarse el modo
+  useEffect(() => {
+    if (freeModeStage === 'board') {
+      setStudyPanelExpanded(true);
+    }
+  }, [freeModeStage]);
 
+  // --- Historial del editor de posición (Modo Estudio) ---
+  const EDITOR_INITIAL_FEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+  const editorFenHistoryRef = useRef<string[]>([EDITOR_INITIAL_FEN]);
+  const editorHistoryIndexRef = useRef(0);
+  const [editorFenHistory, setEditorFenHistory] = useState<string[]>([EDITOR_INITIAL_FEN]);
+  const recordEditorStepRef = useRef((_newFen: string) => {});
+  const undoEditorStepRef = useRef(() => {});
+  const redoEditorStepRef = useRef(() => {});
+  const resetEditorHistoryRef = useRef((_fen?: string) => {});
+
+  // Asignaciones por render: siempre leen el estado/ref actual (sin dependencias en handlers)
+  recordEditorStepRef.current = (newFen: string) => {
+    const hist = editorFenHistoryRef.current;
+    const idx = editorHistoryIndexRef.current;
+    // Si se retrocedió, truncar el historial hacia adelante antes de reescribir
+    const base = idx < hist.length - 1 ? hist.slice(0, idx + 1) : hist;
+    if (base[base.length - 1] === newFen) return;
+    const next = [...base, newFen];
+    editorFenHistoryRef.current = next;
+    editorHistoryIndexRef.current = next.length - 1;
+    setEditorFenHistory(next);
+  };
+  undoEditorStepRef.current = () => {
+    if (editorHistoryIndexRef.current <= 0) return;
+    editorHistoryIndexRef.current--;
+    setPositionEditorFen(editorFenHistoryRef.current[editorHistoryIndexRef.current]);
+    setSelectedSparePiece(null);
+  };
+  redoEditorStepRef.current = () => {
+    const hist = editorFenHistoryRef.current;
+    if (editorHistoryIndexRef.current >= hist.length - 1) return;
+    editorHistoryIndexRef.current++;
+    setPositionEditorFen(hist[editorHistoryIndexRef.current]);
+    setSelectedSparePiece(null);
+  };
+  resetEditorHistoryRef.current = (fen?: string) => {
+    const base = fen || EDITOR_INITIAL_FEN;
+    editorFenHistoryRef.current = [base];
+    editorHistoryIndexRef.current = 0;
+    setEditorFenHistory([base]);
+  };
 
   // --- Estados de Música de Aventura ---
 const [adventureMusicVolume, setAdventureMusicVolume] = useState(() => {
@@ -1496,8 +1571,9 @@ const [adventureMusicVolume, setAdventureMusicVolume] = useState(() => {
   const [showMainScreen, setShowMainScreen] = useState(true);
   const [homeLogoAnimating, setHomeLogoAnimating] = useState(false); // Controla cuándo inicia la animación de vuelo del logo
   const [showHomeButtons, setShowHomeButtons] = useState(false); // Controla cuándo aparecen los botones
-  const [showRecursosJugadores, setShowRecursosJugadores] = useState(false);
   const [isVideoReady, setIsVideoReady] = useState(false); // Controla cuándo el video de fondo está listo
+  const bgVideoRef = useRef<HTMLVideoElement>(null);
+  const [showBgLightning, setShowBgLightning] = useState(false);
   const [isIntroMuted, setIsIntroMuted] = useState(() => localStorage.getItem("gm3000_intro_muted") === "true");
   const isIntroMutedRef = useRef(isIntroMuted);
   useEffect(() => {
@@ -1575,6 +1651,15 @@ const [adventureMusicVolume, setAdventureMusicVolume] = useState(() => {
 
   const [moveComments, setMoveComments] = useState<Record<number, string>>({});
   const [moveArrows, setMoveArrows] = useState<Record<number, string[][]>>({});
+  const moveArrowsRef = useRef(moveArrows);
+  moveArrowsRef.current = moveArrows;
+  // Callback estable para onArrowsChange (evita loop infinito en useMemo del chessboard)
+  const onArrowsChangeRef = useRef<(arrowsObj: any) => void>(null);
+  onArrowsChangeRef.current = (arrowsObj: any) => {
+    setMoveArrows((prev: any) => ({ ...prev, [currentMoveIdxRef.current ?? 0]: arrowsObj.arrows || arrowsObj }));
+  };
+  // Ref para currentMoveIdx que usa onArrowsChangeRef
+  const currentMoveIdxRef = useRef(0);
   const [explorerStats, setExplorerStats] = useState<Record<number, { moves: Array<{ san: string; white: number; draws: number; black: number; total: number }>; totalGames: number }>>({});
 
   // --- Exit guard: check for unsaved data ---
@@ -1723,30 +1808,28 @@ const [adventureMusicVolume, setAdventureMusicVolume] = useState(() => {
   const moveFromRef = useRef<string>("");
 
   useEffect(() => {
+    // Limpiar sessionStorage corrupto al montar
     const savedSession = sessionStorage.getItem('chess_gm2000_session');
     if (savedSession) {
       try {
         const parsed = JSON.parse(savedSession);
-        if (parsed.moveComments) setMoveComments(parsed.moveComments);
-        if (parsed.moveArrows) setMoveArrows(parsed.moveArrows);
         if (parsed.fen) {
           const g = new Chess();
+          let valid = true;
           if (parsed.history && parsed.history.length > 0) {
             for (const h of parsed.history) {
-              try { g.move(h); } catch (e) { }
-            }
-            setGame(g);
-            setHasStarted(true);
-          } else {
-            g.load(parsed.fen);
-            setGame(g);
-            if (parsed.fen !== "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1") {
-              setHasStarted(true);
+              try { g.move(h); } catch (e) { valid = false; break; }
             }
           }
+          if (!valid || !g.fen()) {
+            sessionStorage.removeItem('chess_gm2000_session');
+            console.log("[GM3000] sessionStorage limpiado: datos corruptos");
+          }
         }
-        if (parsed.isLoadedPgn) setIsLoadedPgn(parsed.isLoadedPgn);
-      } catch (e) { }
+      } catch {
+        sessionStorage.removeItem('chess_gm2000_session');
+        console.log("[GM3000] sessionStorage limpiado: parse error");
+      }
     }
   }, []);
 
@@ -1767,15 +1850,12 @@ const [adventureMusicVolume, setAdventureMusicVolume] = useState(() => {
   }, [history, initialFen]);
 
   useEffect(() => {
+    // Guardar solo datos de análisis y configuración (NO estado de partida)
     sessionStorage.setItem('chess_gm2000_session', JSON.stringify({
       moveComments,
       moveArrows,
-      fen: game.fen(),
-      history,
-      historyFens,
-      isLoadedPgn
     }));
-  }, [moveComments, moveArrows, game, history, historyFens, isLoadedPgn]);
+  }, [moveComments, moveArrows]);
 
   // GM-2000 Features Options
   const [isAutoRotate, setIsAutoRotate] = useState(false);
@@ -1974,6 +2054,13 @@ const triggerHomeAnimation = useCallback(() => {
     if (hasTriggeredHomeAnimRef.current) return;
     hasTriggeredHomeAnimRef.current = true;
 
+    if (typeof (window as any).removeLoadingScreen === 'function') {
+      (window as any).removeLoadingScreen();
+    }
+
+    // Mostrar el logo React al terminar la carga inicial (el loader se desvanece)
+    setHomeLogoAnimating(true);
+
     setTimeout(() => {
       setShowHomeButtons(true);
     }, 2000);
@@ -2117,6 +2204,9 @@ const triggerHomeAnimation = useCallback(() => {
   useEffect(() => {
     localStorage.setItem("chess_isUndoEnabled", String(isUndoEnabled));
   }, [isUndoEnabled]);
+  useEffect(() => {
+    localStorage.setItem("chess_notificationConfig", String(notificationConfig));
+  }, [notificationConfig]);
   useEffect(() => {
     localStorage.setItem("chess_aiProvider", aiProvider);
     const savedKey = localStorage.getItem(`chess_aiApiKey_${aiProvider}`) || "";
@@ -2469,6 +2559,7 @@ const triggerHomeAnimation = useCallback(() => {
       clearTimeout((window as any)._gameResetTimer);
       delete (window as any)._gameResetTimer;
     }
+    startSequenceAbortRef.current = true;
 
     if (lanStatusRef.current === "connected" && lanRoleRef.current === "host" && !isRemoteLanReset) {
       lanSendControlRef.current?.("reset");
@@ -2487,9 +2578,10 @@ const triggerHomeAnimation = useCallback(() => {
     }
 
     if (hasStartedRef.current || tournamentRef.current.active) {
-      setHasStarted(true);
-      hasStartedRef.current = true;
-      setTimerActive(true);
+            setHasStarted(true);
+            hasStartedRef.current = true;
+            isStartingGameRef.current = false;
+            setTimerActive(true);
       Promise.all([
         Promise.race([pW, new Promise(r => setTimeout(r, 5000))]),  // Aumentado de 3000 a 5000 ms
         Promise.race([pB, new Promise(r => setTimeout(r, 5000))])   // Aumentado de 3000 a 5000 ms
@@ -2799,6 +2891,9 @@ const triggerHomeAnimation = useCallback(() => {
             setTimerActive(false);
             engineWhiteRef.current?.stop();
             engineBlackRef.current?.stop();
+            if (notificationConfig !== "none") {
+              setSystemNotification(finalResult);
+            }
             if (lanStatusRef.current === "connected" && lanSendStateRef.current) {
               lanSendStateRef.current({ gameResult: finalResult, hasStarted: false });
             }
@@ -2895,7 +2990,7 @@ const triggerHomeAnimation = useCallback(() => {
     setHistory(g.history());
     setTimerActive(false);
 
-    // Detener motores para evitar que envíen jugadas basadas en estados cacheados
+    // Detener motores completamente — NO re-activar
     if (engineWhiteRef.current) engineWhiteRef.current.stop();
     if (engineBlackRef.current) engineBlackRef.current.stop();
   };
@@ -2920,8 +3015,13 @@ const triggerHomeAnimation = useCallback(() => {
   };
 
   const stopGame = (isRemote = false) => {
+    // Modo Estudio: si se detiene una partida de estudio, volver a la bandeja de piezas
+    const wasStudyGame = freeModeStage === 'playing';
+    // Cancelar cualquier secuencia de inicio pendiente (sync/countdown)
+    startSequenceAbortRef.current = true;
+
     // Guardar snapshot antes de destruir motores (para poder retomar)
-    if (!isRemote && hasStartedRef.current) {
+    if (!isRemote && hasStartedRef.current && !wasStudyGame) {
       const currentGame = gameRef.current;
       if (currentGame && !currentGame.isGameOver()) {
         setStoppedGameSnapshot({
@@ -3009,6 +3109,20 @@ const triggerHomeAnimation = useCallback(() => {
     applyObsidianEngineConfig(engB, blackObsidianConfig);
     engB.init();
     engineBlackRef.current = engB;
+
+    // Modo Estudio: volver a la configuración del tablero para poder jugar otra vez sin salir del modo
+    if (wasStudyGame) {
+      setShowFreeMode(true);
+      setFreeModeStage('board');
+      setIsGameStopped(false);
+      setStoppedGameSnapshot(null);
+      setShowMainScreen(false);
+      const lastFen = gameRef.current?.fen();
+      if (lastFen) {
+        setPositionEditorFen(lastFen);
+        resetEditorHistoryRef.current(lastFen);
+      }
+    }
   };
 
   const resumeGame = () => {
@@ -3109,6 +3223,7 @@ const triggerHomeAnimation = useCallback(() => {
           countdownValue--;
           if (countdownValue <= 0) {
             clearInterval(countdownInterval);
+            if (startSequenceAbortRef.current) return;
             setStartCountdown(null);
             setHasStarted(true);
             hasStartedRef.current = true;
@@ -3208,6 +3323,7 @@ const triggerHomeAnimation = useCallback(() => {
 
   // Inicializar / re-inicializar motor BLANCO cuando cambia el tipo
   useEffect(() => {
+    if (isStartingGameRef.current) return;
     engineWhiteRef.current?.quit();
     engineWhiteRef.current = null;
     let cancelled = false;
@@ -3235,6 +3351,7 @@ const triggerHomeAnimation = useCallback(() => {
     });
 
     return () => {
+      if (isStartingGameRef.current) return;
       cancelled = true;
       engineWhiteRef.current?.quit();
       engineWhiteRef.current = null;
@@ -3243,6 +3360,7 @@ const triggerHomeAnimation = useCallback(() => {
 
   // Inicializar / re-inicializar motor NEGRO cuando cambia el tipo
   useEffect(() => {
+    if (isStartingGameRef.current) return;
     engineBlackRef.current?.quit();
     engineBlackRef.current = null;
     let cancelled = false;
@@ -3269,6 +3387,7 @@ const triggerHomeAnimation = useCallback(() => {
     });
 
     return () => {
+      if (isStartingGameRef.current) return;
       cancelled = true;
       engineBlackRef.current?.quit();
       engineBlackRef.current = null;
@@ -3292,16 +3411,16 @@ const triggerHomeAnimation = useCallback(() => {
 
   const triggerEngine = useCallback(
     (currentGameState: Chess) => {
-      console.log("[Mental] triggerEngine called. turn:", currentGameState.turn(), "hasStarted:", hasStartedRef.current, "isGameOver:", currentGameState.isGameOver(), "wPlayer:", whitePlayerRef.current, "bPlayer:", blackPlayerRef.current, "whiteReady:", engineWhiteRef.current?.isReady, "blackReady:", engineBlackRef.current?.isReady, "whiteRef:", !!engineWhiteRef.current, "blackRef:", !!engineBlackRef.current);
       if (
         currentGameState.isGameOver() ||
         timeOutWinnerRef.current ||
         !hasStartedRef.current
       ) {
         if (currentGameState.isGameOver()) setTimerActive(false);
-        // Ensure engines are stopped when not active
-        if (engineWhiteRef.current) engineWhiteRef.current.stop();
-        if (engineBlackRef.current) engineBlackRef.current.stop();
+        if (!isStartingGameRef.current) {
+          if (engineWhiteRef.current) engineWhiteRef.current.stop();
+          if (engineBlackRef.current) engineBlackRef.current.stop();
+        }
         return;
       }
 
@@ -3484,6 +3603,66 @@ const triggerHomeAnimation = useCallback(() => {
 
   const onPieceDrop = useCallback(
     ({ piece, sourceSquare, targetSquare }: { piece: { pieceType: string; isSparePiece: boolean; position: string }; sourceSquare: string; targetSquare: string | null }) => {
+      // --- Modo Estudio: colocar piezas libremente en el tablero ---
+      if (showFreeMode && !hasStartedRef.current) {
+        try {
+          const currentFen = positionEditorFen || "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+          const fenPartsArr = currentFen.split(' ');
+          const rows = fenPartsArr[0].split('/');
+          const board: string[][] = rows.map(row => {
+            const r: string[] = [];
+            for (const c of row) {
+              if (c >= '1' && c <= '8') { for (let i = 0; i < parseInt(c); i++) r.push(''); }
+              else r.push(c);
+            }
+            return r;
+          });
+
+          // Pieza de repuesto: colocar en el tablero
+          if (piece.isSparePiece) {
+            if (!targetSquare) return false;
+            const toCol = targetSquare.charCodeAt(0) - 97;
+            const toRow = 8 - parseInt(targetSquare[1]);
+            board[toRow][toCol] = piece.pieceType.startsWith('w') ? piece.pieceType[1] : piece.pieceType[1].toLowerCase();
+          }
+          // Arrastrar fuera del tablero: eliminar pieza
+          else if (!targetSquare) {
+            if (!sourceSquare) return false;
+            const fromCol = sourceSquare.charCodeAt(0) - 97;
+            const fromRow = 8 - parseInt(sourceSquare[1]);
+            board[fromRow][fromCol] = '';
+          }
+          // Mover pieza existente dentro del tablero
+          else {
+            if (sourceSquare === targetSquare) return false;
+            const fromCol = sourceSquare.charCodeAt(0) - 97;
+            const fromRow = 8 - parseInt(sourceSquare[1]);
+            const toCol = targetSquare.charCodeAt(0) - 97;
+            const toRow = 8 - parseInt(targetSquare[1]);
+            const pieceChar = board[fromRow]?.[fromCol];
+            if (!pieceChar) return false;
+            board[fromRow][fromCol] = '';
+            board[toRow][toCol] = pieceChar;
+          }
+
+          const fenParts: string[] = [];
+          for (const row of board) {
+            let empty = 0;
+            let fenRow = '';
+            for (const cell of row) {
+              if (cell === '') empty++;
+              else { if (empty > 0) { fenRow += empty; empty = 0; } fenRow += cell; }
+            }
+            if (empty > 0) fenRow += empty;
+            fenParts.push(fenRow);
+          }
+          const newFen = fenParts.join('/') + ' ' + (fenPartsArr[1] || 'w') + ' ' + (fenPartsArr[2] || '-') + ' - 0 1';
+          setPositionEditorFen(newFen);
+          recordEditorStepRef.current(newFen);
+          return true;
+        } catch { return false; }
+      }
+
       // --- Modo Exploración: interceptar ANTES de cualquier otra guarda ---
       // Permite mover cualquier pieza (ambos colores) en una instancia aislada
       if (isBoardAnalysisMode && analysisGameRef.current) {
@@ -3666,7 +3845,7 @@ const triggerHomeAnimation = useCallback(() => {
       }
       return res;
     },
-    [executeMove, viewingMoveIndex, isFreeMode, game, isSyncing, whitePlayer, blackPlayer, isBoardAnalysisMode],
+    [executeMove, viewingMoveIndex, isFreeMode, game, isSyncing, whitePlayer, blackPlayer, isBoardAnalysisMode, showFreeMode, positionEditorFen],
   );
 
   useEffect(() => {
@@ -3688,6 +3867,77 @@ const triggerHomeAnimation = useCallback(() => {
   const onSquareClick = useCallback(
     ({ square }: { piece: { pieceType: string } | null; square: string }) => {
       if (promotionInProgressRef.current) {
+        return;
+      }
+
+      // Modo Estudio: colocar pieza de repuesto con clic
+      if (showFreeMode && !hasStartedRef.current && selectedSparePiece) {
+        try {
+          const currentFen = positionEditorFen || "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+          const fenPartsArr = currentFen.split(' ');
+          const rows = fenPartsArr[0].split('/');
+          const board: string[][] = rows.map(row => {
+            const r: string[] = [];
+            for (const c of row) {
+              if (c >= '1' && c <= '8') { for (let i = 0; i < parseInt(c); i++) r.push(''); }
+              else r.push(c);
+            }
+            return r;
+          });
+          const toCol = square.charCodeAt(0) - 97;
+          const toRow = 8 - parseInt(square[1]);
+          board[toRow][toCol] = selectedSparePiece.startsWith('w') ? selectedSparePiece[1] : selectedSparePiece[1].toLowerCase();
+          const fenParts: string[] = [];
+          for (const row of board) {
+            let empty = 0;
+            let fenRow = '';
+            for (const cell of row) {
+              if (cell === '') empty++;
+              else { if (empty > 0) { fenRow += empty; empty = 0; } fenRow += cell; }
+            }
+            if (empty > 0) fenRow += empty;
+            fenParts.push(fenRow);
+          }
+          const newFen = fenParts.join('/') + ' ' + (fenPartsArr[1] || 'w') + ' ' + (fenPartsArr[2] || '-') + ' - 0 1';
+          setPositionEditorFen(newFen);
+          recordEditorStepRef.current(newFen);
+        } catch { }
+        return;
+      }
+
+      // Modo Estudio: borrar pieza con clic si no hay pieza seleccionada
+      if (showFreeMode && !hasStartedRef.current && !selectedSparePiece) {
+        try {
+          const currentFen = positionEditorFen || "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+          const fenPartsArr = currentFen.split(' ');
+          const rows = fenPartsArr[0].split('/');
+          const board: string[][] = rows.map(row => {
+            const r: string[] = [];
+            for (const c of row) {
+              if (c >= '1' && c <= '8') { for (let i = 0; i < parseInt(c); i++) r.push(''); }
+              else r.push(c);
+            }
+            return r;
+          });
+          const toCol = square.charCodeAt(0) - 97;
+          const toRow = 8 - parseInt(square[1]);
+          if (!board[toRow][toCol]) return;
+          board[toRow][toCol] = '';
+          const fenParts: string[] = [];
+          for (const row of board) {
+            let empty = 0;
+            let fenRow = '';
+            for (const cell of row) {
+              if (cell === '') empty++;
+              else { if (empty > 0) { fenRow += empty; empty = 0; } fenRow += cell; }
+            }
+            if (empty > 0) fenRow += empty;
+            fenParts.push(fenRow);
+          }
+          const newFen = fenParts.join('/') + ' ' + (fenPartsArr[1] || 'w') + ' ' + (fenPartsArr[2] || '-') + ' - 0 1';
+          setPositionEditorFen(newFen);
+          recordEditorStepRef.current(newFen);
+        } catch { }
         return;
       }
 
@@ -3862,6 +4112,7 @@ const triggerHomeAnimation = useCallback(() => {
     engineWhiteRef.current?.stop();
     engineBlackRef.current?.stop();
     sendLanGameResult(result);
+    if (notificationConfig !== "none") setSystemNotification(result);
   };
 
   const sendLanGameResult = useCallback((result: string) => {
@@ -3883,6 +4134,7 @@ const triggerHomeAnimation = useCallback(() => {
     engineWhiteRef.current?.stop();
     engineBlackRef.current?.stop();
     sendLanGameResult(result);
+    if (notificationConfig !== "none") setSystemNotification(result);
   };
 
 
@@ -4470,6 +4722,7 @@ const triggerHomeAnimation = useCallback(() => {
     }
 
     // 4. Limpiar timers
+    startSequenceAbortRef.current = true;
     if (quickStartTimeoutRef.current) clearTimeout(quickStartTimeoutRef.current);
     if ((window as any)._gameResetTimer) {
       clearTimeout((window as any)._gameResetTimer);
@@ -4495,8 +4748,9 @@ const triggerHomeAnimation = useCallback(() => {
     setIsGameStopped(false);
     setStoppedGameSnapshot(null);
 
-    // 🔥 IMPORTANTE: Cerrar el sidebar de configuración cuando se limpia la sesión
-    setIsConfigSidebarOpen(false);
+    // 🔥 Resetear Modo Estudio
+    setShowFreeMode(false);
+    setFreeModeStage('config');
 
     // 6. Limpiar evaluaciones y variaciones
     setEvalScore(0);
@@ -4551,11 +4805,59 @@ const triggerHomeAnimation = useCallback(() => {
     }
   };
 
-  const startGameInternal = (options?: { preserveAdventure?: boolean }) => {
-    saveCurrentGame();
+  const startGameInternal = (options?: { preserveAdventure?: boolean; freeMode?: { engineType: string; elo: number; color: "white" | "black"; fen?: string } }) => {
+    isStartingGameRef.current = true;
+    // No guardar partida en segundo plano: se elimina el guardado automático
+
+    // --- Resolver configuración efectiva (freeMode tiene prioridad) ---
+    let effectiveWhitePlayer = whitePlayer;
+    let effectiveBlackPlayer = blackPlayer;
+    let effectiveBoardOrientation = boardOrientation;
+    let effectiveWhiteEngineType = whiteEngineType;
+    let effectiveBlackEngineType = blackEngineType;
+    let effectiveWhiteAiDepth = whiteAiDepth;
+    let effectiveBlackAiDepth = blackAiDepth;
+
+    if (options?.freeMode) {
+      const fm = options.freeMode;
+      if (fm.color === "white") {
+        effectiveBoardOrientation = "white";
+        effectiveWhitePlayer = "human";
+        effectiveBlackPlayer = "ai";
+        effectiveBlackEngineType = fm.engineType;
+        effectiveBlackAiDepth = fm.elo;
+      } else {
+        effectiveBoardOrientation = "black";
+        effectiveWhitePlayer = "ai";
+        effectiveBlackPlayer = "human";
+        effectiveWhiteEngineType = fm.engineType;
+        effectiveWhiteAiDepth = fm.elo;
+      }
+      // Actualizar refs para triggerEngine (sin tocar el estado -> no dispara useEffects)
+      whitePlayerRef.current = effectiveWhitePlayer;
+      blackPlayerRef.current = effectiveBlackPlayer;
+      whiteEngineTypeRef.current = effectiveWhiteEngineType;
+      blackEngineTypeRef.current = effectiveBlackEngineType;
+      whiteAiDepthRef.current = effectiveWhiteAiDepth;
+      blackAiDepthRef.current = effectiveBlackAiDepth;
+    }
+
+    // Aplicar orientación/players al estado (estos no disparan useEffects de motores)
+    setBoardOrientation(effectiveBoardOrientation);
+    setWhitePlayer(effectiveWhitePlayer);
+    setBlackPlayer(effectiveBlackPlayer);
 
     // ⚡ CRÍTICO: Limpiar COMPLETAMENTE la sesión anterior antes de iniciar una nueva
     cleanupPreviousSession({ preserveAdventure: options?.preserveAdventure ?? !!activeAdventureEnemy });
+
+    // Reactivar la secuencia de inicio (cleanupPreviousSession la cancela al limpiar sesiones previas)
+    startSequenceAbortRef.current = false;
+
+    // Modo Estudio: mantener activo el contexto del modo durante toda la partida
+    if (options?.freeMode) {
+      setShowFreeMode(true);
+      setFreeModeStage('playing');
+    }
 
     // Solo resetea a modo normal si no estamos ya en modo aventura
     if (!activeAdventureEnemy && currentGameMode !== "adventure") {
@@ -4579,26 +4881,42 @@ const triggerHomeAnimation = useCallback(() => {
       newFen = generateTrainingFen(trainingPiecesW, trainingPiecesB);
     } else if (isFreestyleMode) {
       newFen = generateChess960Fen();
+    } else if (options?.freeMode?.fen && options.freeMode.fen.trim()) {
+      newFen = options.freeMode.fen;
+    } else if (customFen) {
+      newFen = customFen;
+      setCustomFen(null);
+    }
+    // Validar FEN: debe tener ambos reyes (blanco y negro) y no estar en jaque mate
+    try {
+      const testG = new Chess(newFen);
+      const hasWK = testG.board().some(row => row.some(p => p?.type === 'k' && p.color === 'w'));
+      const hasBK = testG.board().some(row => row.some(p => p?.type === 'k' && p.color === 'b'));
+      if (!hasWK || !hasBK || testG.isGameOver()) {
+        newFen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+      }
+    } catch {
+      newFen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
     }
     setInitialFen(newFen);
 
-    // Crear nuevos motores frescos para la partida
-    const engW = whiteEngineType === "atlas"
+    // Crear nuevos motores frescos para la partida (usar tipos efectivos)
+    const engW = effectiveWhiteEngineType === "atlas"
         ? new AtlasEngine((msg) => handleEngineMessageRef.current?.(msg as any, "w"))
-        : whiteEngineType === "obsidian"
+        : effectiveWhiteEngineType === "obsidian"
           ? new ObsidianEngine((msg) => handleEngineMessageRef.current?.(msg as any, "w"))
-          : whiteEngineType === "obsidian"
+          : effectiveWhiteEngineType === "obsidian"
             ? new ObsidianEngine((msg) => handleEngineMessageRef.current?.(msg as any, "w"))
-            : whiteEngineType === "edd"
+            : effectiveWhiteEngineType === "edd"
               ? new EDDEngine((msg) => handleEngineMessageRef.current?.(msg as any, "w"))
               : new StockfishEngineWhite((msg) => handleEngineMessageRef.current?.(msg, "w"));
-    const engB = blackEngineType === "atlas"
+    const engB = effectiveBlackEngineType === "atlas"
         ? new AtlasEngine((msg) => handleEngineMessageRef.current?.(msg as any, "b"))
-        : blackEngineType === "obsidian"
+        : effectiveBlackEngineType === "obsidian"
           ? new ObsidianEngine((msg) => handleEngineMessageRef.current?.(msg as any, "b"))
-          : blackEngineType === "obsidian"
+          : effectiveBlackEngineType === "obsidian"
             ? new ObsidianEngine((msg) => handleEngineMessageRef.current?.(msg as any, "b"))
-            : blackEngineType === "edd"
+            : effectiveBlackEngineType === "edd"
               ? new EDDEngine((msg) => handleEngineMessageRef.current?.(msg as any, "b"))
               : new StockfishEngineBlack((msg) => handleEngineMessageRef.current?.(msg, "b"));
 
@@ -4606,19 +4924,18 @@ const triggerHomeAnimation = useCallback(() => {
     engineBlackRef.current = engB;
     applyObsidianEngineConfig(engW, whiteObsidianConfig);
     applyObsidianEngineConfig(engB, blackObsidianConfig);
-
     const pW = engW.init();
     const pB = engB.init();
 
     const g = new Chess(newFen);
-    const baseNameW = whiteEngineName || (whiteEngineType === "atlas" ? "Atlas.1" : whiteEngineType === "edd" ? "Nexus" : whiteEngineType === "obsidian" ? "Obsidian" : whiteEngineType === "obsidian" ? "DxA.47" : whiteEngineType.startsWith("maia") ? "Maia: " + whiteEngineType.substring(4) : whiteEngineType === "ailed" ? "Ailed" : "Stockfish");
-    const baseNameB = blackEngineName || (blackEngineType === "atlas" ? "Atlas.1" : blackEngineType === "edd" ? "Nexus" : blackEngineType === "obsidian" ? "Obsidian" : blackEngineType === "obsidian" ? "DxA.47" : blackEngineType.startsWith("maia") ? "Maia: " + blackEngineType.substring(4) : blackEngineType === "ailed" ? "Ailed" : "Stockfish");
+    const baseNameW = whiteEngineName || (effectiveWhiteEngineType === "atlas" ? "Atlas.1" : effectiveWhiteEngineType === "edd" ? "Nexus" : effectiveWhiteEngineType === "obsidian" ? "Obsidian" : effectiveWhiteEngineType === "obsidian" ? "DxA.47" : effectiveWhiteEngineType.startsWith("maia") ? "Maia: " + effectiveWhiteEngineType.substring(4) : effectiveWhiteEngineType === "ailed" ? "Ailed" : "Stockfish");
+    const baseNameB = blackEngineName || (effectiveBlackEngineType === "atlas" ? "Atlas.1" : effectiveBlackEngineType === "edd" ? "Nexus" : effectiveBlackEngineType === "obsidian" ? "Obsidian" : effectiveBlackEngineType === "obsidian" ? "DxA.47" : effectiveBlackEngineType.startsWith("maia") ? "Maia: " + effectiveBlackEngineType.substring(4) : effectiveBlackEngineType === "ailed" ? "Ailed" : "Stockfish");
 
     g.header(
       "White",
-      whitePlayer === "human" ? (effectivePlayerName || "Humano") : baseNameW,
+      effectiveWhitePlayer === "human" ? (effectivePlayerName || "Humano") : baseNameW,
       "Black",
-      blackPlayer === "human" ? (effectivePlayerName || "Humano") : baseNameB
+      effectiveBlackPlayer === "human" ? (effectivePlayerName || "Humano") : baseNameB
     );
     setGame(g);
     gameRef.current = g;
@@ -4643,7 +4960,7 @@ const triggerHomeAnimation = useCallback(() => {
     setIsPaused(false);
     isPausedRef.current = false;
 
-    const shouldSync = whitePlayer === "ai" || blackPlayer === "ai";
+    const shouldSync = effectiveWhitePlayer === "ai" || effectiveBlackPlayer === "ai";
     setIsSyncing(shouldSync);
     setTimerActive(false);
 
@@ -4654,9 +4971,9 @@ const triggerHomeAnimation = useCallback(() => {
     setIsLoadedPgn(false);
     setViewingMoveIndex(null);
 
-    if (whitePlayer === "human" && blackPlayer === "ai") {
+    if (effectiveWhitePlayer === "human" && effectiveBlackPlayer === "ai") {
       setBoardOrientation("white");
-    } else if (blackPlayer === "human" && whitePlayer === "ai") {
+    } else if (effectiveBlackPlayer === "human" && effectiveWhitePlayer === "ai") {
       setBoardOrientation("black");
     }
 
@@ -4665,11 +4982,14 @@ const triggerHomeAnimation = useCallback(() => {
     const startAfterSync = async () => {
       try {
         await Promise.all([pW, pB]);
+        if (startSequenceAbortRef.current) return;
         const syncDelay = currentGameMode === "adventure" ? 1200 : 800;
         await new Promise(resolve => setTimeout(resolve, syncDelay));
+        if (startSequenceAbortRef.current) return;
 
         setIsSyncing(true);
         await new Promise(resolve => setTimeout(resolve, 2000));
+        if (startSequenceAbortRef.current) return;
 
         setIsSyncing(false);
         setStartCountdown(3);
@@ -4678,11 +4998,13 @@ const triggerHomeAnimation = useCallback(() => {
           countdownValue--;
           if (countdownValue <= 0) {
             clearInterval(countdownInterval);
+            if (startSequenceAbortRef.current) return;
             setStartCountdown(null);
 
             setHasStarted(true);
             hasStartedRef.current = true;
             setTimerActive(true);
+            isStartingGameRef.current = false;
 
             setTimeout(() => {
               if (hasStartedRef.current && !gameRef.current.isGameOver()) {
@@ -5011,6 +5333,57 @@ const triggerHomeAnimation = useCallback(() => {
     return startGameInternal({ preserveAdventure: !!activeAdventureEnemy });
   }
 
+  // Modo Estudio: iniciar partida de estudio conservando el contexto del modo
+  function startStudyModeGame(resetBoard?: boolean) {
+    const INITIAL_FEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+    let fenToUse = resetBoard
+      ? INITIAL_FEN
+      : (positionEditorFen || INITIAL_FEN);
+    if (resetBoard) {
+      setPositionEditorFen(INITIAL_FEN);
+      setSelectedSparePiece(null);
+      resetEditorHistoryRef.current(INITIAL_FEN);
+    }
+
+    // El motor oponente siempre juega el PRIMER movimiento:
+    // con blancas -> turno negro; con negras -> turno blanco
+    const engineTurn = freeModeColor === "white" ? "b" : "w";
+    const fenParts = fenToUse.split(" ");
+    if (fenParts.length >= 2) {
+      fenToUse = [fenParts[0], engineTurn, ...fenParts.slice(2)].join(" ");
+    }
+
+    // Validar la posición personalizada ANTES de iniciar (evita que se cambie en silencio a la posición inicial)
+    try {
+      const testG = new Chess(fenToUse);
+      const hasWhiteKing = testG.board().some(row => row.some(p => p?.type === 'k' && p.color === 'w'));
+      const hasBlackKing = testG.board().some(row => row.some(p => p?.type === 'k' && p.color === 'b'));
+      if (!hasWhiteKing || !hasBlackKing) {
+        alert(language === "es"
+          ? "La posición personalizada debe contener ambos reyes para poder jugar."
+          : "The custom position must contain both kings to play.");
+        return;
+      }
+      if (testG.isGameOver()) {
+        alert(language === "es"
+          ? "La posición personalizada ya está terminada (jaque mate o tablas). Ajusta la posición para poder jugar."
+          : "The custom position is already finished (checkmate or draw). Adjust the position to play.");
+        return;
+      }
+    } catch {
+      alert(language === "es"
+        ? "El FEN personalizado no es válido. Revísalo antes de jugar."
+        : "The custom FEN is invalid. Please review it before playing.");
+      return;
+    }
+
+    startGameInternal({
+      freeMode: { engineType: freeModeEngineType, elo: freeModeElo, color: freeModeColor, fen: fenToUse },
+    });
+    setShowFreeMode(true);
+    setFreeModeStage('playing');
+  }
+
   const lanPreparingHandledRef = useRef(false);
   const [lanIsPreparing, setLanIsPreparing] = useState(false);
 
@@ -5254,8 +5627,6 @@ const triggerHomeAnimation = useCallback(() => {
   };
 
   const handleAdventureStartBattle = (enemy: AdventureEnemy, playerElo: number) => {
-    saveCurrentGame();
-
     // ⚡ CRÍTICO: Limpiar sesión anterior completamente antes de iniciar aventura
     cleanupPreviousSession();
 
@@ -5963,24 +6334,28 @@ const triggerHomeAnimation = useCallback(() => {
     }
 
     const currentMoveIdx = viewingMoveIndex !== null ? viewingMoveIndex : (historyFens.length > 0 ? historyFens.length - 1 : 0);
+    currentMoveIdxRef.current = currentMoveIdx;
     return {
-      position: isBoardAnalysisMode && analysisPosition ? analysisPosition : (viewingMoveIndex !== null ? (historyFens[viewingMoveIndex + 1] || game.fen()) : game.fen()),
+      position: showFreeMode && !hasStarted ? positionEditorFen : (isBoardAnalysisMode && analysisPosition ? analysisPosition : (viewingMoveIndex !== null ? (historyFens[viewingMoveIndex + 1] || game.fen()) : game.fen())),
       customPieces: undefined,
       onPieceDrop: onPieceDrop,
       onSquareClick: onSquareClick,
-      customArrows: moveArrows[currentMoveIdx] || [],
-      onArrowsChange: (arrowsObj: any) => {
-        setMoveArrows((prev: any) => ({ ...prev, [currentMoveIdx]: arrowsObj.arrows || arrowsObj }));
+      onPieceClick: ({ isSparePiece, piece }: { isSparePiece: boolean; piece: { pieceType: string } }) => {
+        if (isSparePiece && showFreeMode && !hasStarted) {
+          setSelectedSparePiece(prev => prev === piece.pieceType ? null : piece.pieceType);
+        }
       },
+      customArrows: moveArrowsRef.current[currentMoveIdxRef.current] || [],
+      onArrowsChange: onArrowsChangeRef.current,
       squareStyles,
       boardOrientation: effectiveIsAutoRotate ? (game.turn() === "b" ? "black" : "white") : boardOrientation,
       darkSquareStyle: { backgroundColor: ({ gray: "#4b5563", chess: "#4b5563", neutral: "#111827", classic: "#b58863", green: "#2d5a27", blue: "#1e3a8a", purple: "#4c1d95", gothic: "#1a1a1a", neural: "#06161a" } as Record<string, string>)[boardTheme] || "#4b5563" },
       lightSquareStyle: { backgroundColor: ({ gray: "#d1d5db", chess: "#d1d5db", neutral: "#1f2937", classic: "#f0d9b5", green: "#4a7a3c", blue: "#3b82f6", purple: "#7c3aed", gothic: "#2d2d2d", neural: "#0d2d2d" } as Record<string, string>)[boardTheme] || "#d1d5db" },
       animationDurationInMs: effectiveIsAutoRotate ? (autoRotateSpeed === "slide" ? 400 : 50) : 50,
       showNotation: true,
-      allowDragOffBoard: false,
+      allowDragOffBoard: showFreeMode && !hasStarted,
     };
-  }, [game, boardOrientation, viewingMoveIndex, boardTheme, moveArrows, preMoves, kingInCheckSquare, isThreatRadarActive, threatRadarMode, showLastMove, moveFrom, showLegalMoves, onPieceDrop, onSquareClick, isBoardAnalysisMode, analysisPosition]);
+  }, [game, boardOrientation, viewingMoveIndex, boardTheme, preMoves, kingInCheckSquare, isThreatRadarActive, threatRadarMode, showLastMove, moveFrom, showLegalMoves, onPieceDrop, onSquareClick, isBoardAnalysisMode, analysisPosition, showFreeMode, hasStarted, positionEditorFen]);
 
   const effectiveBoardSize = boardSize;
 
@@ -6118,11 +6493,14 @@ const triggerHomeAnimation = useCallback(() => {
             {/* Si hay un asset fh.* prefijado, mostrarlo (video o imagen) */}
             {FhImg ? (
               (FhImg.match(/\.mp4$|\.webm$|\.ogg$/i)) ? (
+      <>
       <video
+        ref={bgVideoRef}
         autoPlay
         muted
         loop
         playsInline
+        preload="auto"
         controls={false}
         draggable={false}
         onContextMenu={(e) => e.preventDefault()}
@@ -6132,9 +6510,27 @@ const triggerHomeAnimation = useCallback(() => {
           setIsVideoReady(true);
           triggerHomeAnimation();
         }}
+        onTimeUpdate={(e) => {
+          const v = e.target as HTMLVideoElement;
+          if (!v.duration || isNaN(v.duration)) return;
+          const remaining = v.duration - v.currentTime;
+          setShowBgLightning(remaining > 0 && remaining < 2.5);
+        }}
+        onEnded={() => setShowBgLightning(false)}
+        onError={(e) => { console.error("[GM3000] Video error:", e.nativeEvent, "src:", (e.target as HTMLVideoElement).currentSrc); }}
       >
-                  <source src={FhImg} />
-                </video>
+        <source src={FhVideoDirect} type="video/mp4" />
+      </video>
+      {showBgLightning && (
+        <div
+          className="absolute inset-0 z-10 pointer-events-none animate-lightning-flash-bg"
+          style={{
+            background: "radial-gradient(ellipse at 50% 30%, rgba(180,200,255,0.5) 0%, rgba(100,130,255,0.2) 35%, transparent 70%)",
+            mixBlendMode: "screen",
+          }}
+        />
+      )}
+      </>
               ) : FhImg.match(/\.gif$/i) ? (
                 <img
                   src={FhImg}
@@ -6218,17 +6614,23 @@ const triggerHomeAnimation = useCallback(() => {
               <div className="grid grid-cols-2 gap-3 md:gap-4 flex-1">
                 {/* Botón Modo Clásico */}
                 <div className="flex flex-col items-center group">
-                  <button
-                    onClick={() => {
-                      cleanupPreviousSession();
-                      setActiveAdventureEnemy(null);
-                      setShowMainScreen(false);
-                      setIsConfigSidebarOpen(true);
-                      setCurrentGameMode("normal");
-                      setIsAdventureModeOpen(false);
-                      setIsHeaderVisible(true);
-                    }}
-                    onMouseEnter={() => playAudio("hover_mode")}
+<button
+                     onClick={() => {
+                       console.log("[GM3000] Modo Clásico click - before cleanup");
+                       cleanupPreviousSession();
+                       console.log("[GM3000] Modo Clásico click - after cleanup, opening sidebar");
+                       setActiveAdventureEnemy(null);
+                       setShowMainScreen(false);
+                       setIsConfigSidebarOpen(true);
+                       setCurrentGameMode("normal");
+                       setIsAdventureModeOpen(false);
+                       setIsHeaderVisible(true);
+                       setShowFreeMode(true);
+                       setPositionEditorFen("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+                       setSelectedSparePiece(null);
+                       resetEditorHistoryRef.current();
+                     }}
+                     onMouseEnter={() => playAudio("hover_mode")}
                     className="relative flex items-center justify-center bg-transparent border-none outline-none transition-all duration-300 hover:scale-[1.12] active:scale-[0.98] rounded-2xl min-h-[140px] md:min-h-[200px] lg:min-h-[240px] animate-slide-in-left overflow-hidden w-full"
                   >
                       <img
@@ -6387,6 +6789,24 @@ const triggerHomeAnimation = useCallback(() => {
             }
             .animate-logo-intro {
               animation: logo-transition 6s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
+            }
+            @keyframes lightning-flash-bg {
+              0% { opacity: 0; }
+              5% { opacity: 0.85; }
+              10% { opacity: 0; }
+              12% { opacity: 0.6; }
+              17% { opacity: 0; }
+              35% { opacity: 0; }
+              37% { opacity: 0.7; }
+              40% { opacity: 0.4; }
+              43% { opacity: 0; }
+              60% { opacity: 0; }
+              62% { opacity: 0.5; }
+              65% { opacity: 0; }
+              100% { opacity: 0; }
+            }
+            .animate-lightning-flash-bg {
+              animation: lightning-flash-bg 2s ease-in-out infinite;
             }
             @keyframes fade-in-delayed {
               0%, 60% { opacity: 0; transform: translateY(20px); }
@@ -6703,8 +7123,156 @@ const triggerHomeAnimation = useCallback(() => {
                   ? ((currentGameMode === "adventure" || isAdventureModeOpen) ? "max-h-[calc(100vh-150px)]" : "max-h-[calc(100vh-120px)]")
                   : "max-h-[calc(100dvh-60px)]"
             )}>
-              {/* Panel izquierdo: Perfiles LAN o EvalBar */}
+              <ChessboardProvider options={chessboardConfig}>
+              {/* Panel izquierdo: Perfiles LAN, EvalBar o Bandeja de piezas de Modo Estudio */}
               {(() => {
+                if (freeModeStage === 'board' && !hasStarted) {
+                  return (
+                    <div className="hidden md:flex shrink-0 flex-col items-center gap-2 self-stretch justify-center py-2">
+                      <div className="flex flex-col items-center gap-3 p-2.5 rounded-2xl border border-cyan-900/40 bg-slate-900/80 backdrop-blur-sm shadow-[0_10px_30px_-10px_rgba(0,0,0,0.6)]">
+                        <button
+                          onClick={() => setStudyPanelExpanded(!studyPanelExpanded)}
+                          className="w-full flex items-center justify-between gap-3 px-1 py-0.5 group"
+                          title={language === "es" ? "Expandir/Colapsar Modo Estudio" : "Expand/Collapse Study Mode"}
+                        >
+                          <span className="text-[9px] font-bold text-cyan-400/90 uppercase tracking-widest select-none">
+                            {language === "es" ? "Modo Estudio" : "Study Mode"}
+                          </span>
+                          <ChevronDown className={cn("w-3.5 h-3.5 text-cyan-400/70 transition-transform duration-200 group-hover:text-cyan-300", studyPanelExpanded ? "rotate-180" : "rotate-0")} />
+                        </button>
+                        {studyPanelExpanded && (
+                        <>
+                        <span className="text-[9px] font-bold text-cyan-400/90 uppercase tracking-widest select-none">{language === "es" ? "Piezas" : "Pieces"}</span>
+                        <div className="grid grid-cols-2 gap-1.5">
+                          {(["wK", "wQ", "wR", "wB", "wN", "wP", "bK", "bQ", "bR", "bB", "bN", "bP"] as string[]).map((pt) => (
+                            <div
+                              key={pt}
+                              className={cn(
+                                "w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center rounded-lg border-2 transition-all cursor-grab active:cursor-grabbing select-none",
+                                selectedSparePiece === pt
+                                  ? "bg-cyan-500/30 ring-2 ring-cyan-400/60 shadow-[0_0_10px_rgba(6,182,212,0.5)] border-cyan-500/50"
+                                  : "border-slate-700/50 hover:border-cyan-500/30 hover:bg-cyan-900/30"
+                              )}
+                              title={pt}
+                            >
+                              <SparePiece pieceType={pt} />
+                            </div>
+                          ))}
+                        </div>
+                        <div className="w-full border-t border-slate-800 pt-2.5 space-y-2">
+                          <input
+                            type="text"
+                            value={positionEditorFen}
+                            onChange={(e) => {
+                              setPositionEditorFen(e.target.value);
+                              resetEditorHistoryRef.current(e.target.value);
+                            }}
+                            placeholder="FEN"
+                            className="w-full bg-black/40 border border-cyan-900/30 text-[9px] text-cyan-300/80 rounded-lg px-2 py-1.5 outline-none focus:border-cyan-500/60 font-mono placeholder:text-slate-700 transition-all"
+                          />
+                          <div className="flex bg-slate-950/60 rounded-lg border border-slate-700/50 overflow-hidden">
+                            <button
+                              onClick={() => setFreeModeColor("white")}
+                              className={cn("flex-1 text-[9px] px-2 py-1.5 font-bold transition-all flex items-center justify-center gap-1.5", freeModeColor === "white" ? "bg-white/10 text-white shadow-[inset_0_0_10px_rgba(255,255,255,0.08)]" : "text-slate-500 hover:text-slate-300")}
+                            >
+                              <div className="w-2 h-2 rounded-full bg-white border border-slate-400" />
+                              {language === "es" ? "Blancas" : "White"}
+                            </button>
+                            <button
+                              onClick={() => setFreeModeColor("black")}
+                              className={cn("flex-1 text-[9px] px-2 py-1.5 font-bold transition-all flex items-center justify-center gap-1.5", freeModeColor === "black" ? "bg-white/10 text-white shadow-[inset_0_0_10px_rgba(255,255,255,0.08)]" : "text-slate-500 hover:text-slate-300")}
+                            >
+                              <div className="w-2 h-2 rounded-full bg-slate-800 border border-slate-500" />
+                              {language === "es" ? "Negras" : "Black"}
+                            </button>
+                          </div>
+                          <select
+                            value={freeModeEngineType}
+                            onChange={(e) => setFreeModeEngineType(e.target.value)}
+                            className="w-full bg-slate-950 border border-slate-700 text-[9px] text-slate-300 rounded-lg p-1.5 outline-none focus:border-cyan-500/50 transition-all cursor-pointer appearance-none"
+                          >
+                            <option value="stockfish">Stockfish</option>
+                            <option value="atlas">Atlas.1 (Nuestro)</option>
+                            <option value="edd">Nexus (Nuestro)</option>
+                            <option value="maia1">Maia 1</option>
+                            <option value="maia2">Maia 2</option>
+                            <option value="ailed">Ailed (Nuestro)</option>
+                            <option value="obsidian">Obsidian (Neural)</option>
+                          </select>
+                          <div className="flex justify-between text-[8px] text-slate-500 font-semibold select-none">
+                            <span className="uppercase tracking-wider">{language === "es" ? "Fuerza" : "Strength"}</span>
+                            <span className={cn("font-mono font-bold", freeModeEngineType === "atlas" ? "text-emerald-400" : freeModeEngineType === "obsidian" ? "text-teal-400" : freeModeEngineType === "edd" ? "text-emerald-400" : freeModeEngineType.startsWith("maia") ? "text-purple-400" : freeModeEngineType === "ailed" ? "text-red-400" : "text-blue-400")}>
+                              ~{getEloRating(freeModeElo, freeModeEngineType)}
+                            </span>
+                          </div>
+                          <input
+                            type="range"
+                            min="3"
+                            max="25"
+                            value={freeModeElo}
+                            onChange={(e) => setFreeModeElo(parseInt(e.target.value))}
+                            className="w-full h-1.5 cursor-pointer bg-slate-800 rounded-full appearance-none accent-cyan-500"
+                          />
+                          <select
+                            value={initialTimeMin}
+                            onChange={(e) => setInitialTimeMin(parseInt(e.target.value))}
+                            className="w-full bg-slate-950 border border-slate-700 text-[9px] text-slate-300 rounded-lg p-1.5 outline-none focus:border-cyan-500/50 transition-all cursor-pointer appearance-none"
+                          >
+                            {[1, 3, 5, 10, 15, 30, 60].map((m) => (
+                              <option key={m} value={m}>{language === "es" ? "Tiempo" : "Time"}: {m} {m === 1 ? (language === "es" ? "min" : "min") : (language === "es" ? "min" : "min")}</option>
+                            ))}
+                          </select>
+                          <button
+                            onClick={() => {
+                              setPositionEditorFen("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+                              setSelectedSparePiece(null);
+                              resetEditorHistoryRef.current();
+                            }}
+                            className="w-full py-1.5 bg-slate-800/80 hover:bg-slate-700 border border-slate-700 text-slate-400 rounded-lg text-[9px] font-bold transition-all flex items-center justify-center gap-1.5 active:scale-[0.98]"
+                          >
+                            <RotateCcw className="w-3 h-3" />
+                            {language === "es" ? "Reset Tablero" : "Reset Board"}
+                          </button>
+                          <div className="flex gap-1.5">
+                            <button
+                              onClick={() => undoEditorStepRef.current()}
+                              disabled={editorHistoryIndexRef.current <= 0}
+                              className="flex-1 py-1.5 bg-slate-800/80 hover:bg-slate-700 disabled:opacity-30 disabled:cursor-not-allowed border border-slate-700 text-slate-400 rounded-lg text-[9px] font-bold transition-all flex items-center justify-center gap-1"
+                            >
+                              <Undo2 className="w-3 h-3" />
+                              {language === "es" ? "Deshacer" : "Undo"}
+                            </button>
+                            <button
+                              onClick={() => redoEditorStepRef.current()}
+                              disabled={editorHistoryIndexRef.current >= editorFenHistory.length - 1}
+                              className="flex-1 py-1.5 bg-slate-800/80 hover:bg-slate-700 disabled:opacity-30 disabled:cursor-not-allowed border border-slate-700 text-slate-400 rounded-lg text-[9px] font-bold transition-all flex items-center justify-center gap-1"
+                            >
+                              <Redo2 className="w-3 h-3" />
+                              {language === "es" ? "Rehacer" : "Redo"}
+                            </button>
+                          </div>
+                          <span className="block text-[8px] text-slate-500 text-center select-none">
+                            {language === "es" ? "Pasos" : "Steps"}: {editorHistoryIndexRef.current}/{editorFenHistory.length - 1}
+                          </span>
+                          <button
+                            onClick={() => {
+                              startStudyModeGame();
+                            }}
+                            className="w-full py-2 bg-gradient-to-r from-cyan-600 to-emerald-600 hover:from-cyan-500 hover:to-emerald-500 text-white rounded-lg text-[10px] font-black uppercase tracking-wider shadow-lg shadow-cyan-900/40 border border-cyan-400/30 flex items-center justify-center gap-1.5 active:scale-[0.98] transition-all"
+                          >
+                            <Play className="w-3.5 h-3.5" fill="currentColor" />
+                            {language === "es" ? "Jugar" : "Play"}
+                          </button>
+                          <span className="block text-[8px] text-slate-500 italic text-center leading-tight select-none">
+                            {language === "es" ? "Arrastra o clic para colocar · Clic en casilla = borrar" : "Drag or click to place · Click square = remove"}
+                          </span>
+                        </div>
+                        </>
+                        )}
+                      </div>
+                    </div>
+                  );
+                }
                 if (lanStatus === "connected") {
                   const topColor = boardOrientation === "white" ? "b" : "w";
                   const botColor = boardOrientation === "white" ? "w" : "b";
@@ -6808,9 +7376,9 @@ const triggerHomeAnimation = useCallback(() => {
                       !isRightPanelOpen && "col-start-2 row-start-1 row-span-3",
                       currentGameMode === "adventure" ? "border-amber-900/60 bg-transparent" : "border-[#2d3748] bg-[#2d3748]",
                       isInvisiblePieces && "invisible-pieces",
-                      !hasStarted && "pointer-events-none opacity-70"
+                      !hasStarted && !showFreeMode && freeModeStage !== 'config' && "pointer-events-none opacity-70"
                     )}
-                      onClick={() => { if (isConfigSidebarOpen) setIsConfigSidebarOpen(false); }}
+                      onClick={() => { if (isConfigSidebarOpen && !showFreeMode) setIsConfigSidebarOpen(false); }}
                       style={{
                         '--rotate-duration': autoRotateSpeed === 'spin_fast' ? '300ms' : '700ms'
                       } as any}>
@@ -6862,7 +7430,7 @@ const triggerHomeAnimation = useCallback(() => {
                       </div>
 
                       <div className="w-full h-full chess-board-inner relative" style={{ zIndex: 100 }}>
-                        <Chessboard options={chessboardConfig} boardWidth={boardWidthPx} />
+                        <Chessboard />
                       </div>
 
                   {(isSyncing || startCountdown !== null) && (
@@ -7139,7 +7707,7 @@ const triggerHomeAnimation = useCallback(() => {
                           </button>
                         </div>
                         <button
-                          onClick={startGame}
+                          onClick={() => { if (freeModeStage === 'playing') startStudyModeGame(true); else startGame(); }}
                           className="w-full py-3 bg-slate-800/80 hover:bg-slate-700 text-slate-300 rounded-2xl text-[10px] font-black transition-all uppercase border border-white/5 shadow-lg"
                         >
                           {language === "es" ? "Nueva Partida" : "New Game"}
@@ -7156,6 +7724,7 @@ const triggerHomeAnimation = useCallback(() => {
           )}
 
                 </div>
+              </ChessboardProvider>
               </div>
 
             <aside className={cn(
@@ -7234,7 +7803,7 @@ const triggerHomeAnimation = useCallback(() => {
                     </div>
                   )}
 
-                  {!hasStarted && !isGameStopped && !isAdventureModeOpen && currentGameMode === "normal" && (
+                  {!hasStarted && !isGameStopped && !isAdventureModeOpen && !showFreeMode && currentGameMode === "normal" && (
                     <div className="w-full space-y-2 p-4 bg-gradient-to-b from-slate-800/30 to-slate-900/50 border border-emerald-500/20 rounded-lg text-center">
                       <h3 className="text-sm font-bold text-emerald-400 flex items-center justify-center gap-2">
                         <Play className="w-4 h-4" />
@@ -7288,6 +7857,9 @@ const triggerHomeAnimation = useCallback(() => {
                           if (lanStatus === "connected") {
                             // En LAN, usar la función que maneja reset y color aleatorio
                             lanStartNewGame();
+                          } else if (freeModeStage === 'playing') {
+                            // Modo Estudio: reiniciar en el mismo modo reseteando el tablero
+                            startStudyModeGame(true);
                           } else {
                             // En modo normal, iniciar directamente
                             startGame();
@@ -8707,7 +9279,6 @@ const triggerHomeAnimation = useCallback(() => {
                     </div>
                   </div>
                 </>)}
-
               {currentGameMode === "normal" && !activeAdventureEnemy && (
                 <>
                   <div className="grid grid-cols-2 gap-3" key="game-config-time">
@@ -9195,6 +9766,102 @@ const triggerHomeAnimation = useCallback(() => {
                 {language === "es" ? "Modo Mental" : "Mental Mode"}
               </button>
 
+              {/* --- Modo Estudio / Study Mode --- */}
+              {currentGameMode === "normal" && !activeAdventureEnemy && freeModeStage === 'config' && (
+                <div className="bg-gradient-to-b from-[#0a1f1f]/80 to-[#061212]/90 p-4 rounded-2xl border border-cyan-900/40 hover:border-cyan-700/50 transition-all shadow-[inset_0_0_20px_rgba(34,211,238,0.04)] relative z-10">
+                  <h3 className="text-xs font-bold text-cyan-400/90 flex items-center gap-2 tracking-widest uppercase mb-4" style={{ fontFamily: "Georgia, serif" }}>
+                    <Target className="w-4 h-4 text-cyan-400" />
+                    {language === "es" ? "Modo Estudio" : "Study Mode"}
+                  </h3>
+
+                  {/* PASO 1: Tu Color */}
+                  <div className="mb-4">
+                    <label className="text-[9px] text-slate-500 uppercase tracking-wider mb-1.5 block font-semibold">{language === "es" ? "1. Juegas como" : "1. You play as"}</label>
+                    <div className="flex bg-slate-900/80 rounded-xl border border-slate-700/50 overflow-hidden">
+                      <button
+                        onClick={() => { setFreeModeColor("white"); }}
+                        className={cn("flex-1 text-[10px] px-3 py-2.5 font-bold transition-all flex items-center justify-center gap-1.5", freeModeColor === "white" ? "bg-white/10 text-white shadow-[inset_0_0_10px_rgba(255,255,255,0.08)]" : "text-slate-500 hover:text-slate-300")}
+                      >
+                        <div className="w-2.5 h-2.5 rounded-full bg-white border border-slate-400" />
+                        {language === "es" ? "Blancas" : "White"}
+                      </button>
+                      <button
+                        onClick={() => { setFreeModeColor("black"); }}
+                        className={cn("flex-1 text-[10px] px-3 py-2.5 font-bold transition-all flex items-center justify-center gap-1.5", freeModeColor === "black" ? "bg-white/10 text-white shadow-[inset_0_0_10px_rgba(255,255,255,0.08)]" : "text-slate-500 hover:text-slate-300")}
+                      >
+                        <div className="w-2.5 h-2.5 rounded-full bg-slate-800 border border-slate-500" />
+                        {language === "es" ? "Negras" : "Black"}
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* PASO 2: Motor */}
+                  <div className="mb-4">
+                    <label className="text-[9px] text-slate-500 uppercase tracking-wider mb-1.5 block font-semibold">{language === "es" ? "2. Motor oponente" : "2. Opponent engine"}</label>
+                    <select
+                      value={freeModeEngineType}
+                      onChange={(e) => {
+                        setFreeModeEngineType(e.target.value);
+                      }}
+                      className="w-full bg-slate-900 border border-slate-700 text-[10px] text-slate-300 rounded-xl p-2.5 outline-none focus:border-cyan-500/50 transition-all cursor-pointer appearance-none"
+                    >
+                      <option value="stockfish">Stockfish</option>
+                      <option value="atlas">Atlas.1 (Nuestro)</option>
+                      <option value="edd">Nexus (Nuestro)</option>
+                      <option value="maia1">Maia 1</option>
+                      <option value="maia2">Maia 2</option>
+                      <option value="ailed">Ailed (Nuestro)</option>
+                      <option value="obsidian">Obsidian (Neural)</option>
+                    </select>
+                    <span className={cn("text-[8px] italic block mt-1", getEngineColorClass(freeModeEngineType))}>
+                      {getEngineInfo(freeModeEngineType).name}
+                      {getEngineInfo(freeModeEngineType).isOwn && " (Nuestro)"}
+                    </span>
+                  </div>
+
+                  {/* PASO 3: ELO / Fuerza */}
+                  <div className="mb-4">
+                    <div className="flex justify-between text-[9px] text-slate-500 mb-1.5 font-semibold">
+                      <span className="uppercase tracking-wider">{language === "es" ? "3. Fuerza (ELO)" : "3. Strength (ELO)"}</span>
+                      <span className={cn("font-mono font-bold",
+                        freeModeEngineType === "atlas" ? "text-emerald-400" : freeModeEngineType === "obsidian" ? "text-teal-400" : freeModeEngineType === "edd" ? "text-emerald-400" : freeModeEngineType.startsWith("maia") ? "text-purple-400" : freeModeEngineType === "ailed" ? "text-red-400" : "text-blue-400"
+                      )}>
+                        ~{getEloRating(freeModeElo, freeModeEngineType)}
+                      </span>
+                    </div>
+                    <input
+                      type="range"
+                      min="3"
+                      max="25"
+                      value={freeModeElo}
+                      onChange={(e) => {
+                        setFreeModeElo(parseInt(e.target.value));
+                      }}
+                      className={cn("w-full h-1.5 cursor-pointer bg-slate-800 rounded-full appearance-none",
+                        freeModeEngineType === "atlas" ? "accent-emerald-500" :
+                        freeModeEngineType === "obsidian" ? "accent-teal-500" :
+                        freeModeEngineType === "edd" ? "accent-emerald-500" :
+                        freeModeEngineType.startsWith("maia") ? "accent-purple-500" :
+                        freeModeEngineType === "ailed" ? "accent-red-500" : "accent-blue-500"
+                      )}
+                    />
+                  </div>
+
+                  {/* BOTÓN: IR AL TABLERO */}
+                  <button
+                    onClick={() => {
+                      setFreeModeStage('board');
+                      setShowFreeMode(true);
+                      setIsConfigSidebarOpen(false);
+                    }}
+                    className="w-full py-3.5 bg-gradient-to-r from-cyan-600 to-emerald-600 hover:from-cyan-500 hover:to-emerald-500 text-white rounded-2xl text-[11px] font-black transition-all uppercase tracking-widest shadow-xl shadow-cyan-900/40 border border-cyan-400/30 flex items-center justify-center gap-2 active:scale-[0.98]"
+                  >
+                    <ArrowRight className="w-4 h-4" fill="currentColor" />
+                    {language === "es" ? "Ir al tablero" : "Go to board"}
+                  </button>
+                </div>
+              )}
+
               {/* Preferencias Visuales */}
               <div className="bg-white/5 rounded-2xl border border-white/5 hover:border-white/10 transition-colors shadow-sm">
                 <button
@@ -9322,7 +9989,7 @@ const triggerHomeAnimation = useCallback(() => {
                     </div>
 
                     <label className="flex items-center justify-between cursor-pointer">
-                      <span className="text-[10px] text-slate-400 font-semibold">{language === "es" ? "Modo Libre (Guardar PGN)" : "Free Mode (Save PGN)"}</span>
+                      <span className="text-[10px] text-slate-400 font-semibold">{language === "es" ? "Modo Estudio (Guardar PGN)" : "Study Mode (Save PGN)"}</span>
                       <input type="checkbox" className="hidden" checked={isFreeMode} onChange={() => setIsFreeMode(!isFreeMode)} />
                       <div className={cn("w-8 h-4 rounded-full transition-all relative flex items-center", isFreeMode ? "bg-emerald-500" : "bg-slate-700")}>
                         <div className={cn("absolute w-3 h-3 bg-white rounded-full transition-all shadow-md", isFreeMode ? "right-0.5" : "left-0.5")} />

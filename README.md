@@ -1,4 +1,4 @@
-# GM-3000 v3 — Board de Auto-Entrenamiento
+﻿# GM-3000 v3 — Board de Auto-Entrenamiento
 
 > ### 🔒 ESTA ES LA VERSIÓN ESTABLE
 > **GM-3000 v3** es la versión estable y de producción del proyecto. Todas las funcionalidades han sido probadas, validadas y están listas para uso cotidiano. Esta es la rama principal y la versión recomendada para todos los usuarios.
@@ -15,7 +15,7 @@ La aplicación integra potentes motores de análisis, análisis con inteligencia
 
 ## 🌐 Versión Online (Demo Web)
 
-> **🎉 Versión 3.1.7 ya disponible en [gm-3000.web.app](https://gm-3000.web.app)**  
+> **🎉 Versión 3.2.0 ya disponible en [gm-3000.web.app](https://gm-3000.web.app)**  
 > Prueba la aplicación directamente desde tu navegador con las últimas mejoras en interfaz, editor FEN, seguridad LAN y Modo Aventura.  
 > ⚠️ **Nota:** La funcionalidad de conexión LAN para jugar en red local, el análisis con IA en lenguaje natural y la lectura por voz del análisis con voces realistas **solo están disponibles en la versión de escritorio**. Para disfrutar de todas las funciones, descarga el instalador.
 
@@ -25,12 +25,12 @@ La aplicación integra potentes motores de análisis, análisis con inteligencia
 
 Si desea utilizar todas las funciones, incluyendo el modo LAN y los motores locales, descargue la versión de escritorio:
 
-### ✨ Última Versión 3.1.7
+### ✨ Última Versión 3.2.0
 
 | Tipo de Instalador | Enlace de Descarga (MEGA) | Enlace de Descarga (GitHub) | Descripción |
 | :--- | :--- | :--- | :--- |
-| **Portable (.ZIP)** | [Descargar ZIP](https://mega.nz/file/7fxgEJLa#kVwRmtB64G0qdirxvd0MHdYHvRybXjVQQGZ_DiFmYCI) | [GitHub Release](https://github.com/ElalChico/GM-3000/releases/download/v3.1.7/GM-3000-win32-x64-3.1.7.zip) | No requiere instalación. Descomprimir y ejecutar. Ideal para USB o pruebas rápidas. |
-| **Instalador (.EXE 64-bit)** | [Descargar Setup](https://mega.nz/file/vLhRxKxC#BfBbqsQZpiewwx8ncE_ZdeadYPFJfmLaOuFd85zkP8E) | [GitHub Release](https://github.com/ElalChico/GM-3000/releases/download/v3.1.7/GM-3000.Setup.exe) | Instalador tradicional para Windows. Integra accesos directos y configuraciones de sistema. |
+| **Portable (.ZIP)** | [Descargar ZIP](https://mega.nz/file/7fxgEJLa#kVwRmtB64G0qdirxvd0MHdYHvRybXjVQQGZ_DiFmYCI) | [GitHub Release](https://github.com/ElalChico/GM-3000/releases/download/v3.2.0/GM-3000-win32-x64-3.2.0.zip) | No requiere instalación. Descomprimir y ejecutar. Ideal para USB o pruebas rápidas. |
+| **Instalador (.EXE 64-bit)** | [Descargar Setup](https://mega.nz/file/vLhRxKxC#BfBbqsQZpiewwx8ncE_ZdeadYPFJfmLaOuFd85zkP8E) | [GitHub Release](https://github.com/ElalChico/GM-3000/releases/download/v3.2.0/GM-3000.Setup.exe) | Instalador tradicional para Windows. Integra accesos directos y configuraciones de sistema. |
 
 ### 📦 Versión Anterior 2.1.9
 
@@ -379,16 +379,16 @@ GM-3000 incluye un **Servidor de Relevo Integrado** que permite jugar partidas m
 *   ✅ Sincronización de estado para evitar manipulaciones
 *   ✅ Relojes independientes con verificación cruzada
 *   ✅ Historial completo de movimientos verificado
-*   ✅ **Mejoras de Seguridad v3.1.7:** Sanitización de datos de red y protección contra inyecciones en el servidor de relevo.
+*   ✅ **Mejoras de Seguridad v3.2.0:** Sanitización de datos de red y protección contra inyecciones en el servidor de relevo.
 
 ### 🔄 Compatibilidad entre Versiones:
-Debido a las mejoras en la lógica de sincronización y protocolos de seguridad en la versión 3.1.7, la comunicación con versiones anteriores (v3.1.6 o inferiores) puede presentar discrepancias. 
+Debido a las mejoras en la lógica de sincronización y protocolos de seguridad en la versión 3.2.0, la comunicación con versiones anteriores (v3.1.6 o inferiores) puede presentar discrepancias. 
 
 > **Recomendación Crucial:** Si desea jugar contra un usuario que utiliza una versión anterior de GM-3000, **se recomienda que la sala sea creada (Host) desde la versión más antigua**. Esto asegura que el protocolo de comunicación sea el esperado por el cliente antiguo y mantiene la estabilidad de la partida.
 
 ---
 
-## ✨ Mejoras en la Versión 3.1.7
+## ✨ Mejoras en la Versión 3.2.0
 
 ### Editor de Posiciones FEN
 *   ✅ Editor completo con drag & drop de piezas desde paleta
@@ -507,3 +507,4 @@ Para leer los términos completos, consulte el archivo [`LICENSE`](https://githu
 
 ---
 *GM-3000 — Board de Auto-Entrenamiento.*
+

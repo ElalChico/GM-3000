@@ -183,5 +183,7 @@ export class StockfishEngine {
     this.stop();
     this.worker?.terminate();
     this.worker = null;
+    this.isReady = false;
+    this.initPromise = null;
   }
 }

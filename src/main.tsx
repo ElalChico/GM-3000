@@ -17,19 +17,28 @@ if (typeof window !== 'undefined') {
 
     if (text) (text as HTMLElement).style.opacity = '0';
     if (progress) (progress as HTMLElement).style.opacity = '0';
+    if (logo) (logo as HTMLElement).style.opacity = '0';
 
-    setTimeout(() => {
-      if (logo) {
-        (logo as HTMLElement).style.transition = 'transform 3.0s cubic-bezier(0.25, 1, 0.5, 1)';
-        (logo as HTMLElement).style.transform = 'translateY(0)';
-      }
-      if (loader) {
-        loader.style.transition = 'background-color 1.0s ease-out';
-        loader.style.backgroundColor = 'transparent';
-        loader.style.pointerEvents = 'none';
-      }
-    }, 500);
+    if (loader) {
+      loader.style.transition = 'background-color 1.0s ease-out, opacity 1.0s ease-out';
+      loader.style.backgroundColor = 'transparent';
+      loader.style.opacity = '0';
+      loader.style.pointerEvents = 'none';
+      setTimeout(() => { loader.style.display = 'none'; }, 1200);
+    }
   };
+
+  // FALLBACK INDEPENDIENTE DE REACT: quitar #loading-screen después de 6 segundos
+  // Esto garantiza que el overlay z-index:9999 nunca bloquee la app aunque React falle
+  setTimeout(() => {
+    const loader = document.getElementById('loading-screen');
+    if (loader && loader.style.display !== 'none') {
+      loader.style.transition = 'opacity 0.5s ease-out';
+      loader.style.opacity = '0';
+      loader.style.pointerEvents = 'none';
+      setTimeout(() => { loader.style.display = 'none'; }, 600);
+    }
+  }, 6000);
 }
 
 class ErrorBoundary extends Component<{ children: React.ReactNode }, { hasError: boolean; error: Error | null; errorInfo: ErrorInfo | null }> {

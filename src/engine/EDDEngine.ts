@@ -181,6 +181,8 @@ export class EDDEngine {
     this.stop();
     this.worker?.terminate();
     this.worker = null;
+    this.isReady = false;
+    this.initPromise = null;
   }
 
   terminate() { this.quit(); }
