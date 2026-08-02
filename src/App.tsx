@@ -7090,10 +7090,10 @@ const triggerHomeAnimation = useCallback(() => {
       <main
         ref={boardContainerRef}
         className={cn(
-          "flex-1 flex w-full overflow-y-auto overflow-x-hidden relative z-10",
+          "flex-1 flex flex-col md:flex-row w-full overflow-hidden relative z-10",
           !isHeaderVisible && "py-0",
           isHeaderVisible && "pt-0 pb-0 sm:pt-0.5 sm:pb-0.5",
-          (currentGameMode === "tournament" || currentGameMode === "live_station") ? "flex-col p-4" : "flex-col md:flex-row px-0 sm:px-3 lg:px-4 gap-1 sm:gap-2 lg:gap-4",
+          (currentGameMode === "tournament" || currentGameMode === "live_station") && "p-4",
           (isFullscreen && !isRightPanelOpen) ? "bg-[#0f1115]" : "bg-transparent",
           (currentGameMode === "adventure" || isAdventureModeOpen) && "bg-transparent"
         )}
@@ -7133,10 +7133,8 @@ const triggerHomeAnimation = useCallback(() => {
           </div>
         ) : (
           <>
-              <div className={cn(
-              "shrink min-w-0 relative flex justify-center",
-              isFullscreen ? "flex-1" : "",
-            )}>
+              <div className="flex-1 flex items-start justify-center min-w-0 overflow-y-auto overflow-x-hidden">
+              <div className="shrink-0 relative">
               <ChessboardProvider options={chessboardConfig}>
               {/* Panel izquierdo: Perfiles LAN, EvalBar o Bandeja de piezas de Modo Estudio */}
               {(() => {
@@ -7339,7 +7337,7 @@ const triggerHomeAnimation = useCallback(() => {
                 );
               })()}
 
-              <div style={isFullscreen ? undefined : { width: boardWidthPx, maxWidth: '100%' }} className="w-full shrink flex flex-col items-stretch gap-0">
+              <div style={{ width: boardWidthPx, maxWidth: '100%' }} className="shrink-0 flex flex-col items-stretch gap-0">
                 <div className={cn("mb-1 flex justify-between items-center bg-slate-800/80 px-2 py-0.5 rounded-t-lg border-b-2 border-slate-900 border-x border-t border-slate-700/50 overflow-visible", !isRightPanelOpen && "mb-0 rounded-lg border-x border-t border-b-0 border-slate-700/50 flex-col gap-1 px-1.5 py-1")}>
                   <div className="flex items-center gap-2">
                     {(() => {
@@ -7738,6 +7736,7 @@ const triggerHomeAnimation = useCallback(() => {
 
                 </div>
               </ChessboardProvider>
+              </div>
               </div>
 
             <aside className={cn(
