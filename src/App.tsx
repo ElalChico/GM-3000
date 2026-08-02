@@ -4,6 +4,7 @@ import React, {
   useRef,
   useCallback,
   useMemo,
+  startTransition,
 } from "react";
 import { Chess } from "chess.js";
 
@@ -1574,6 +1575,7 @@ const [adventureMusicVolume, setAdventureMusicVolume] = useState(() => {
   const [isVideoReady, setIsVideoReady] = useState(false); // Controla cuándo el video de fondo está listo
   const bgVideoRef = useRef<HTMLVideoElement>(null);
   const [showBgLightning, setShowBgLightning] = useState(false);
+  const [showRecursosJugadores, setShowRecursosJugadores] = useState(false);
   const [isIntroMuted, setIsIntroMuted] = useState(() => localStorage.getItem("gm3000_intro_muted") === "true");
   const isIntroMutedRef = useRef(isIntroMuted);
   useEffect(() => {
@@ -2067,10 +2069,10 @@ const triggerHomeAnimation = useCallback(() => {
   }, []);
 
   useEffect(() => {
-    // Fallback de 8 segundos máximo por si falla la carga del video
+    // Fallback de 45 segundos máximo por si falla la carga del video (10MB)
     const fallbackTimer = setTimeout(() => {
       triggerHomeAnimation();
-    }, 8000);
+    }, 45000);
     return () => clearTimeout(fallbackTimer);
   }, [triggerHomeAnimation]);
 
@@ -2838,34 +2840,37 @@ const triggerHomeAnimation = useCallback(() => {
 //          console.log("[GM3000] Movimiento ejecutado:", move.san);
           setGame(new Chess(g.fen()));
           setHistory(newHistory);
-          // Solo actualizar si tenemos un valor real de evalScore (para evitar undefined en Master Analysis)
-          if (typeof evalScore === "number") {
-            setMoveEvaluations((prev) => {
-              const newEvals = [...prev];
-              newEvals[moveIndex] = evalScore;
-              return newEvals;
-            });
+          // Deferir actualizaciones no críticas al siguiente frame para no bloquear el drag
+          startTransition(() => {
+            // Solo actualizar si tenemos un valor real de evalScore (para evitar undefined en Master Analysis)
+            if (typeof evalScore === "number") {
+              setMoveEvaluations((prev) => {
+                const newEvals = [...prev];
+                newEvals[moveIndex] = evalScore;
+                return newEvals;
+              });
 
-            // El motor DxA.47 ahora aprende internamente basándose en sus propias evaluaciones,
-            // por lo que ya no es necesario llamarlo con el evalScore absoluto desde la UI.
-          }
-          setMoveTimes((prev) => {
-            const newTimes = [...prev];
-            newTimes[moveIndex] = { w: whiteTime, b: blackTime };
-            return newTimes;
-          });
-          // Calcular tiempo transcurrido para esta jugada
-          if (hasStartedRef.current && !isRedo && !isLanSync) {
-            const playerWhoMoved = g.turn() === "w" ? "b" : "w";
-            const preTime = playerWhoMoved === "w" ? preMoveWhiteTime : preMoveBlackTime;
-            const postTime = playerWhoMoved === "w" ? whiteTime : blackTime;
-            const elapsed = Math.max(0, Math.round(preTime - postTime));
-            setMoveElapsedTimes((prev) => {
-              const newArr = [...prev];
-              newArr[moveIndex] = elapsed;
-              return newArr;
+              // El motor DxA.47 ahora aprende internamente basándose en sus propias evaluaciones,
+              // por lo que ya no es necesario llamarlo con el evalScore absoluto desde la UI.
+            }
+            setMoveTimes((prev) => {
+              const newTimes = [...prev];
+              newTimes[moveIndex] = { w: whiteTime, b: blackTime };
+              return newTimes;
             });
-          }
+            // Calcular tiempo transcurrido para esta jugada
+            if (hasStartedRef.current && !isRedo && !isLanSync) {
+              const playerWhoMoved = g.turn() === "w" ? "b" : "w";
+              const preTime = playerWhoMoved === "w" ? preMoveWhiteTime : preMoveBlackTime;
+              const postTime = playerWhoMoved === "w" ? whiteTime : blackTime;
+              const elapsed = Math.max(0, Math.round(preTime - postTime));
+              setMoveElapsedTimes((prev) => {
+                const newArr = [...prev];
+                newArr[moveIndex] = elapsed;
+                return newArr;
+              });
+            }
+          });
           setTimerActive(true);
           setMoveFrom("");
           if (!isRedo) setRedoStack([]);
@@ -4191,24 +4196,27 @@ const triggerHomeAnimation = useCallback(() => {
     lastEngineActivityRef.current = Date.now();
   }, [whiteEngineType, blackEngineType]);
 
-  // Vigilante de salud del motor para evitar cuelgues
+  // Vigilante de salud del motor - usa refs para no recrear interval en cada jugada
+  const engineWatchdogIntervalRef = useRef<NodeJS.Timeout | null>(null);
   useEffect(() => {
+    if (engineWatchdogIntervalRef.current) {
+      clearInterval(engineWatchdogIntervalRef.current);
+      engineWatchdogIntervalRef.current = null;
+    }
     if (!hasStarted || isPaused || game.isGameOver() || showMentalMode) return;
 
-    const checkInterval = setInterval(() => {
+    engineWatchdogIntervalRef.current = setInterval(() => {
       const now = Date.now();
       const diff = now - lastEngineActivityRef.current;
 
-      const turn = game.turn();
-      const isAiTurn = (turn === "w" && whitePlayer === "ai") || (turn === "b" && blackPlayer === "ai");
+      const turn = gameRef.current.turn();
+      const isAiTurn = (turn === "w" && whitePlayerRef.current === "ai") || (turn === "b" && blackPlayerRef.current === "ai");
 
       // 🔥 AUMENTADO de 10s a 45s - Atlas/EDD necesitan tiempo en profundidades altas
-      // Atlas en depth 24 puede tomar 20-30+ segundos, especialmente en posiciones complejas
       if (isAiTurn && diff > 45000) { // 45 segundos sin noticias del motor
         console.warn(`[App] Motor parece colgado después de ${(diff / 1000).toFixed(1)}s, recreando...`);
-        // 🔥 Ahora recreateEngines es async, esperar a que se complete
         recreateEngines().then(() => {
-          setTimeout(() => triggerEngine(game), 500);
+          setTimeout(() => triggerEngine(gameRef.current), 500);
         }).catch((err) => {
           console.error("[App] Error al recrear motores:", err);
         });
@@ -4216,8 +4224,13 @@ const triggerHomeAnimation = useCallback(() => {
       }
     }, 5000);
 
-    return () => clearInterval(checkInterval);
-  }, [hasStarted, isPaused, game, whitePlayer, blackPlayer, recreateEngines, triggerEngine]);
+    return () => {
+      if (engineWatchdogIntervalRef.current) {
+        clearInterval(engineWatchdogIntervalRef.current);
+        engineWatchdogIntervalRef.current = null;
+      }
+    };
+  }, [hasStarted, isPaused]);
 
   const runFullAnalysis = useCallback(async (overrideMode?: "fast" | "deep" | "lichess") => {
     if (isAnalyzing || history.length === 0) return;
@@ -6364,10 +6377,10 @@ const triggerHomeAnimation = useCallback(() => {
     medium: "w-[95vw] sm:w-[360px] md:w-[420px] lg:w-[480px] xl:w-[500px]",
     large: "w-[95vw] sm:w-[520px] md:w-[640px] lg:w-[780px] xl:w-[920px]",
     fill: !isHeaderVisible
-      ? "w-full max-w-[min(95vw,65vh)] md:max-w-[min(95vw,72vh)] lg:max-w-[min(95vw,82vh)]"
+      ? "w-full max-w-[min(95vw,80vh)] md:max-w-[min(95vw,72vh)] lg:max-w-[min(95vw,82vh)]"
       : ((currentGameMode === "adventure" || isAdventureModeOpen)
-        ? "w-full max-w-[min(95vw,50vh)] md:max-w-[min(95vw,60vh)] lg:max-w-[min(95vw,68vh)]"
-        : "w-full max-w-[min(95vw,55vh)] md:max-w-[min(95vw,63vh)] lg:max-w-[min(95vw,72vh)]")
+        ? "w-full max-w-[min(95vw,65vh)] md:max-w-[min(95vw,60vh)] lg:max-w-[min(95vw,68vh)]"
+        : "w-full max-w-[min(95vw,70vh)] md:max-w-[min(95vw,68vh)] lg:max-w-[min(95vw,78vh)]")
   }[effectiveBoardSize];
 
   const boardSizeClassInner = {
@@ -6380,9 +6393,10 @@ const triggerHomeAnimation = useCallback(() => {
   const calcBoardWidth = useCallback((size: string, fullscreen: boolean, gameMode?: string, headerVisible: boolean = true) => {
     const vw = window.innerWidth;
     const vh = window.innerHeight;
+    const isMobile = vw <= 768;
     const isClassic = !fullscreen && gameMode !== "adventure" && !isAdventureModeOpen;
-    const vhFactor = fullscreen ? 0.94 : !headerVisible ? 0.75 : isClassic ? 0.62 : 0.60;
-    const vwFactor = fullscreen ? 0.98 : 0.95;
+    const vhFactor = fullscreen ? 0.94 : isMobile ? 0.85 : !headerVisible ? 0.75 : isClassic ? 0.68 : 0.65;
+    const vwFactor = fullscreen ? 0.98 : isMobile ? 0.95 : 0.95;
     const maxDim = Math.min(vw * vwFactor, vh * vhFactor);
     if (size === "fill") {
       return Math.round(Math.min(vw * vwFactor, vh * vhFactor));
@@ -7066,8 +7080,8 @@ const triggerHomeAnimation = useCallback(() => {
         ref={boardContainerRef}
         className={cn(
           "flex-1 flex w-full overflow-y-auto overflow-x-hidden relative z-10",
-          !isHeaderVisible && "py-3 md:py-4",
-          isHeaderVisible && !isFullscreen && "pt-4 pb-2 sm:pt-6 sm:pb-4 lg:pt-6 lg:pb-4",
+          !isHeaderVisible && "py-1 md:py-4",
+          isHeaderVisible && !isFullscreen && "pt-1 pb-1 sm:pt-6 sm:pb-4 lg:pt-6 lg:pb-4",
           isHeaderVisible && isFullscreen && "pt-2 pb-2",
           (currentGameMode === "tournament" || currentGameMode === "live_station") ? "flex-col p-4" : "flex-col md:flex-row px-1 sm:px-3 lg:px-4 gap-1 sm:gap-2 lg:gap-4",
           boardAlign === "center" && "justify-between",
@@ -7111,17 +7125,17 @@ const triggerHomeAnimation = useCallback(() => {
           </div>
         ) : (
           <>
-            {isRightPanelOpen && boardAlign === "center" && <div className="w-[340px] sm:w-[360px] lg:w-[380px] xl:w-[420px] shrink pointer-events-none" />}
+            {isRightPanelOpen && boardAlign === "center" && <div className="hidden md:block w-[340px] sm:w-[360px] lg:w-[380px] xl:w-[420px] shrink pointer-events-none" />}
 
-            <div className={cn(
+              <div className={cn(
               "flex gap-2 items-start shrink justify-center min-w-0",
               boardAlign === "center" ? "mx-auto" : (boardAlign === "right" ? "ml-auto" : "ml-0"),
               isFullscreen ? "max-w-full" : boardSizeClassWrapper,
               isFullscreen
                 ? "max-h-[calc(100vh-40px)]"
                 : isHeaderVisible
-                  ? ((currentGameMode === "adventure" || isAdventureModeOpen) ? "max-h-[calc(100vh-150px)]" : "max-h-[calc(100vh-120px)]")
-                  : "max-h-[calc(100dvh-60px)]"
+                  ? ((currentGameMode === "adventure" || isAdventureModeOpen) ? "max-h-[calc(100vh-100px)]" : "max-h-[calc(100vh-90px)]")
+                  : "max-h-[calc(100dvh-40px)]"
             )}>
               <ChessboardProvider options={chessboardConfig}>
               {/* Panel izquierdo: Perfiles LAN, EvalBar o Bandeja de piezas de Modo Estudio */}
@@ -7325,7 +7339,7 @@ const triggerHomeAnimation = useCallback(() => {
                 );
               })()}
 
-              <div className={cn("w-full h-full shrink relative min-h-0", boardSizeClassInner, !isRightPanelOpen ? "grid grid-cols-[auto_1fr] grid-rows-[auto_1fr_auto] gap-x-2 place-items-center" : cn("flex flex-col", isFullscreen ? "justify-center" : (isHeaderVisible ? "justify-center" : "justify-start")), isFullscreen ? "max-h-[calc(100vh-40px)]" : (isHeaderVisible ? "max-h-[calc(100vh-120px)]" : "max-h-[calc(100dvh-60px)]"))}>
+              <div className={cn("w-full h-full shrink relative min-h-0", boardSizeClassInner, !isRightPanelOpen ? "grid grid-cols-[auto_1fr] grid-rows-[auto_1fr_auto] gap-x-2 place-items-center" : cn("flex flex-col", isFullscreen ? "justify-center" : (isHeaderVisible ? "justify-center" : "justify-start")), isFullscreen ? "max-h-[calc(100vh-40px)]" : (isHeaderVisible ? "max-h-[calc(100vh-90px)]" : "max-h-[calc(100dvh-40px)]"))}>
                 <div className={cn("mb-1 flex justify-between items-center bg-slate-800/80 px-2 py-0.5 rounded-t-lg border-b-2 border-slate-900 border-x border-t border-slate-700/50 overflow-visible", !isRightPanelOpen && "col-start-1 row-start-1 mb-0 w-auto rounded-lg border-x border-t border-b-0 border-slate-700/50 flex-col gap-1 px-1.5 py-1")}>
                   <div className="flex items-center gap-2">
                     {(() => {
@@ -7730,13 +7744,14 @@ const triggerHomeAnimation = useCallback(() => {
             <aside className={cn(
               "flex flex-col gap-4 transition-all duration-300 min-h-0 overflow-hidden self-stretch",
               !isRightPanelOpen && "hidden",
-              isRightPanelOpen && "flex-1 min-w-[360px] sm:min-w-[420px] lg:min-w-[460px]",
+              isRightPanelOpen && "flex-1 min-w-0 md:min-w-[360px] sm:min-w-[420px] lg:min-w-[460px]",
               isHeaderVisible ? "max-h-[calc(100vh-120px)]" : "max-h-[calc(100vh-60px)]",
               boardAlign === "left"
                   ? "ml-0 pl-2 sm:pl-4"
                   : boardAlign === "right"
                     ? "mr-0 md:order-first pr-2 sm:pr-4"
-                    : "w-[380px] sm:w-[420px] lg:w-[460px] xl:w-[520px] shrink-0 ml-auto pl-1 sm:pl-2"
+                    : "md:w-[380px] sm:w-[420px] lg:w-[460px] xl:w-[520px] shrink-0 ml-auto pl-1 sm:pl-2",
+              isRightPanelOpen && "fixed md:relative right-0 top-0 bottom-0 z-[4000] w-full md:w-auto bg-slate-950/95 md:bg-transparent backdrop-blur-md md:backdrop-blur-none"
             )}>
               <div className={cn(
                 "flex flex-col gap-2 mt-4 p-4 rounded-xl relative overflow-hidden group w-full medieval-panel shrink-0",

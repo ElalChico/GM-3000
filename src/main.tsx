@@ -28,7 +28,7 @@ if (typeof window !== 'undefined') {
     }
   };
 
-  // FALLBACK INDEPENDIENTE DE REACT: quitar #loading-screen después de 6 segundos
+  // FALLBACK INDEPENDIENTE DE REACT: quitar #loading-screen después de 45 segundos
   // Esto garantiza que el overlay z-index:9999 nunca bloquee la app aunque React falle
   setTimeout(() => {
     const loader = document.getElementById('loading-screen');
@@ -38,7 +38,7 @@ if (typeof window !== 'undefined') {
       loader.style.pointerEvents = 'none';
       setTimeout(() => { loader.style.display = 'none'; }, 600);
     }
-  }, 6000);
+  }, 45000);
 }
 
 class ErrorBoundary extends Component<{ children: React.ReactNode }, { hasError: boolean; error: Error | null; errorInfo: ErrorInfo | null }> {
