@@ -6389,8 +6389,9 @@ const triggerHomeAnimation = useCallback(() => {
   const calcBoardWidth = useCallback((size: string, fullscreen: boolean, gameMode?: string, headerVisible: boolean = true) => {
     const vw = window.innerWidth;
     const vh = window.innerHeight;
-    const headerSpace = headerVisible ? 80 : 30;
-    const availableH = vh - headerSpace;
+    // Player bars (top + bottom ~35px each) + header + padding
+    const chrome = headerVisible ? 120 : 50;
+    const availableH = vh - chrome;
     const availableW = vw * 0.95;
     const boardSize = Math.min(availableW, availableH);
     if (size === "fill") {
@@ -7126,6 +7127,11 @@ const triggerHomeAnimation = useCallback(() => {
               "flex gap-2 items-start shrink justify-center min-w-0",
               boardAlign === "center" ? "mx-auto" : (boardAlign === "right" ? "ml-auto" : "ml-0"),
               isFullscreen ? "max-w-full" : boardSizeClassWrapper,
+              isFullscreen
+                ? "max-h-[calc(100vh-40px)]"
+                : isHeaderVisible
+                  ? "max-h-[calc(100vh-80px)]"
+                  : "max-h-[calc(100dvh-30px)]"
             )}>
               <ChessboardProvider options={chessboardConfig}>
               {/* Panel izquierdo: Perfiles LAN, EvalBar o Bandeja de piezas de Modo Estudio */}
@@ -7329,7 +7335,7 @@ const triggerHomeAnimation = useCallback(() => {
                 );
               })()}
 
-              <div className={cn("shrink relative min-h-0", boardSizeClassInner, !isRightPanelOpen ? "w-full h-full grid grid-cols-[auto_1fr] grid-rows-[auto_1fr_auto] gap-x-2 place-items-center" : cn("w-full h-full flex flex-col", isFullscreen ? "justify-center" : (isHeaderVisible ? "justify-center" : "justify-start")), isFullscreen ? "max-h-[calc(100vh-40px)]" : (isHeaderVisible ? "max-h-[calc(100vh-80px)]" : "max-h-[calc(100dvh-40px)]"))}>
+              <div className={cn("shrink relative min-h-0", boardSizeClassInner, !isRightPanelOpen ? "w-full h-full grid grid-cols-[auto_1fr] grid-rows-[auto_1fr_auto] gap-x-2 place-items-center" : cn("w-full h-full flex flex-col", isFullscreen ? "justify-center" : "justify-center"))}>
                 <div className={cn("mb-1 flex justify-between items-center bg-slate-800/80 px-2 py-0.5 rounded-t-lg border-b-2 border-slate-900 border-x border-t border-slate-700/50 overflow-visible", !isRightPanelOpen && "col-start-1 row-start-1 mb-0 w-auto rounded-lg border-x border-t border-b-0 border-slate-700/50 flex-col gap-1 px-1.5 py-1")}>
                   <div className="flex items-center gap-2">
                     {(() => {
@@ -7376,7 +7382,7 @@ const triggerHomeAnimation = useCallback(() => {
                 </div>
 
                     {!showMentalMode && <div className={cn(
-                      "max-h-full aspect-square shadow-[0_25px_50px_-12px_rgba(0,0,0,0.5)] border-4 touch-none relative chess-container-wrapper mx-auto flex items-start justify-center p-1.5 sm:p-2",
+                      "h-full max-w-full aspect-square shadow-[0_25px_50px_-12px_rgba(0,0,0,0.5)] border-4 touch-none relative chess-container-wrapper mx-auto flex items-start justify-center p-1.5 sm:p-2",
                       !isRightPanelOpen && "col-start-2 row-start-1 row-span-3",
                       currentGameMode === "adventure" ? "border-amber-900/60 bg-transparent" : "border-[#2d3748] bg-[#2d3748]",
                       isInvisiblePieces && "invisible-pieces",
@@ -7732,16 +7738,16 @@ const triggerHomeAnimation = useCallback(() => {
               </div>
 
             <aside className={cn(
-              "flex flex-col gap-4 transition-all duration-300 min-h-0 overflow-hidden",
+              "flex flex-col gap-4 transition-all duration-300 min-h-0 overflow-hidden self-stretch",
               !isRightPanelOpen && "hidden",
-              isRightPanelOpen && "md:flex-1 min-w-0",
+              isRightPanelOpen && "flex-1 min-w-[360px] sm:min-w-[420px] lg:min-w-[460px]",
               isHeaderVisible ? "max-h-[calc(100vh-120px)]" : "max-h-[calc(100vh-60px)]",
               boardAlign === "left"
-                  ? "md:ml-0 md:pl-2 sm:pl-4"
+                  ? "ml-0 pl-2 sm:pl-4"
                   : boardAlign === "right"
-                    ? "md:mr-0 md:order-first md:pr-2 sm:pr-4"
-                    : "md:w-[380px] sm:w-[420px] lg:w-[460px] xl:w-[520px] shrink-0 md:ml-auto md:pl-1 sm:pl-2",
-              isRightPanelOpen && "fixed md:relative inset-0 md:inset-auto right-0 md:right-auto top-0 md:top-auto bottom-0 md:bottom-auto z-[4000] w-full md:w-auto bg-slate-950/98 md:bg-transparent backdrop-blur-md md:backdrop-blur-none p-4 md:p-0"
+                    ? "mr-0 md:order-first pr-2 sm:pr-4"
+                    : "w-[380px] sm:w-[420px] lg:w-[460px] xl:w-[520px] shrink-0 ml-auto pl-1 sm:pl-2",
+              isRightPanelOpen && "max-md:fixed max-md:inset-0 max-md:z-[4000] max-md:w-full max-md:min-w-0 max-md:bg-slate-950/98 max-md:backdrop-blur-md max-md:p-4 max-md:self-auto max-md:max-h-full"
             )}>
               <div className={cn(
                 "flex flex-col gap-2 mt-4 p-4 rounded-xl relative overflow-hidden group w-full medieval-panel shrink-0",
