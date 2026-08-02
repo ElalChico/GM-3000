@@ -6376,11 +6376,7 @@ const triggerHomeAnimation = useCallback(() => {
     small: "w-[95vw] sm:w-[320px] md:w-[380px] lg:w-[420px] xl:w-[480px]",
     medium: "w-[95vw] sm:w-[360px] md:w-[420px] lg:w-[480px] xl:w-[500px]",
     large: "w-[95vw] sm:w-[520px] md:w-[640px] lg:w-[780px] xl:w-[920px]",
-    fill: !isHeaderVisible
-      ? "w-full max-w-[min(95vw,80vh)] md:max-w-[min(95vw,72vh)] lg:max-w-[min(95vw,82vh)]"
-      : ((currentGameMode === "adventure" || isAdventureModeOpen)
-        ? "w-full max-w-[min(95vw,65vh)] md:max-w-[min(95vw,60vh)] lg:max-w-[min(95vw,68vh)]"
-        : "w-full max-w-[min(95vw,70vh)] md:max-w-[min(95vw,68vh)] lg:max-w-[min(95vw,78vh)]")
+    fill: "w-full"
   }[effectiveBoardSize];
 
   const boardSizeClassInner = {
@@ -6393,18 +6389,17 @@ const triggerHomeAnimation = useCallback(() => {
   const calcBoardWidth = useCallback((size: string, fullscreen: boolean, gameMode?: string, headerVisible: boolean = true) => {
     const vw = window.innerWidth;
     const vh = window.innerHeight;
-    const isMobile = vw <= 768;
-    const isClassic = !fullscreen && gameMode !== "adventure" && !isAdventureModeOpen;
-    const vhFactor = fullscreen ? 0.94 : isMobile ? 0.85 : !headerVisible ? 0.75 : isClassic ? 0.68 : 0.65;
-    const vwFactor = fullscreen ? 0.98 : isMobile ? 0.95 : 0.95;
-    const maxDim = Math.min(vw * vwFactor, vh * vhFactor);
+    const headerSpace = headerVisible ? 80 : 30;
+    const availableH = vh - headerSpace;
+    const availableW = vw * 0.95;
+    const boardSize = Math.min(availableW, availableH);
     if (size === "fill") {
-      return Math.round(Math.min(vw * vwFactor, vh * vhFactor));
+      return Math.round(boardSize);
     }
     const bases: Record<string, number> = { small: 320, medium: 360, large: 520, fill: 400 };
     const base = bases[size] || 480;
-    return Math.round(Math.min(base, maxDim));
-  }, [currentGameMode, isAdventureModeOpen]);
+    return Math.round(Math.min(base, boardSize));
+  }, []);
 
   const [boardWidthPx, setBoardWidthPx] = useState(() => calcBoardWidth(effectiveBoardSize, isFullscreen, currentGameMode, isHeaderVisible));
 
@@ -7083,7 +7078,7 @@ const triggerHomeAnimation = useCallback(() => {
           !isHeaderVisible && "py-1 md:py-4",
           isHeaderVisible && !isFullscreen && "pt-1 pb-1 sm:pt-6 sm:pb-4 lg:pt-6 lg:pb-4",
           isHeaderVisible && isFullscreen && "pt-2 pb-2",
-          (currentGameMode === "tournament" || currentGameMode === "live_station") ? "flex-col p-4" : "flex-col md:flex-row px-1 sm:px-3 lg:px-4 gap-1 sm:gap-2 lg:gap-4",
+          (currentGameMode === "tournament" || currentGameMode === "live_station") ? "flex-col p-4" : "flex-col md:flex-row px-0 sm:px-3 lg:px-4 gap-1 sm:gap-2 lg:gap-4",
           boardAlign === "center" && "justify-between",
           boardAlign === "right" && "justify-end",
           (isFullscreen && !isRightPanelOpen) ? "bg-[#0f1115]" : "bg-transparent",
@@ -7131,11 +7126,6 @@ const triggerHomeAnimation = useCallback(() => {
               "flex gap-2 items-start shrink justify-center min-w-0",
               boardAlign === "center" ? "mx-auto" : (boardAlign === "right" ? "ml-auto" : "ml-0"),
               isFullscreen ? "max-w-full" : boardSizeClassWrapper,
-              isFullscreen
-                ? "max-h-[calc(100vh-40px)]"
-                : isHeaderVisible
-                  ? ((currentGameMode === "adventure" || isAdventureModeOpen) ? "max-h-[calc(100vh-100px)]" : "max-h-[calc(100vh-90px)]")
-                  : "max-h-[calc(100dvh-40px)]"
             )}>
               <ChessboardProvider options={chessboardConfig}>
               {/* Panel izquierdo: Perfiles LAN, EvalBar o Bandeja de piezas de Modo Estudio */}
@@ -7339,7 +7329,7 @@ const triggerHomeAnimation = useCallback(() => {
                 );
               })()}
 
-              <div className={cn("w-full h-full shrink relative min-h-0", boardSizeClassInner, !isRightPanelOpen ? "grid grid-cols-[auto_1fr] grid-rows-[auto_1fr_auto] gap-x-2 place-items-center" : cn("flex flex-col", isFullscreen ? "justify-center" : (isHeaderVisible ? "justify-center" : "justify-start")), isFullscreen ? "max-h-[calc(100vh-40px)]" : (isHeaderVisible ? "max-h-[calc(100vh-90px)]" : "max-h-[calc(100dvh-40px)]"))}>
+              <div className={cn("shrink relative min-h-0", boardSizeClassInner, !isRightPanelOpen ? "w-full h-full grid grid-cols-[auto_1fr] grid-rows-[auto_1fr_auto] gap-x-2 place-items-center" : cn("w-full h-full flex flex-col", isFullscreen ? "justify-center" : (isHeaderVisible ? "justify-center" : "justify-start")), isFullscreen ? "max-h-[calc(100vh-40px)]" : (isHeaderVisible ? "max-h-[calc(100vh-80px)]" : "max-h-[calc(100dvh-40px)]"))}>
                 <div className={cn("mb-1 flex justify-between items-center bg-slate-800/80 px-2 py-0.5 rounded-t-lg border-b-2 border-slate-900 border-x border-t border-slate-700/50 overflow-visible", !isRightPanelOpen && "col-start-1 row-start-1 mb-0 w-auto rounded-lg border-x border-t border-b-0 border-slate-700/50 flex-col gap-1 px-1.5 py-1")}>
                   <div className="flex items-center gap-2">
                     {(() => {
@@ -7386,7 +7376,7 @@ const triggerHomeAnimation = useCallback(() => {
                 </div>
 
                     {!showMentalMode && <div className={cn(
-                      "w-full max-w-full max-h-full aspect-square shadow-[0_25px_50px_-12px_rgba(0,0,0,0.5)] border-4 touch-none relative chess-container-wrapper mx-auto flex items-start justify-center p-1.5 sm:p-2",
+                      "max-h-full aspect-square shadow-[0_25px_50px_-12px_rgba(0,0,0,0.5)] border-4 touch-none relative chess-container-wrapper mx-auto flex items-start justify-center p-1.5 sm:p-2",
                       !isRightPanelOpen && "col-start-2 row-start-1 row-span-3",
                       currentGameMode === "adventure" ? "border-amber-900/60 bg-transparent" : "border-[#2d3748] bg-[#2d3748]",
                       isInvisiblePieces && "invisible-pieces",
@@ -7742,16 +7732,16 @@ const triggerHomeAnimation = useCallback(() => {
               </div>
 
             <aside className={cn(
-              "flex flex-col gap-4 transition-all duration-300 min-h-0 overflow-hidden self-stretch",
+              "flex flex-col gap-4 transition-all duration-300 min-h-0 overflow-hidden",
               !isRightPanelOpen && "hidden",
-              isRightPanelOpen && "flex-1 min-w-0 md:min-w-[360px] sm:min-w-[420px] lg:min-w-[460px]",
+              isRightPanelOpen && "md:flex-1 min-w-0",
               isHeaderVisible ? "max-h-[calc(100vh-120px)]" : "max-h-[calc(100vh-60px)]",
               boardAlign === "left"
-                  ? "ml-0 pl-2 sm:pl-4"
+                  ? "md:ml-0 md:pl-2 sm:pl-4"
                   : boardAlign === "right"
-                    ? "mr-0 md:order-first pr-2 sm:pr-4"
-                    : "md:w-[380px] sm:w-[420px] lg:w-[460px] xl:w-[520px] shrink-0 ml-auto pl-1 sm:pl-2",
-              isRightPanelOpen && "fixed md:relative right-0 top-0 bottom-0 z-[4000] w-full md:w-auto bg-slate-950/95 md:bg-transparent backdrop-blur-md md:backdrop-blur-none"
+                    ? "md:mr-0 md:order-first md:pr-2 sm:pr-4"
+                    : "md:w-[380px] sm:w-[420px] lg:w-[460px] xl:w-[520px] shrink-0 md:ml-auto md:pl-1 sm:pl-2",
+              isRightPanelOpen && "fixed md:relative inset-0 md:inset-auto right-0 md:right-auto top-0 md:top-auto bottom-0 md:bottom-auto z-[4000] w-full md:w-auto bg-slate-950/98 md:bg-transparent backdrop-blur-md md:backdrop-blur-none p-4 md:p-0"
             )}>
               <div className={cn(
                 "flex flex-col gap-2 mt-4 p-4 rounded-xl relative overflow-hidden group w-full medieval-panel shrink-0",
