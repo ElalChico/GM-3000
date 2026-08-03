@@ -6392,7 +6392,7 @@ const triggerHomeAnimation = useCallback(() => {
     const vh = window.innerHeight;
     const isMobile = vw <= 768;
     // Player bars (~40px each = 80px) + header (~50px) + main padding (~4px)
-    const chrome = headerVisible ? 135 : 85;
+    const chrome = headerVisible ? 145 : 95;
     const availableH = vh - chrome;
     // On desktop with sidebar open, subtract sidebar width + gap
     const sidebarW = (!isMobile && isRightPanelOpen) ? 320 : 0;
@@ -7131,17 +7131,17 @@ const triggerHomeAnimation = useCallback(() => {
               allowFullScreen
             />
           </div>
-        ) : (
+) : (
           <>
-              <div className="flex-1 flex items-start justify-center min-w-0 overflow-y-auto overflow-x-hidden">
-              <div className="shrink-0 relative">
-              <ChessboardProvider options={chessboardConfig}>
-              {/* Panel izquierdo: Perfiles LAN, EvalBar o Bandeja de piezas de Modo Estudio */}
-              {(() => {
-                if (freeModeStage === 'board' && !hasStarted) {
-                  return (
-                    <div className="hidden md:flex shrink-0 flex-col items-center gap-2 self-stretch justify-center py-2">
-                      <div className="flex flex-col items-center gap-3 p-2.5 rounded-2xl border border-cyan-900/40 bg-slate-900/80 backdrop-blur-sm shadow-[0_10px_30px_-10px_rgba(0,0,0,0.6)]">
+              <div className="flex-1 flex flex-col items-center justify-center min-w-0 overflow-hidden overflow-x-hidden">
+              <div className="shrink-0 relative w-full flex flex-row items-start">
+                <ChessboardProvider options={chessboardConfig}>
+                {/* Panel izquierdo: Perfiles LAN, EvalBar o Bandeja de piezas de Modo Estudio */}
+                {(() => {
+                  if (freeModeStage === 'board' && !hasStarted) {
+                    return (
+                      <div className="hidden md:flex shrink-0 flex-col items-center gap-2 self-stretch justify-center py-2 mr-2">
+                        <div className="flex flex-col items-center gap-3 p-2.5 rounded-2xl border border-cyan-900/40 bg-slate-900/80 backdrop-blur-sm shadow-[0_10px_30px_-10px_rgba(0,0,0,0.6)]">
                         <button
                           onClick={() => setStudyPanelExpanded(!studyPanelExpanded)}
                           className="w-full flex items-center justify-between gap-3 px-1 py-0.5 group"
@@ -7742,7 +7742,7 @@ const triggerHomeAnimation = useCallback(() => {
             <aside className={cn(
               "flex flex-col gap-4 transition-all duration-300 min-h-0 overflow-y-auto overflow-x-hidden self-stretch",
               !isRightPanelOpen && "hidden",
-              isRightPanelOpen && "flex-1 min-w-[300px] max-w-[400px] pl-1 sm:pl-2",
+              isRightPanelOpen && "w-[320px] flex-shrink-0 pl-1 sm:pl-2",
               isRightPanelOpen && "max-md:fixed max-md:inset-0 max-md:z-[4000] max-md:w-full max-md:min-w-0 max-md:max-w-full max-md:bg-slate-950/98 max-md:backdrop-blur-md max-md:p-4 max-md:self-auto max-md:max-h-full"
             )}>
               <div className={cn(
