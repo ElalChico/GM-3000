@@ -6524,13 +6524,16 @@ const triggerHomeAnimation = useCallback(() => {
           setIsVideoReady(true);
           triggerHomeAnimation();
         }}
-        onTimeUpdate={(e) => {
-          const v = e.target as HTMLVideoElement;
-          if (!v.duration || isNaN(v.duration)) return;
-          const remaining = v.duration - v.currentTime;
-          setShowBgLightning(remaining > 0 && remaining < 2.5);
-        }}
-        onEnded={() => setShowBgLightning(false)}
+onTimeUpdate={(e) => {
+            const v = e.target as HTMLVideoElement;
+            if (!v.duration || isNaN(v.duration)) return;
+            const remaining = v.duration - v.currentTime;
+            if (remaining > 0 && remaining < 0.5 && !showBgLightning) {
+              setShowBgLightning(true);
+              setTimeout(() => setShowBgLightning(false), 300);
+            }
+          }}
+          onEnded={() => setShowBgLightning(false)}
         onError={(e) => { console.error("[GM3000] Video error:", e.nativeEvent, "src:", (e.target as HTMLVideoElement).currentSrc); }}
       >
         <source src={FhVideoDirect} type="video/mp4" />
@@ -6958,7 +6961,7 @@ const triggerHomeAnimation = useCallback(() => {
       {isFullscreen && !showMainScreen && (
         <button
           onClick={toggleFullScreen}
-          className="fixed bottom-4 right-4 flex items-center gap-1.5 px-3 py-1.5 bg-slate-800/90 hover:bg-slate-700 text-slate-300 border border-slate-700 rounded-lg transition-all text-[10px] font-bold uppercase tracking-wider shadow-lg z-[9999] backdrop-blur-sm"
+          className="fixed bottom-4 right-4 flex items-center gap-1.5 px-3 py-1.5 bg-slate-800/90 hover:bg-slate-700 text-slate-300 border border-slate-700 rounded-lg transition-all text-[10px] font-bold uppercase tracking-wider shadow-lg z-[9999] backdrop-blur-sm md:right-[calc(320px+1rem)]"
         >
           <Minimize className="w-3.5 h-3.5" />
           {language === "es" ? "Salir" : "Exit"}
@@ -7134,7 +7137,7 @@ const triggerHomeAnimation = useCallback(() => {
 ) : (
           <>
               <div className="flex-1 flex flex-col items-center justify-center min-w-0 overflow-hidden overflow-x-hidden">
-              <div className="shrink-0 relative w-full flex flex-row items-start">
+              <div className="shrink-0 relative w-full flex flex-row items-center justify-center">
                 <ChessboardProvider options={chessboardConfig}>
                 {/* Panel izquierdo: Perfiles LAN, EvalBar o Bandeja de piezas de Modo Estudio */}
                 {(() => {
