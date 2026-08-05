@@ -30,7 +30,7 @@ Si desea utilizar todas las funciones, incluyendo el modo LAN y los motores loca
 | Tipo de Instalador | Enlace de Descarga (MEGA) | Enlace de Descarga (GitHub) | Descripción |
 | :--- | :--- | :--- | :--- |
 | **Portable (.ZIP)** | [Descargar ZIP - MEGA](https://mega.nz/file/TKohWb5a#p7I0hM3ou5rZQbJYjG3XqvMq1GS-HpL24TTjaxjyX2k) | [GitHub Release](https://github.com/ElalChico/GM-3000/releases/download/v3.2.0/GM-3000-win32-x64-3.2.0.zip) | No requiere instalación. Descomprimir y ejecutar. Ideal para USB o pruebas rápidas. |
-| **Instalador (.EXE 64-bit)** | [Descargar Setup en MEGA]- (https://mega.nz/file/3GoVVTiJ#cfnmvTtIZj_Xn8c4PrtiYU41UkdCNc-8FTO2JK-GKhI) | [GitHub Release](https://github.com/ElalChico/GM-3000/releases/download/v3.2.0/GM-3000.Setup.exe) | Instalador tradicional para Windows. Integra accesos directos y configuraciones de sistema. |
+| **Instalador (.EXE 64-bit)** | [Descargar Setup en MEGA](https://mega.nz/file/3GoVVTiJ#cfnmvTtIZj_Xn8c4PrtiYU41UkdCNc-8FTO2JK-GKhI) | [GitHub Release](https://github.com/ElalChico/GM-3000/releases/download/v3.2.0/GM-3000.Setup.exe) | Instalador tradicional para Windows. Integra accesos directos y configuraciones de sistema. |
 
 > **Nota:** Los enlaces de MEGA deben subirse manualmente. Los enlaces de GitHub Release apuntan a la versión 3.2.0.
 
