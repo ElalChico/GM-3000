@@ -6957,17 +6957,6 @@ onTimeUpdate={(e) => {
         </button>
       )}
 
-      {/* Exit fullscreen button - fixed position bottom-right, always visible in fullscreen */}
-      {isFullscreen && !showMainScreen && (
-        <button
-          onClick={toggleFullScreen}
-          className="fixed bottom-4 right-4 flex items-center gap-1.5 px-3 py-1.5 bg-slate-800/90 hover:bg-slate-700 text-slate-300 border border-slate-700 rounded-lg transition-all text-[10px] font-bold uppercase tracking-wider shadow-lg z-[9999] backdrop-blur-sm md:right-[calc(320px+1rem)]"
-        >
-          <Minimize className="w-3.5 h-3.5" />
-          {language === "es" ? "Salir" : "Exit"}
-        </button>
-      )}
-
       {/* Assist Toast at Bottom-Left */}
       {assistMessage && (
         <div className="fixed bottom-4 left-4 z-[9999] bg-slate-900/95 backdrop-blur shadow-2xl rounded-xl border border-blue-500/30 p-4 flex items-center gap-4 animate-in slide-in-from-bottom-5">
