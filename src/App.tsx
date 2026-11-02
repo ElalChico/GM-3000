@@ -43,6 +43,7 @@ Chess.prototype.isDraw = function() {
 
 import { generateTrainingFen, generateChess960Fen } from "./utils/fenGenerator";
 import { classifyMove, MoveClassification } from "./utils/analysisTemplates";
+import { estimateElo, MAIA2_ELO_LADDER, MAIA2_ELO_MIN, MAIA2_ELO_MAX, MAIA2_ELO_DEFAULT, snapMaia2Elo, maia2DepthToElo, maia2EloToDepth } from "./utils/eloEstimation";
 import { cn } from "./lib/utils";
 import { Chessboard, ChessboardProvider, SparePiece } from "react-chessboard";
 import { LanPlaceholder } from "./components/server_placeholder/LanPlaceholder";
@@ -104,6 +105,7 @@ import {
   Loader2,
   CheckCircle2,
   ArrowRight,
+  Clock,
   Download
 } from "lucide-react";
 import SidebarProfileSummary from "./components/SidebarProfileSummary";
@@ -896,11 +898,28 @@ const [blackEngineType, setBlackEngineType] = useState<string>(() => {
     
     "stockfish": { min: 400, max: 3500, default: 1600 },
     "maia1": { min: 1100, max: 1700, default: 1400 },
-    "maia2": { min: 1300, max: 1900, default: 1600 },
+    "maia2": { min: MAIA2_ELO_MIN, max: MAIA2_ELO_MAX, default: MAIA2_ELO_DEFAULT },
   };
 
   const getEngineEloRange = (engineType: string) => {
     return ENGINE_ELO_RANGES[engineType] || { min: 400, max: 3500, default: 1600 };
+  };
+
+  // Convierte un ELO elegido a la profundidad real que usa el motor (3-25)
+  const eloToEngineDepth = (elo: number, engineType: string) => {
+    if (engineType === "maia2") return maia2EloToDepth(elo);
+    const range = getEngineEloRange(engineType);
+    const pct = Math.max(0, Math.min(1, (elo - range.min) / Math.max(1, range.max - range.min)));
+    return Math.max(3, Math.min(25, Math.round(3 + pct * 22)));
+  };
+
+  // Skill Level (0-20) del motor según el nivel ELO de Maia 2.
+  // 400 ELO -> skill 0 (débil) ... 2100 ELO -> skill 20 (fuerte)
+  const getMaia2SkillLevel = (engineType: string, depth: number): number | undefined => {
+    if (engineType !== "maia2") return undefined;
+    const elo = maia2DepthToElo(depth);
+    const pct = (elo - MAIA2_ELO_MIN) / Math.max(1, MAIA2_ELO_MAX - MAIA2_ELO_MIN);
+    return Math.max(0, Math.min(20, Math.round(pct * 20)));
   };
   
   const defaultProgressiveState: ProgressiveState = {
@@ -2435,7 +2454,7 @@ const triggerHomeAnimation = useCallback(() => {
       return `${depthPercent}%`;
     }
     if (engineType === "maia1") return `${1100 + depth}`;
-    if (engineType === "maia2") return `${1500 + depth}`;
+    if (engineType === "maia2") return `${maia2DepthToElo(depth)}`;
     return `${800 + depth * 116}`;
   };
 
@@ -3444,15 +3463,6 @@ const triggerHomeAnimation = useCallback(() => {
       };
 
       // Compute history FENs and recent moves for repetition detection
-      const historyMoves = currentGameState.history({ verbose: true });
-      const historyFens: string[] = [];
-      const tempGame = new Chess();
-      for (const m of historyMoves) {
-        tempGame.move(m);
-        historyFens.push(tempGame.fen());
-      }
-      const recentMoves = historyMoves.slice(-8).map((m: any) => `${m.from}${m.to}${m.promotion || ""}`);
-
       if (turn === "w") {
         if (whitePlayerRef.current === "ai" && !isPausedRef.current) {
           // Solo disparar si el motor está listo
@@ -3474,8 +3484,7 @@ const triggerHomeAnimation = useCallback(() => {
               engineDepth,
               times,
               adjustedSpeed,
-              historyFens,
-              recentMoves
+              getMaia2SkillLevel(whiteEngineTypeRef.current, uiDepth)
             );
           } else {
             // Motor aún inicializando: reintentar cuando esté listo
@@ -3525,8 +3534,7 @@ const triggerHomeAnimation = useCallback(() => {
               engineDepth,
               times,
               adjustedSpeed,
-              historyFens,
-              recentMoves
+              getMaia2SkillLevel(blackEngineTypeRef.current, uiDepth)
             );
           } else {
             // Motor aún inicializando: reintentar cuando esté listo
@@ -4854,6 +4862,25 @@ const triggerHomeAnimation = useCallback(() => {
       blackEngineTypeRef.current = effectiveBlackEngineType;
       whiteAiDepthRef.current = effectiveWhiteAiDepth;
       blackAiDepthRef.current = effectiveBlackAiDepth;
+    }
+
+    // 🔥 Modo Progresivo: el ELO elegido define la FUERZA REAL del motor.
+    // Se traduce a la profundidad de cálculo que usa el motor (3-25).
+    if (!options?.freeMode && progressiveState.enabled && currentGameMode === "normal" &&
+        ((effectiveWhitePlayer === "human" && effectiveBlackPlayer === "ai") ||
+         (effectiveWhitePlayer === "ai" && effectiveBlackPlayer === "human"))) {
+      const aiIsWhite = effectiveWhitePlayer === "ai";
+      const aiEngineType = aiIsWhite ? effectiveWhiteEngineType : effectiveBlackEngineType;
+      const eloDepth = eloToEngineDepth(progressiveState.currentElo, aiEngineType);
+      if (aiIsWhite) {
+        effectiveWhiteAiDepth = eloDepth;
+        whiteAiDepthRef.current = eloDepth;
+        setWhiteAiDepth(eloDepth);
+      } else {
+        effectiveBlackAiDepth = eloDepth;
+        blackAiDepthRef.current = eloDepth;
+        setBlackAiDepth(eloDepth);
+      }
     }
 
     // Aplicar orientación/players al estado (estos no disparan useEffects de motores)
@@ -8294,10 +8321,111 @@ onTimeUpdate={(e) => {
             className="absolute inset-0 bg-black/40 backdrop-blur-sm transition-opacity"
             onClick={() => setIsConfigSidebarOpen(false)}
           />
-          <div className={cn(
-            "relative w-[95vw] sm:w-[760px] h-full border-l flex flex-col transform transition-transform animate-in slide-in-from-right duration-300 medieval-panel shadow-2xl z-[5001] overflow-hidden",
-            getSidebarThemeClasses()
-          )}>
+          <div className="relative h-full flex flex-row animate-in slide-in-from-right duration-300 z-[5001]">
+            {/* PANEL RESUMEN + INICIAR PARTIDA (anclado al panel de configuración) */}
+            {currentGameMode === "normal" && !activeAdventureEnemy && (
+              <div className={cn(
+                "hidden md:flex h-full w-[280px] shrink-0 flex-col medieval-panel overflow-hidden border-l",
+                getSidebarThemeClasses()
+              )}>
+                <div className="p-4 border-b border-white/5 flex items-center gap-2">
+                  <Target className="w-4 h-4 text-teal-400" />
+                  <span className="text-xs font-bold text-white uppercase tracking-widest">
+                    {language === "es" ? "Resumen de Partida" : "Game Summary"}
+                  </span>
+                </div>
+                <div className="flex-1 overflow-y-auto p-4 space-y-3 custom-scrollbar">
+                  {/* Blancas */}
+                  <div className="bg-white/5 rounded-xl border border-white/5 p-3">
+                    <div className="flex items-center gap-2 mb-2">
+                      <div className="w-3 h-3 rounded-full bg-white border border-slate-400 shadow-inner" />
+                      <span className="text-[10px] font-bold text-slate-300 uppercase tracking-wider">
+                        {language === "es" ? "Blancas" : "White"}
+                      </span>
+                    </div>
+                    {whitePlayer === "human" ? (
+                      <div className="flex items-center gap-1.5">
+                        <User className="w-3.5 h-3.5 text-teal-400 shrink-0" />
+                        <span className="text-sm font-black text-teal-200 truncate">{effectivePlayerName || (language === "es" ? "Humano" : "Human")}</span>
+                      </div>
+                    ) : (
+                      <div className="flex flex-col">
+                        <span className={cn("text-sm font-black", getEngineColorClass(whiteEngineType))}>
+                          {getEngineInfo(whiteEngineType).name}
+                        </span>
+                        <span className="text-[10px] text-slate-400">
+                          ~{getEloRating(whiteAiDepth, whiteEngineType)} ELO · {language === "es" ? "Prof." : "Depth"} {whiteAiDepth}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                  {/* Negras */}
+                  <div className="bg-white/5 rounded-xl border border-white/5 p-3">
+                    <div className="flex items-center gap-2 mb-2">
+                      <div className="w-3 h-3 rounded-full bg-black border border-slate-600 shadow-inner" />
+                      <span className="text-[10px] font-bold text-slate-300 uppercase tracking-wider">
+                        {language === "es" ? "Negras" : "Black"}
+                      </span>
+                    </div>
+                    {blackPlayer === "human" ? (
+                      <div className="flex items-center gap-1.5">
+                        <User className="w-3.5 h-3.5 text-teal-400 shrink-0" />
+                        <span className="text-sm font-black text-teal-200 truncate">{effectivePlayerName || (language === "es" ? "Humano" : "Human")}</span>
+                      </div>
+                    ) : (
+                      <div className="flex flex-col">
+                        <span className={cn("text-sm font-black", getEngineColorClass(blackEngineType))}>
+                          {getEngineInfo(blackEngineType).name}
+                        </span>
+                        <span className="text-[10px] text-slate-400">
+                          ~{getEloRating(blackAiDepth, blackEngineType)} ELO · {language === "es" ? "Prof." : "Depth"} {blackAiDepth}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                  {/* Ritmo de juego */}
+                  <div className="bg-white/5 rounded-xl border border-white/5 p-3">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Clock className="w-3.5 h-3.5 text-emerald-400" />
+                      <span className="text-[10px] font-bold text-slate-300 uppercase tracking-wider">
+                        {language === "es" ? "Ritmo de juego" : "Time Control"}
+                      </span>
+                    </div>
+                    <div className="flex items-baseline gap-1">
+                      <span className="text-2xl font-black text-emerald-300 font-mono">{initialTimeMin}</span>
+                      <span className="text-[10px] text-slate-500 uppercase">min</span>
+                      <span className="text-xl font-black text-blue-300 font-mono ml-2">+{initialTimeInc}</span>
+                      <span className="text-[10px] text-slate-500 uppercase">seg</span>
+                    </div>
+                  </div>
+                </div>
+                {/* Botón INICIAR PARTIDA */}
+                <div className="p-4 pt-3 border-t border-white/5">
+                  <button
+                    onClick={startGame}
+                    className={cn(
+                      "w-full py-5 text-teal-100 rounded-xl text-base font-black tracking-widest uppercase transition-all flex flex-col justify-center items-center gap-1.5 shadow-lg border active:scale-95",
+                      appTheme === "matrix" ? "bg-emerald-900 hover:bg-emerald-800 border-emerald-500/50 shadow-emerald-900/50" :
+                        appTheme === "nebula" ? "bg-purple-800 hover:bg-purple-700 shadow-purple-900/50 border-purple-500/50" :
+                          appTheme === "linux" ? "bg-orange-700 hover:bg-orange-600 border-orange-500/50 shadow-orange-900/50" :
+                            appTheme === "pure-black" ? "bg-slate-800 hover:bg-slate-700 border-slate-500/50" :
+                              "bg-teal-700 hover:bg-teal-600 border-teal-500/50 shadow-[0_0_20px_rgba(20,184,166,0.3)]",
+                      (whitePlayer === "human" && blackPlayer === "human" && lanStatus === "connected" && lanRole !== "host") ? "opacity-50 cursor-not-allowed pointer-events-none" : ""
+                    )}
+                    disabled={whitePlayer === "human" && blackPlayer === "human" && lanStatus === "connected" && lanRole !== "host"}
+                  >
+                    <PlayCircle className="w-8 h-8" />
+                    {whitePlayer === "human" && blackPlayer === "human" && lanStatus === "connected" && lanRole !== "host"
+                      ? (language === "es" ? "ESPERANDO AL HOST..." : "WAITING FOR HOST...")
+                      : (language === "es" ? "INICIAR PARTIDA" : "START GAME")}
+                  </button>
+                </div>
+              </div>
+            )}
+            <div className={cn(
+              "relative w-[95vw] sm:w-[760px] h-full border-l flex flex-col medieval-panel shadow-2xl overflow-hidden",
+              getSidebarThemeClasses()
+            )}>
             <div className={cn("flex flex-col justify-between p-4 pt-12 border-b bg-transparent relative z-10",
               appTheme === "matrix" ? "border-emerald-900/50" :
                 appTheme === "emerald" ? "border-emerald-800" :
@@ -9050,30 +9178,53 @@ onTimeUpdate={(e) => {
                                   >
                                     <option value="ailed">Ailed</option>
                                     <option value="stockfish">Stockfish</option>
+                                    <option value="maia2">Maia 2</option>
                                   </select>
                                 </div>
 
                                 {progressiveState.level === 1 && (
                                   <div className="bg-slate-900/40 border border-slate-700/30 rounded-lg p-2 flex flex-col gap-1">
                                     <label className="text-[8px] text-slate-400 font-bold uppercase">ELO Inicial</label>
-                                    <div className="flex gap-1 items-center">
-                                      <input
-                                        type="range"
-                                        min={getEngineEloRange(whitePlayer === "ai" ? whiteEngineType : blackEngineType).min}
-                                        max={getEngineEloRange(whitePlayer === "ai" ? whiteEngineType : blackEngineType).max}
-                                        step="50"
-                                        value={progressiveState.startElo}
-                                        onChange={(e) => {
-                                          const newElo = Math.max(
-                                            getEngineEloRange(whitePlayer === "ai" ? whiteEngineType : blackEngineType).min,
-                                            Math.min(getEngineEloRange(whitePlayer === "ai" ? whiteEngineType : blackEngineType).max, parseInt(e.target.value))
-                                          );
-                                          setProgressiveState(prev => ({...prev, startElo: newElo, currentElo: newElo, level: 1, gamesPlayedAtLevel: 0, gamesWonAtLevel: 0, gamesLostAtLevel: 0, gamesTiedAtLevel: 0}));
-                                        }}
-                                        className="flex-1 h-1 bg-slate-700 rounded-none appearance-none cursor-pointer accent-emerald-500"
-                                      />
-                                      <span className="text-[8px] text-emerald-400 font-bold w-10 text-right">{progressiveState.startElo}</span>
-                                    </div>
+                                    {(() => {
+                                      const progEngineType = whitePlayer === "ai" ? whiteEngineType : blackEngineType;
+                                      const isMaia2Prog = progEngineType === "maia2";
+                                      const progRange = getEngineEloRange(progEngineType);
+                                      return (
+                                        <div className="flex gap-1 items-center">
+                                          {isMaia2Prog ? (
+                                            <select
+                                              value={snapMaia2Elo(progressiveState.startElo)}
+                                              onChange={(e) => {
+                                                const newElo = snapMaia2Elo(parseInt(e.target.value));
+                                                setProgressiveState(prev => ({...prev, startElo: newElo, currentElo: newElo, level: 1, gamesPlayedAtLevel: 0, gamesWonAtLevel: 0, gamesLostAtLevel: 0, gamesTiedAtLevel: 0}));
+                                              }}
+                                              className="flex-1 bg-slate-800 text-white text-[9px] px-1.5 py-1 rounded border border-slate-700 outline-none hover:border-slate-500 cursor-pointer"
+                                            >
+                                              {MAIA2_ELO_LADDER.map((elo) => (
+                                                <option key={elo} value={elo}>{elo} ELO</option>
+                                              ))}
+                                            </select>
+                                          ) : (
+                                            <input
+                                              type="range"
+                                              min={progRange.min}
+                                              max={progRange.max}
+                                              step="50"
+                                              value={progressiveState.startElo}
+                                              onChange={(e) => {
+                                                const newElo = Math.max(
+                                                  progRange.min,
+                                                  Math.min(progRange.max, parseInt(e.target.value))
+                                                );
+                                                setProgressiveState(prev => ({...prev, startElo: newElo, currentElo: newElo, level: 1, gamesPlayedAtLevel: 0, gamesWonAtLevel: 0, gamesLostAtLevel: 0, gamesTiedAtLevel: 0}));
+                                              }}
+                                              className="flex-1 h-1 bg-slate-700 rounded-none appearance-none cursor-pointer accent-emerald-500"
+                                            />
+                                          )}
+                                          <span className="text-[8px] text-emerald-400 font-bold w-10 text-right">{progressiveState.startElo}</span>
+                                        </div>
+                                      );
+                                    })()}
                                   </div>
                                 )}
 
@@ -9118,9 +9269,17 @@ onTimeUpdate={(e) => {
                                   </button>
                                   <button
                                     onClick={() => {
-                                      const newElo = progressiveState.currentElo - progressiveState.eloIncrement;
-                                      if (newElo >= getEngineEloRange(whitePlayer === "ai" ? whiteEngineType : blackEngineType).min) {
+                                      const progEngineType = whitePlayer === "ai" ? whiteEngineType : blackEngineType;
+                                      const range = getEngineEloRange(progEngineType);
+                                      if (progEngineType === "maia2") {
+                                        const idx = MAIA2_ELO_LADDER.findIndex(v => v >= progressiveState.currentElo) - 1;
+                                        const newElo = MAIA2_ELO_LADDER[Math.max(0, idx)];
                                         setProgressiveState(prev => ({...prev, level: Math.max(1, prev.level - 1), currentElo: newElo}));
+                                      } else {
+                                        const newElo = progressiveState.currentElo - progressiveState.eloIncrement;
+                                        if (newElo >= range.min) {
+                                          setProgressiveState(prev => ({...prev, level: Math.max(1, prev.level - 1), currentElo: newElo}));
+                                        }
                                       }
                                     }}
                                     disabled={progressiveState.currentElo <= getEngineEloRange(whitePlayer === "ai" ? whiteEngineType : blackEngineType).min}
@@ -9130,7 +9289,14 @@ onTimeUpdate={(e) => {
                                   </button>
                                   <button
                                     onClick={() => {
-                                      setProgressiveState(prev => ({...prev, level: prev.level + 1, currentElo: prev.currentElo + prev.eloIncrement, gamesPlayedAtLevel: 0, gamesWonAtLevel: 0, gamesLostAtLevel: 0, gamesTiedAtLevel: 0}));
+                                      const progEngineType = whitePlayer === "ai" ? whiteEngineType : blackEngineType;
+                                      if (progEngineType === "maia2") {
+                                        const idx = MAIA2_ELO_LADDER.findIndex(v => v > progressiveState.currentElo);
+                                        const newElo = idx === -1 ? MAIA2_ELO_LADDER[MAIA2_ELO_LADDER.length - 1] : MAIA2_ELO_LADDER[idx];
+                                        setProgressiveState(prev => ({...prev, level: prev.level + 1, currentElo: newElo, gamesPlayedAtLevel: 0, gamesWonAtLevel: 0, gamesLostAtLevel: 0, gamesTiedAtLevel: 0}));
+                                      } else {
+                                        setProgressiveState(prev => ({...prev, level: prev.level + 1, currentElo: prev.currentElo + prev.eloIncrement, gamesPlayedAtLevel: 0, gamesWonAtLevel: 0, gamesLostAtLevel: 0, gamesTiedAtLevel: 0}));
+                                      }
                                     }}
                                     className="flex-1 bg-slate-800 hover:bg-slate-700 text-[8px] font-bold text-slate-300 py-1.5 px-2 border border-slate-700 rounded"
                                   >
@@ -9403,6 +9569,18 @@ onTimeUpdate={(e) => {
                                 ~{getEloRating(whiteAiDepth, whiteEngineType)}
                               </span>
                             </div>
+                            {whiteEngineType === "maia2" ? (
+                              <select
+                                value={maia2DepthToElo(whiteAiDepth)}
+                                onChange={(e) => setWhiteAiDepth(maia2EloToDepth(parseInt(e.target.value)))}
+                                disabled={!!activeAdventureEnemy}
+                                className="w-full bg-slate-900 border border-slate-700 text-[10px] text-slate-200 rounded-lg p-2 outline-none focus:border-purple-500/50 transition-all cursor-pointer disabled:opacity-50 appearance-none"
+                              >
+                                {MAIA2_ELO_LADDER.map((elo) => (
+                                  <option key={elo} value={elo}>{elo} ELO</option>
+                                ))}
+                              </select>
+                            ) : (
                             <input
                               type="range"
                               min="3"
@@ -9419,7 +9597,8 @@ onTimeUpdate={(e) => {
                                       (whiteEngineType.startsWith("maia") ? "accent-purple-500" :
                                         (whiteEngineType === "ailed" ? "accent-red-500" : "accent-blue-500"))))))}
                             />
-                            <span className="text-[8px] text-slate-500 italic block mt-1 leading-tight">{whiteEngineType === "obsidian" ? "En Obsidian, la profundidad controla fuerza y tiempo: valores altos mejoran el cálculo pero tardan más, valores bajos aceleran respuestas." : "Define la profundidad de análisis e inteligencia de la IA."}</span>
+                            )}
+                            <span className="text-[8px] text-slate-500 italic block mt-1 leading-tight">{whiteEngineType === "obsidian" ? "En Obsidian, la profundidad controla fuerza y tiempo: valores altos mejoran el cálculo pero tardan más, valores bajos aceleran respuestas." : whiteEngineType === "maia2" ? "Maia 2 juega en 8 niveles ELO discretos: cada nivel cambia la profundidad real de cálculo del motor." : "Define la profundidad de análisis e inteligencia de la IA."}</span>
                           </div>
                           <div>
                             <div className="flex justify-between text-[10px] text-slate-400 mb-1 font-semibold">
@@ -9595,6 +9774,18 @@ onTimeUpdate={(e) => {
                                 ~{getEloRating(blackAiDepth, blackEngineType)}
                               </span>
                             </div>
+                            {blackEngineType === "maia2" ? (
+                              <select
+                                value={maia2DepthToElo(blackAiDepth)}
+                                onChange={(e) => setBlackAiDepth(maia2EloToDepth(parseInt(e.target.value)))}
+                                disabled={!!activeAdventureEnemy}
+                                className="w-full bg-slate-900 border border-slate-700 text-[10px] text-slate-200 rounded-lg p-2 outline-none focus:border-rose-500/50 transition-all cursor-pointer disabled:opacity-50 appearance-none"
+                              >
+                                {MAIA2_ELO_LADDER.map((elo) => (
+                                  <option key={elo} value={elo}>{elo} ELO</option>
+                                ))}
+                              </select>
+                            ) : (
                             <input
                               type="range"
                               min="3"
@@ -9611,7 +9802,8 @@ onTimeUpdate={(e) => {
                                       (blackEngineType.startsWith("maia") ? "accent-purple-500" :
                                         (blackEngineType === "ailed" ? "accent-red-500" : "accent-rose-500"))))))}
                             />
-                            <span className="text-[8px] text-slate-500 italic block mt-1 leading-tight">{blackEngineType === "obsidian" ? "En Obsidian, la profundidad controla fuerza y tiempo: valores altos mejoran el cálculo pero tardan más, valores bajos aceleran respuestas." : "Define la profundidad de análisis e inteligencia de la IA."}</span>
+                            )}
+                            <span className="text-[8px] text-slate-500 italic block mt-1 leading-tight">{blackEngineType === "obsidian" ? "En Obsidian, la profundidad controla fuerza y tiempo: valores altos mejoran el cálculo pero tardan más, valores bajos aceleran respuestas." : blackEngineType === "maia2" ? "Maia 2 juega en 8 niveles ELO discretos: cada nivel cambia la profundidad real de cálculo del motor." : "Define la profundidad de análisis e inteligencia de la IA."}</span>
                           </div>
                           <div>
                             <div className="flex justify-between text-[10px] text-slate-400 mb-1 font-semibold">
@@ -9837,6 +10029,17 @@ onTimeUpdate={(e) => {
                         ~{getEloRating(freeModeElo, freeModeEngineType)}
                       </span>
                     </div>
+                    {freeModeEngineType === "maia2" ? (
+                      <select
+                        value={maia2DepthToElo(freeModeElo)}
+                        onChange={(e) => setFreeModeElo(maia2EloToDepth(parseInt(e.target.value)))}
+                        className="w-full bg-slate-900 border border-slate-700 text-[10px] text-slate-300 rounded-xl p-2 outline-none focus:border-cyan-500/50 transition-all cursor-pointer appearance-none"
+                      >
+                        {MAIA2_ELO_LADDER.map((elo) => (
+                          <option key={elo} value={elo}>{elo} ELO</option>
+                        ))}
+                      </select>
+                    ) : (
                     <input
                       type="range"
                       min="3"
@@ -9853,6 +10056,7 @@ onTimeUpdate={(e) => {
                         freeModeEngineType === "ailed" ? "accent-red-500" : "accent-blue-500"
                       )}
                     />
+                    )}
                   </div>
 
                   {/* BOTÓN: IR AL TABLERO */}
@@ -10396,25 +10600,6 @@ onTimeUpdate={(e) => {
 
                 {currentGameMode === "normal" && !activeAdventureEnemy && (
                   <>
-                    <button
-                      onClick={startGame}
-                      className={cn(
-                        "w-full py-4 text-teal-100 rounded text-sm font-black tracking-widest uppercase transition-all flex justify-center items-center gap-2 shadow-lg border",
-                        appTheme === "matrix" ? "bg-emerald-900 hover:bg-emerald-800 border-emerald-500/50 shadow-emerald-900/50" :
-                          appTheme === "nebula" ? "bg-purple-800 hover:bg-purple-700 shadow-purple-900/50 border-purple-500/50" :
-                            appTheme === "linux" ? "bg-orange-700 hover:bg-orange-600 border-orange-500/50 shadow-orange-900/50" :
-                              appTheme === "pure-black" ? "bg-slate-800 hover:bg-slate-700 border-slate-500/50" :
-                                "bg-teal-700 hover:bg-teal-600 border-teal-500/50 shadow-[0_0_15px_rgba(20,184,166,0.2)]",
-                        (whitePlayer === "human" && blackPlayer === "human" && lanStatus === "connected" && lanRole !== "host") ? "opacity-50 cursor-not-allowed pointer-events-none" : ""
-                      )}
-                      disabled={whitePlayer === "human" && blackPlayer === "human" && lanStatus === "connected" && lanRole !== "host"}
-                    >
-                      <PlayCircle className="w-5 h-5" />
-                      {whitePlayer === "human" && blackPlayer === "human" && lanStatus === "connected" && lanRole !== "host"
-                        ? (language === "es" ? "ESPERANDO AL HOST..." : "WAITING FOR HOST...")
-                        : (language === "es" ? "EMPEZAR DESAFÍO" : "START CHALLENGE")}
-                    </button>
-
                     {IS_WEB_VERSION ? (
                       <LanPlaceholder language={language} />
                     ) : (
@@ -10808,6 +10993,7 @@ onTimeUpdate={(e) => {
             </div>
           </div>
         </div>
+      </div>
       )}
 
       {/* Tournament Modal Overlay */}

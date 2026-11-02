@@ -188,17 +188,23 @@ export class StockfishEngineWhite {
     }
   }
 
-  private pendingSearch: { fen: string; searchDepth: number; times?: any; targetDelayMs: number } | null = null;
+  private pendingSearch: { fen: string; searchDepth: number; times?: any; targetDelayMs: number; skillLevel?: number } | null = null;
   private pendingEval: { fen: string; color: 'w' | 'b'; searchDepth: number } | null = null;
   private isSearching = false;
 
   private executePendingSearch() {
     if (!this.pendingSearch || !this.worker) return;
-    const { fen, searchDepth, times, targetDelayMs } = this.pendingSearch;
+    const { fen, searchDepth, times, targetDelayMs, skillLevel } = this.pendingSearch;
     this.pendingSearch = null;
     this.isSearching = true;
     this.isThinkingForMove = true;
-    
+
+    // Skill Level opcional: permite controlar la fuerza real del motor (ELO)
+    if (typeof skillLevel === "number") {
+      this.worker.postMessage('setoption name UCI_LimitStrength value true');
+      this.worker.postMessage(`setoption name Skill Level value ${Math.max(0, Math.min(20, Math.round(skillLevel)))}`);
+    }
+
     this.worker.postMessage('position fen ' + fen);
     
     const actualDepth = Math.min(searchDepth, 25);
@@ -237,7 +243,7 @@ export class StockfishEngineWhite {
     }
   }
 
-  findBestMove(fen: string, color: 'w' | 'b', searchDepth: number = 10, times?: { wtime: number, btime: number, winc: number, binc: number }, delayMs: number = 500) {
+  findBestMove(fen: string, color: 'w' | 'b', searchDepth: number = 10, times?: { wtime: number, btime: number, winc: number, binc: number }, delayMs: number = 500, skillLevel?: number) {
     if (!this.worker) return;
     this.searchStartTime = performance.now();
     
@@ -253,7 +259,7 @@ export class StockfishEngineWhite {
     this.currentTurnColor = color;
     
     this.pendingEval = null; // Cancelar evaluación si la hubiera
-    this.pendingSearch = { fen, searchDepth, times, targetDelayMs };
+    this.pendingSearch = { fen, searchDepth, times, targetDelayMs, skillLevel };
     
     if (this.isSearching) {
        this.stop(false);

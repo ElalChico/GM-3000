@@ -14,13 +14,58 @@ const ELO_TITLES = [
   { min: 2800, title: "Gran Maestro",  color: "#e0a040" },
 ];
 
+// Escalera ELO de Maia 2: 8 niveles discretos controlables
+export const MAIA2_ELO_LADDER = [400, 600, 800, 1000, 1200, 1500, 1800, 2100] as const;
+export const MAIA2_ELO_MIN = 400;
+export const MAIA2_ELO_MAX = 2100;
+export const MAIA2_ELO_DEFAULT = 1200;
+
+const MIN_DEPTH = 3;
+const MAX_DEPTH = 25;
+const DEPTH_SPAN = MAX_DEPTH - MIN_DEPTH;
+
+// Ajusta un ELO arbitrario al nivel de la escalera más cercano
+export function snapMaia2Elo(elo: number): number {
+  let best: number = MAIA2_ELO_LADDER[0];
+  let bestDiff = Number.POSITIVE_INFINITY;
+  for (const value of MAIA2_ELO_LADDER) {
+    const diff = Math.abs(value - elo);
+    if (diff < bestDiff) {
+      bestDiff = diff;
+      best = value;
+    }
+  }
+  return best;
+}
+
+// Profundidad -> nivel ELO de Maia 2 (misma profundidad que maneja el motor)
+export function maia2DepthToElo(depth: number): number {
+  const clampedDepth = Math.max(MIN_DEPTH, Math.min(depth, MAX_DEPTH));
+  const index = Math.round(((clampedDepth - MIN_DEPTH) / DEPTH_SPAN) * (MAIA2_ELO_LADDER.length - 1));
+  return MAIA2_ELO_LADDER[Math.max(0, Math.min(index, MAIA2_ELO_LADDER.length - 1))];
+}
+
+// Nivel ELO de Maia 2 -> profundidad real del motor
+export function maia2EloToDepth(elo: number): number {
+  const snapped = snapMaia2Elo(elo);
+  const index = MAIA2_ELO_LADDER.indexOf(snapped as typeof MAIA2_ELO_LADDER[number]);
+  return Math.round(MIN_DEPTH + (index / (MAIA2_ELO_LADDER.length - 1)) * DEPTH_SPAN);
+}
+
+// Profundidad exacta de cada nivel de la escalera (para sliders discretos)
+export function maia2LadderDepths(): number[] {
+  return MAIA2_ELO_LADDER.map((_, index) =>
+    Math.round(MIN_DEPTH + (index / (MAIA2_ELO_LADDER.length - 1)) * DEPTH_SPAN)
+  );
+}
+
 function getEngineElo(depth: number, engineType: string): number {
-  const clampedDepth = Math.max(3, Math.min(depth, 25));
+  const clampedDepth = Math.max(MIN_DEPTH, Math.min(depth, MAX_DEPTH));
   if (["atlas", "edd", "obsidian", "ailed"].includes(engineType)) {
-    return 800 + Math.round(((clampedDepth - 3) / 22) * 1400);
+    return 800 + Math.round(((clampedDepth - MIN_DEPTH) / DEPTH_SPAN) * 1400);
   }
   if (engineType === "maia1") return 1100 + clampedDepth;
-  if (engineType === "maia2") return 1500 + clampedDepth;
+  if (engineType === "maia2") return maia2DepthToElo(clampedDepth);
   return 800 + clampedDepth * 116;
 }
 
