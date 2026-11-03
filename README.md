@@ -1,44 +1,44 @@
-Ôªø# GM-3000 v3 ‚Äî Board de Auto-Entrenamiento
+# GM-3000 v3 ó Board de Auto-Entrenamiento
 
-> ### üîí ESTA ES LA VERSI√ìN ESTABLE
-> **GM-3000 v3** es la versi√≥n estable y de producci√≥n del proyecto. Todas las funcionalidades han sido probadas, validadas y est√°n listas para uso cotidiano. Esta es la rama principal y la versi√≥n recomendada para todos los usuarios.
+> ### ?? ESTA ES LA VERSI”N ESTABLE
+> **GM-3000 v3** es la versiÛn estable y de producciÛn del proyecto. Todas las funcionalidades han sido probadas, validadas y est·n listas para uso cotidiano. Esta es la rama principal y la versiÛn recomendada para todos los usuarios.
 
 <div align="center">
   <img src="https://github.com/ElalChico/GM-3000/blob/main/logo-home.png" alt="GM-3000 Logo" width="570">
 </div>
 
-**GM-3000** (sucesor evolutivo de la anterior versi√≥n gm-2000) es una plataforma de ajedrez avanzada desarrollada con tecnolog√≠as modernas. Su objetivo es ofrecer una experiencia de juego fluida, anal√≠tica y competitiva, dise√±ada tanto para el estudio profundo como para el juego casual.
+**GM-3000** (sucesor evolutivo de la anterior versiÛn gm-2000) es una plataforma de ajedrez avanzada desarrollada con tecnologÌas modernas. Su objetivo es ofrecer una experiencia de juego fluida, analÌtica y competitiva, diseÒada tanto para el estudio profundo como para el juego casual.
 
-La aplicaci√≥n integra potentes motores de an√°lisis, an√°lisis con inteligencia artificial en lenguaje natural, lectura por voz y una infraestructura de red local robusta para enfrentamientos en tiempo real.
-
----
-
-## üåê Versi√≥n Online (Demo Web)
-
-> **üéâ Versi√≥n 3.3.0 ya disponible en [gm-3000.web.app](https://gm-3000.web.app)**  
-> Prueba la aplicaci√≥n directamente desde tu navegador con las √∫ltimas mejoras: panel de resumen de partida, niveles ELO reales en Maia 2 y Modo Estudio con salida propia.  
-> ‚ö†Ô∏è **Nota:** La funcionalidad de conexi√≥n LAN para jugar en red local, el an√°lisis con IA en lenguaje natural y la lectura por voz del an√°lisis con voces realistas **solo est√°n disponibles en la versi√≥n de escritorio**. Para disfrutar de todas las funciones, descarga el instalador.
+La aplicaciÛn integra potentes motores de an·lisis, an·lisis con inteligencia artificial en lenguaje natural, lectura por voz y una infraestructura de red local robusta para enfrentamientos en tiempo real.
 
 ---
 
-## üì• Descargas Oficiales
+## ?? VersiÛn Online (Demo Web)
 
-Si desea utilizar todas las funciones, incluyendo el modo LAN y los motores locales, descargue la versi√≥n de escritorio:
+> **?? VersiÛn 3.3.0 ya disponible en [gm-3000.web.app](https://gm-3000.web.app)**  
+> Prueba la aplicaciÛn directamente desde tu navegador con las ˙ltimas mejoras: panel de resumen de partida, niveles ELO reales en Maia 2 y Modo Estudio con salida propia.  
+> ?? **Nota:** La funcionalidad de conexiÛn LAN para jugar en red local, el an·lisis con IA en lenguaje natural y la lectura por voz del an·lisis con voces realistas **solo est·n disponibles en la versiÛn de escritorio**. Para disfrutar de todas las funciones, descarga el instalador.
 
-### ‚ú® √öltima Versi√≥n 3.3.0
+---
 
-| Tipo de Instalador | Enlace de Descarga (MEGA) | Enlace de Descarga (GitHub) | Descripci√≥n |
+## ?? Descargas Oficiales
+
+Si desea utilizar todas las funciones, incluyendo el modo LAN y los motores locales, descargue la versiÛn de escritorio:
+
+### ? ⁄ltima VersiÛn 3.3.0
+
+| Tipo de Instalador | Enlace de Descarga (MEGA) | Enlace de Descarga (GitHub) | DescripciÛn |
 | :--- | :--- | :--- | :--- |
-| **Portable (.ZIP)** | [Descargar ZIP - MEGA](https://mega.nz/file/DWwGSLRA#Bod3B5dHaz5FlyehzZGmk3agAdazFMP7Vzu-71g_QJg) | [GitHub Release](https://github.com/ElalChico/GM-3000/releases/download/v3.3.0/GM-3000-win32-x64-3.3.0.zip) | No requiere instalaci√≥n. Descomprimir y ejecutar. Ideal para USB o pruebas r√°pidas. |
-| **Instalador (.EXE 64-bit)** | [Descargar Setup en MEGA](https://mega.nz/file/nCIAyLjS#b2PJtE5ZJdNRRdvJey_Oyi4UKV-N63Kx6h5oBBj6qNI) | [GitHub Release](https://github.com/ElalChico/GM-3000/releases/download/v3.3.0/GM-3000.Setup.exe) | Instalador tradicional para Windows. Integra accesos directos y configuraciones de sistema. |
+| **Portable (.ZIP)** | [Descargar ZIP - MEGA](https://mega.nz/file/HC5T0BBC#0VM9L77hwi3dJeehp9m8FE0oO4jZxAcl4f7f3KxG_oo) | [GitHub Release](https://github.com/ElalChico/GM-3000/releases/download/v3.3.0/GM-3000-win32-x64-3.3.0.zip) | No requiere instalaciÛn. Descomprimir y ejecutar. Ideal para USB o pruebas r·pidas. |
+| **Instalador (.EXE 64-bit)** | [Descargar Setup en MEGA](https://mega.nz/file/aboFnYwR#EVF04umK9lLPXgxFBki3dTO6qAeBHRNnS60T9IEIsfM) | [GitHub Release](https://github.com/ElalChico/GM-3000/releases/download/v3.3.0/GM-3000.Setup.exe) | Instalador tradicional para Windows. Integra accesos directos y configuraciones de sistema. |
 
-> **Nota:** Los archivos de la versi√≥n 3.3.0 est√°n disponibles tanto en MEGA como en GitHub Releases.
+> **Nota:** Los archivos de la versiÛn 3.3.0 est·n disponibles tanto en MEGA como en GitHub Releases.
 
-### üì¶ Versi√≥n Anterior 2.1.9
+### ?? VersiÛn Anterior 2.1.9
 
-| Tipo de Instalador | Enlace de Descarga | Descripci√≥n |
+| Tipo de Instalador | Enlace de Descarga | DescripciÛn |
 | :--- | :--- | :--- |
-| **Portable (.ZIP)** | [Descargar ZIP](https://mega.nz/file/XKQW2JRZ#Pt5n7T9i-KM2Rd0lFsX89aa03cUvZ31y6sw339NXYkw) | No requiere instalaci√≥n. Descomprimir y ejecutar. Ideal para USB o pruebas r√°pidas. |
+| **Portable (.ZIP)** | [Descargar ZIP](https://mega.nz/file/XKQW2JRZ#Pt5n7T9i-KM2Rd0lFsX89aa03cUvZ31y6sw339NXYkw) | No requiere instalaciÛn. Descomprimir y ejecutar. Ideal para USB o pruebas r·pidas. |
 | **Instalador (.EXE)** | [Descargar Setup](https://mega.nz/file/iGIWVbwY#D1Ok5OoriBrv6ZEs_09nfnRpEDrGEOqVL21FpUIFoIA) | Instalador tradicional para Windows. Integra accesos directos y configuraciones de sistema. |
 
 IMPORTANTE: Si desea probar la version minimalista anterior en la web (version 2.1.9) esta disponible en [gm-2000.web.app](https://gm-2000.web.app/)
@@ -49,227 +49,227 @@ IMPORTANTE: Si desea probar la version minimalista anterior en la web (version 2
   <img src="https://github.com/ElalChico/GM-3000/blob/main/Port.png" alt="GM-3000 Logo" width="570">
 </div>
 
-## üöÄ Caracter√≠sticas Principales
+## ?? CaracterÌsticas Principales
 
-### ‚ôüÔ∏è Motores de An√°lisis Integrados
-Integraci√≥n completa de **Stockfish** para an√°lisis de posiciones, evaluaci√≥n de jugadas y entrenamiento contra diferentes niveles de dificultad. Tambi√©n incluye otros motores desarrollados por el creador de GM-3000:
+### ?? Motores de An·lisis Integrados
+IntegraciÛn completa de **Stockfish** para an·lisis de posiciones, evaluaciÛn de jugadas y entrenamiento contra diferentes niveles de dificultad. TambiÈn incluye otros motores desarrollados por el creador de GM-3000:
 
-*   **Stockfish (Oficial):** Motor de ajedrez de clase mundial para an√°lisis profundo y juego competitivo, ejecutado v√≠a Web Worker para m√°ximo rendimiento.
-*   **Ailed (Nativo):** ‚≠ê *Motor m√°s potente del proyecto*. Especializado en an√°lisis profundo, evaluaci√≥n posicional avanzada y entrenamiento de alto nivel.
-*   **Nexus (Nativo):** Motor avanzado con estrategia posicional refinada y an√°lisis de finales mejorado.
-*   **Atlas.1 (Nativo):** Motor exclusivo y original del proyecto GM-3000. Construido desde cero con b√∫squeda Negamax, Poda Alfa-Beta y Tablas de Transposici√≥n. Potente y con un estilo de juego √∫nico.
-*   **Obsidian (Comunidad):** Motor con red neuronal y algoritmos de poda avanzados, configurable desde la interfaz (reducci√≥n de movimiento nulo, reducci√≥n LMR, futility pruning, tablas de transposici√≥n y ponder).
+*   **Stockfish (Oficial):** Motor de ajedrez de clase mundial para an·lisis profundo y juego competitivo, ejecutado vÌa Web Worker para m·ximo rendimiento.
+*   **Ailed (Nativo):** ? *Motor m·s potente del proyecto*. Especializado en an·lisis profundo, evaluaciÛn posicional avanzada y entrenamiento de alto nivel.
+*   **Nexus (Nativo):** Motor avanzado con estrategia posicional refinada y an·lisis de finales mejorado.
+*   **Atlas.1 (Nativo):** Motor exclusivo y original del proyecto GM-3000. Construido desde cero con b˙squeda Negamax, Poda Alfa-Beta y Tablas de TransposiciÛn. Potente y con un estilo de juego ˙nico.
+*   **Obsidian (Comunidad):** Motor con red neuronal y algoritmos de poda avanzados, configurable desde la interfaz (reducciÛn de movimiento nulo, reducciÛn LMR, futility pruning, tablas de transposiciÛn y ponder).
 *   **Maia (Comunidad):** Soporte para modelos de la serie Maia (1100-1900), con estilo de juego humano y adaptable.
 
-**Ajuste Din√°mico de Motores:** Los motores se asignan autom√°ticamente seg√∫n el nivel de ELO del jugador en modo aventura, garantizando una dificultad adecuada y progresiva.
+**Ajuste Din·mico de Motores:** Los motores se asignan autom·ticamente seg˙n el nivel de ELO del jugador en modo aventura, garantizando una dificultad adecuada y progresiva.
 
-### üéÆ Modos de Juego Vers√°tiles
-*   **Humano vs. M√°quina:** Desaf√≠a al motor con niveles de dificultad personalizables.
+### ?? Modos de Juego Vers·tiles
+*   **Humano vs. M·quina:** DesafÌa al motor con niveles de dificultad personalizables.
 *   **Humano vs. Humano (Local):** Juega con un amigo en la misma computadora o practica contigo mismo utilizando el control de autogiro del tablero.
-*   **LAN Multiplayer (Confirmado):** Conexi√≥n directa en red local con sistema de sincronizaci√≥n en tiempo real. Los invitados requieren confirmaci√≥n del anfitri√≥n para conectarse (requiere versi√≥n de escritorio).
-*   **M√°quina vs. M√°quina:** Observa enfrentamientos entre motores para estudio t√°ctico y te√≥rico.
-*   **Las 3000 Noches (Modo Aventura):** Experiencia narrativa √©pica con 4 bosques progresivos, 10 niveles de dificultad, 6 misiones tem√°ticas y 9 rangos nobiliarios.
-*   **Modo Asistencia:** Asistente inteligente que analiza cada posici√≥n y sugiere las mejores jugadas con explicaciones detalladas. Ideal para aprender estrategias, corregir errores y mejorar tu nivel de juego con retroalimentaci√≥n en tiempo real.
-*   **Modo Progresivo:** Sistema adaptativo que ajusta din√°micamente la dificultad del motor seg√∫n tu rendimiento en cada partida. A mayor acierto, mayor desaf√≠o; perfecto para un crecimiento constante sin frustraciones ni estancamiento.
+*   **LAN Multiplayer (Confirmado):** ConexiÛn directa en red local con sistema de sincronizaciÛn en tiempo real. Los invitados requieren confirmaciÛn del anfitriÛn para conectarse (requiere versiÛn de escritorio).
+*   **M·quina vs. M·quina:** Observa enfrentamientos entre motores para estudio t·ctico y teÛrico.
+*   **Las 3000 Noches (Modo Aventura):** Experiencia narrativa Èpica con 4 bosques progresivos, 10 niveles de dificultad, 6 misiones tem·ticas y 9 rangos nobiliarios.
+*   **Modo Asistencia:** Asistente inteligente que analiza cada posiciÛn y sugiere las mejores jugadas con explicaciones detalladas. Ideal para aprender estrategias, corregir errores y mejorar tu nivel de juego con retroalimentaciÛn en tiempo real.
+*   **Modo Progresivo:** Sistema adaptativo que ajusta din·micamente la dificultad del motor seg˙n tu rendimiento en cada partida. A mayor acierto, mayor desafÌo; perfecto para un crecimiento constante sin frustraciones ni estancamiento.
 
-### üè∞ Modo Aventura ‚Äî "Las 3000 Noches"
-Una experiencia inmersiva donde el jugador se enfrenta a guardianes legendarios del ajedrez en un asedio √©pico. Cada victoria acerca al jugador a una victoria final contra el Rey Demonio.
+### ?? Modo Aventura ó "Las 3000 Noches"
+Una experiencia inmersiva donde el jugador se enfrenta a guardianes legendarios del ajedrez en un asedio Èpico. Cada victoria acerca al jugador a una victoria final contra el Rey Demonio.
 
 **Estructura del Modo Aventura:**
 *   **4 Jefes Progresivos:**
-    - **Sir Alaric** (Guardi√°n del Primer Milenio): Estilo agresivo, ELO 1200
-    - **Nexus** (Guardi√°n del Segundo Milenio): Estrategia posicional, ELO 1700
-    - **Lord Valerius** (Guardi√°n del Tercer Milenio): Defensa robusta, ELO 2200
-    - **Lord Elrod** (Guardi√°n del Umbral): Maestr√≠a total, ELO 3000+
-*   **10 Niveles de Dificultad:** Progresi√≥n desde Soldados Oscuros (ELO 300) hasta Rey Demonio (ELO 1700)
-*   **6 Misiones Narrativas √önicas:**
-    - **El Pe√≥n Elegido:** Un pe√≥n debe coronar en la misma partida o se reinicia el cap√≠tulo
+    - **Sir Alaric** (Guardi·n del Primer Milenio): Estilo agresivo, ELO 1200
+    - **Nexus** (Guardi·n del Segundo Milenio): Estrategia posicional, ELO 1700
+    - **Lord Valerius** (Guardi·n del Tercer Milenio): Defensa robusta, ELO 2200
+    - **Lord Elrod** (Guardi·n del Umbral): MaestrÌa total, ELO 3000+
+*   **10 Niveles de Dificultad:** ProgresiÛn desde Soldados Oscuros (ELO 300) hasta Rey Demonio (ELO 1700)
+*   **6 Misiones Narrativas ⁄nicas:**
+    - **El PeÛn Elegido:** Un peÛn debe coronar en la misma partida o se reinicia el capÌtulo
     - **El Caballero Resucitado:** Un caballo debe capturar pieza de valor 5+
-    - **La Reina Perdida:** Un pe√≥n debe capturar un alma enemiga y coronar
+    - **La Reina Perdida:** Un peÛn debe capturar un alma enemiga y coronar
     - **El Rey Exiliado:** El rey debe viajar al centro y regresar intacto
     - **La Torre Ancestral:** Torre debe capturar en ambas mitades del tablero
     - **El Alfil Iluminado:** Alfil debe visitar 20+ casillas de su color
-*   **Sistema de Rangos Nobiliarios:** 9 rangos (Siervo ‚Üí Gran Maestre) basados en "Almas Cosechadas" (victorias totales)
+*   **Sistema de Rangos Nobiliarios:** 9 rangos (Siervo ? Gran Maestre) basados en "Almas Cosechadas" (victorias totales)
 *   **Eventos Narrativos Aleatorios:** 30-40% de probabilidad por partida con eventos como "La Sombra del Traidor", "El Viajero Perdido", etc.
-*   **Personalizaciones:** Nombre del jugador, ajuste de opacidad de fondo, modo de alta calidad, visualizaci√≥n de ELO enemigo
+*   **Personalizaciones:** Nombre del jugador, ajuste de opacidad de fondo, modo de alta calidad, visualizaciÛn de ELO enemigo
 
-### üéØ Modo Asistencia
-El **Modo Asistencia** es tu entrenador personal de ajedrez integrado. Analiza cada posici√≥n en tiempo real y te sugiere las jugadas m√°s √≥ptimas junto con explicaciones estrat√©gicas para que entiendas el *porqu√©* detr√°s de cada movimiento.
+### ?? Modo Asistencia
+El **Modo Asistencia** es tu entrenador personal de ajedrez integrado. Analiza cada posiciÛn en tiempo real y te sugiere las jugadas m·s Ûptimas junto con explicaciones estratÈgicas para que entiendas el *porquÈ* detr·s de cada movimiento.
 
-**Caracter√≠sticas clave:**
+**CaracterÌsticas clave:**
 *   **Sugerencias en Vivo:** Muestra las mejores jugadas evaluadas por el motor directamente en el tablero.
-*   **Explicaciones Estrat√©gicas:** Cada sugerencia incluye una breve descripci√≥n del objetivo t√°ctico o posicional.
-*   **Evaluaci√≥n Continua:** Gr√°fico de evaluaci√≥n que muestra c√≥mo cambia la ventaja con cada movimiento.
-*   **Detecci√≥n de Errores:** Identifica jugadas d√©biles y sugiere alternativas correctivas.
+*   **Explicaciones EstratÈgicas:** Cada sugerencia incluye una breve descripciÛn del objetivo t·ctico o posicional.
+*   **EvaluaciÛn Continua:** Gr·fico de evaluaciÛn que muestra cÛmo cambia la ventaja con cada movimiento.
+*   **DetecciÛn de Errores:** Identifica jugadas dÈbiles y sugiere alternativas correctivas.
 *   **Modo Aprendizaje:** Ideal para principiantes que quieren entender conceptos como desarrollo, control del centro, seguridad del rey y estructura de peones.
-*   **Disponible en:** Partidas contra la m√°quina y en modo libre.
+*   **Disponible en:** Partidas contra la m·quina y en modo libre.
 
-> **Recomendaci√≥n:** Act√≠valo desde la configuraci√≥n antes de iniciar una partida. √ösalo para estudiar aperturas, analizar t√°cticas o simplemente para ver si tu jugada planeada es la mejor seg√∫n el motor.
+> **RecomendaciÛn:** ActÌvalo desde la configuraciÛn antes de iniciar una partida. ⁄salo para estudiar aperturas, analizar t·cticas o simplemente para ver si tu jugada planeada es la mejor seg˙n el motor.
 
-### üìà Modo Progresivo
-El **Modo Progresivo** transforma cada partida en un desaf√≠o a tu medida. El sistema monitorea tu rendimiento en tiempo real y ajusta la dificultad del motor autom√°ticamente, subiendo el nivel cuando aciertas y baj√°ndolo si cometes errores consecutivos.
+### ?? Modo Progresivo
+El **Modo Progresivo** transforma cada partida en un desafÌo a tu medida. El sistema monitorea tu rendimiento en tiempo real y ajusta la dificultad del motor autom·ticamente, subiendo el nivel cuando aciertas y baj·ndolo si cometes errores consecutivos.
 
-**Caracter√≠sticas clave:**
-*   **Dificultad Adaptativa:** El motor se fortalece o debilita din√°micamente seg√∫n tu desempe√±o.
-*   **Sin Frustraci√≥n:** Si est√°s en una racha de derrotas, el motor reduce su nivel para que puedas recuperar confianza.
-*   **Sin Estancamiento:** Si dominas al motor con facilidad, aumenta el desaf√≠o para que sigas mejorando.
-*   **ELO Din√°mico:** El nivel de juego del motor se recalcula tras cada movimiento basado en la calidad de tus jugadas.
-*   **Seguimiento de Progreso:** Visualiza tu evoluci√≥n a trav√©s de estad√≠sticas de rendimiento.
-*   **Compatible con:** Todos los modos de juego contra la m√°quina.
+**CaracterÌsticas clave:**
+*   **Dificultad Adaptativa:** El motor se fortalece o debilita din·micamente seg˙n tu desempeÒo.
+*   **Sin FrustraciÛn:** Si est·s en una racha de derrotas, el motor reduce su nivel para que puedas recuperar confianza.
+*   **Sin Estancamiento:** Si dominas al motor con facilidad, aumenta el desafÌo para que sigas mejorando.
+*   **ELO Din·mico:** El nivel de juego del motor se recalcula tras cada movimiento basado en la calidad de tus jugadas.
+*   **Seguimiento de Progreso:** Visualiza tu evoluciÛn a travÈs de estadÌsticas de rendimiento.
+*   **Compatible con:** Todos los modos de juego contra la m·quina.
 
-> **Recomendaci√≥n:** Perfecto para jugadores que quieren una curva de aprendizaje natural sin tener que ajustar manualmente la dificultad en cada partida.
+> **RecomendaciÛn:** Perfecto para jugadores que quieren una curva de aprendizaje natural sin tener que ajustar manualmente la dificultad en cada partida.
 
-### üõ°Ô∏è Modo Mental
+### ??? Modo Mental
 
-El **Modo Mental** es una poderosa herramienta de entrenamiento de ajedrez para `a ciegas`. Elimina completamente el tablero visible, forz√°ndote a pensar y jugar exclusivamente con notaciones verbales, algebraicas o de coordenadas. Ideal para jugadores que desean evaluar su memoria t√°ctica, comprensi√≥n de posiciones y capacidad de c√°lculo sin la dependencia visual de las casillas del tablero.
+El **Modo Mental** es una poderosa herramienta de entrenamiento de ajedrez para `a ciegas`. Elimina completamente el tablero visible, forz·ndote a pensar y jugar exclusivamente con notaciones verbales, algebraicas o de coordenadas. Ideal para jugadores que desean evaluar su memoria t·ctica, comprensiÛn de posiciones y capacidad de c·lculo sin la dependencia visual de las casillas del tablero.
 
-#### üéØ Caracter√≠sticas Clave
+#### ?? CaracterÌsticas Clave
 
-*   **Entrada Multi-Formato** ‚Äì Acepta de forma flexible:
+*   **Entrada Multi-Formato** ñ Acepta de forma flexible:
     *   **UCI/Coordenadas:** `e2e4`, `Nf3`, `g1f3`
     *   **SAN (Standard Algebraic Notation):** `e4`, `Nf3`, `O-O`
-    *   **Algebraica Larga:** `pe√≥n e2 a e4`, `torre h1 a h2`
-    *   **Verbal:** `pe√≥n g1 a h2`, `caballo a8 a c7`
-*   **Motor IA Integrado** ‚Äì Enfrenta motores de ajedrez avanzados (Stockfish, Ailed, Nexus, Atlas.1, Obsidian, Maia 1/2) con niveles de profundidad personalizables (3‚Äë25) y adaptaci√≥n autom√°tica seg√∫n el color elegido.
-*   **Motor Seg√∫n Color** ‚Äì Cuando eliges **Negras**, el motor IA juega directamente como **Blancas**, configur√°ndose autom√°ticamente los motores y niveles de blanca en vez de negros.
-*   **Modo Revelar con 3 Niveles** ‚Äì revela progresivamente el tablero y las notaciones:
-    *   **Nivel 1 ‚Äì Solo Tablero:** Discreto tablero mini sin piezas, sin coordenadas
-    *   **Nivel 2 ‚Äì Tablero + Coordenadas:** Tablero con etiquetas de columnas y filas
-    *   **Nivel 3 ‚Äì Todo Revelado:** Tablero completo con piezas y coordenadas (se oculta autom√°ticamente tras 5 segundos)
-*   **Visualizaci√≥n de Fin de Partida** ‚Äì Detecta y muestra banners claros para jaque mate, tablas (ahogado, material insuficiente, tresfold, 50‚Äëmovimientos) y tiempo agotado, con notificaci√≥n inmediata del ganador.
-*   **Historial PGN Integrado** ‚Äì La aplicaci√≥n reconstruye autom√°ticamente posiciones desde el historial completo de movimientos, permitiendo la navegaci√≥n por todo el recorrido de la partida dentro del panel lateral.
-*   **Relojes de Juego** ‚Äì Temporizadores independientes para Blancas y Negras con cuenta regresiva, se√±ales visuales, y soporte para tiempo por movimiento.
-*   **Editor y Historial** ‚Äì Simple entrada de movimiento, historial de jugadas con pesta√±a de revisi√≥n, y un panel de PGN lateral para estudio y navegaci√≥n.
+    *   **Algebraica Larga:** `peÛn e2 a e4`, `torre h1 a h2`
+    *   **Verbal:** `peÛn g1 a h2`, `caballo a8 a c7`
+*   **Motor IA Integrado** ñ Enfrenta motores de ajedrez avanzados (Stockfish, Ailed, Nexus, Atlas.1, Obsidian, Maia 1/2) con niveles de profundidad personalizables (3-25) y adaptaciÛn autom·tica seg˙n el color elegido.
+*   **Motor Seg˙n Color** ñ Cuando eliges **Negras**, el motor IA juega directamente como **Blancas**, configur·ndose autom·ticamente los motores y niveles de blanca en vez de negros.
+*   **Modo Revelar con 3 Niveles** ñ revela progresivamente el tablero y las notaciones:
+    *   **Nivel 1 ñ Solo Tablero:** Discreto tablero mini sin piezas, sin coordenadas
+    *   **Nivel 2 ñ Tablero + Coordenadas:** Tablero con etiquetas de columnas y filas
+    *   **Nivel 3 ñ Todo Revelado:** Tablero completo con piezas y coordenadas (se oculta autom·ticamente tras 5 segundos)
+*   **VisualizaciÛn de Fin de Partida** ñ Detecta y muestra banners claros para jaque mate, tablas (ahogado, material insuficiente, tresfold, 50-movimientos) y tiempo agotado, con notificaciÛn inmediata del ganador.
+*   **Historial PGN Integrado** ñ La aplicaciÛn reconstruye autom·ticamente posiciones desde el historial completo de movimientos, permitiendo la navegaciÛn por todo el recorrido de la partida dentro del panel lateral.
+*   **Relojes de Juego** ñ Temporizadores independientes para Blancas y Negras con cuenta regresiva, seÒales visuales, y soporte para tiempo por movimiento.
+*   **Editor y Historial** ñ Simple entrada de movimiento, historial de jugadas con pestaÒa de revisiÛn, y un panel de PGN lateral para estudio y navegaciÛn.
 
-#### üìã Configuraci√≥n del Modo Mental
+#### ?? ConfiguraciÛn del Modo Mental
 
-Al abrir el Modo Mental, se presenta una interfaz limpia para elegir los par√°metros exactos del entrenamiento:
+Al abrir el Modo Mental, se presenta una interfaz limpia para elegir los par·metros exactos del entrenamiento:
 
-1.  **Tu Color:** Selecciona entre **Blancas** o **Negras**. Cuando eliges Negras, los motores IA toman el bando opuesto de manera autom√°tica.
+1.  **Tu Color:** Selecciona entre **Blancas** o **Negras**. Cuando eliges Negras, los motores IA toman el bando opuesto de manera autom·tica.
 2.  **Motor Oponente:** Elige cualquier motor IA disponible (Stockfish, Ailed, Nexus, Atlas.1, Obsidian, Maia 1/2).
-3.  **Profundidad / Nivel:** Escoge la profundidad de c√°lculo del motor (3‚Äë25). Motor con motor inteligente: ajusta din√°micamente ELO basado en tu nivel de juego.
-4.  **Bot√≥n "Iniciar Partida":** Comienza el entrenamiento, ocultando el panel de configuraci√≥n y mostrando el √°rea de entrada de movimientos.
+3.  **Profundidad / Nivel:** Escoge la profundidad de c·lculo del motor (3-25). Motor con motor inteligente: ajusta din·micamente ELO basado en tu nivel de juego.
+4.  **BotÛn "Iniciar Partida":** Comienza el entrenamiento, ocultando el panel de configuraciÛn y mostrando el ·rea de entrada de movimientos.
 
-#### üéÆ Flujo de Juego
+#### ?? Flujo de Juego
 
 1.  **Entrada de Movimientos:** Escribe movimientos usando cualquier formato admitido. El sistema valida, verifica legalidad y aplica directamente al reloj.
-2.  **Feedback Visual:** La ultima jugada aparece inmediatamente en el √°rea de reveal, mostrando la notaci√≥n convertida (SAN, Coordenadas, Longa o Verbal) seg√∫n el formato seleccionado.
-3.  **Revelaci√≥n Interactiva:** Usa el bot√≥n **Revelar** (‚òÅ) para mostrar el tablero progresivamente, revelando primero solo el tablero, luego las coordenadas, y finalmente las piezas.
-4.  **Fin del Juego:** Cuando termina la partida (jaque mate, tablas, tiempo agotado), aparece un banner llamativo con el resultado y un bot√≥n para **Reiniciar** sin necesidad de volver al men√∫ principal.
-5.  **Revisi√≥n:** Usa los botones de navegaci√≥n para navegar por todo el historial de la partida, estudiar patrones t√°cticos y replay de jugadas clave.
+2.  **Feedback Visual:** La ultima jugada aparece inmediatamente en el ·rea de reveal, mostrando la notaciÛn convertida (SAN, Coordenadas, Longa o Verbal) seg˙n el formato seleccionado.
+3.  **RevelaciÛn Interactiva:** Usa el botÛn **Revelar** (?) para mostrar el tablero progresivamente, revelando primero solo el tablero, luego las coordenadas, y finalmente las piezas.
+4.  **Fin del Juego:** Cuando termina la partida (jaque mate, tablas, tiempo agotado), aparece un banner llamativo con el resultado y un botÛn para **Reiniciar** sin necesidad de volver al men˙ principal.
+5.  **RevisiÛn:** Usa los botones de navegaciÛn para navegar por todo el historial de la partida, estudiar patrones t·cticos y replay de jugadas clave.
 
-#### üß† Aplicaciones de Entrenamiento
+#### ?? Aplicaciones de Entrenamiento
 
-*   **Mejorar la Memoria:** Practica jugar `a ciegas` reforzando la posici√≥n de piezas y movimientos futuros.
-*   **Velocidad de C√°lculo:** La presi√≥n del tiempo obliga a un c√°lculo r√°pido.
-*   **C√≥mputo T√°ctico:** Mejora el c√°lculo posicional sin distracciones visuales.
-*   **Estudio de Aperturas:** Memoriza l√≠neas de apertura complejas y estudios.
-*   **Preparaci√≥n para Torneos:** Entrenate para enfrentar oponentes sin depender del tablero de un oponente.
+*   **Mejorar la Memoria:** Practica jugar `a ciegas` reforzando la posiciÛn de piezas y movimientos futuros.
+*   **Velocidad de C·lculo:** La presiÛn del tiempo obliga a un c·lculo r·pido.
+*   **CÛmputo T·ctico:** Mejora el c·lculo posicional sin distracciones visuales.
+*   **Estudio de Aperturas:** Memoriza lÌneas de apertura complejas y estudios.
+*   **PreparaciÛn para Torneos:** Entrenate para enfrentar oponentes sin depender del tablero de un oponente.
 
-> **Recomendaci√≥n:** Para mayor concentraci√≥n, activa el modo sin distracciones en configuraci√≥n. Usa el Modo Mental regularmente para construir una base s√≥lida de c√°lculo y memoria t√°ctica. Ideal para estudiantes de ajedrez, jugadores r√°pidos y aquellos que buscan mejorar su juego `a ciegas`.
+> **RecomendaciÛn:** Para mayor concentraciÛn, activa el modo sin distracciones en configuraciÛn. Usa el Modo Mental regularmente para construir una base sÛlida de c·lculo y memoria t·ctica. Ideal para estudiantes de ajedrez, jugadores r·pidos y aquellos que buscan mejorar su juego `a ciegas`.
 
-### üñ•Ô∏è Interfaz de Usuario Premium
-Dise√±ada con **React** y **Tailwind CSS**, ofreciendo un entorno oscuro, minimalista y optimizado para la concentraci√≥n.
+### ??? Interfaz de Usuario Premium
+DiseÒada con **React** y **Tailwind CSS**, ofreciendo un entorno oscuro, minimalista y optimizado para la concentraciÛn.
 
-**Caracter√≠sticas de Interfaz Mejoradas:**
-*   **Modo sin Distracciones:** Oculta encabezados, fondos y paneles laterales para m√°xima concentraci√≥n
-*   **Dise√±o Responsivo Avanzado:** Espaciado autom√°tico en pantallas peque√±as, tablero redimensionable (Peque√±o, Normal, Grande, Ajustar Pantalla)
-*   **Tama√±o de Tablero por Defecto:** Modo "Ajustar Pantalla" preseleccionado para experiencia √≥ptima en todas las resoluciones
-*   **Extracci√≥n de Nombres de Jugadores:** Al cargar PGN, extrae autom√°ticamente nombres de blancas/negras del encabezado
-*   **Modal de Fin de Partida:** Dise√±o robusto con mayor opacidad para claridad y bot√≥n X para cerrar
-*   **Confirmaci√≥n al Salir de Aventura:** Di√°logo preventivo para evitar p√©rdidas accidentales de progreso
-*   **Indicadores Visuales Claros:** Botones con etiquetas precisas ("Presiona para Ingresar"), informaci√≥n de enemigo en tiempo real
+**CaracterÌsticas de Interfaz Mejoradas:**
+*   **Modo sin Distracciones:** Oculta encabezados, fondos y paneles laterales para m·xima concentraciÛn
+*   **DiseÒo Responsivo Avanzado:** Espaciado autom·tico en pantallas pequeÒas, tablero redimensionable (PequeÒo, Normal, Grande, Ajustar Pantalla)
+*   **TamaÒo de Tablero por Defecto:** Modo "Ajustar Pantalla" preseleccionado para experiencia Ûptima en todas las resoluciones
+*   **ExtracciÛn de Nombres de Jugadores:** Al cargar PGN, extrae autom·ticamente nombres de blancas/negras del encabezado
+*   **Modal de Fin de Partida:** DiseÒo robusto con mayor opacidad para claridad y botÛn X para cerrar
+*   **ConfirmaciÛn al Salir de Aventura:** Di·logo preventivo para evitar pÈrdidas accidentales de progreso
+*   **Indicadores Visuales Claros:** Botones con etiquetas precisas ("Presiona para Ingresar"), informaciÛn de enemigo en tiempo real
 
 
 
-### üèÜ Gestor de Torneos Profesionales
-Herramienta integrada para gestionar torneos de ajedrez de manera unificada. Funciona tanto en la versi√≥n web, como en la de escritorio con conexi√≥n LAN, o para coordinar torneos presenciales externos a la app. El sistema gestiona llaves, emparejamientos y progreso de participantes profesionalmente.
+### ?? Gestor de Torneos Profesionales
+Herramienta integrada para gestionar torneos de ajedrez de manera unificada. Funciona tanto en la versiÛn web, como en la de escritorio con conexiÛn LAN, o para coordinar torneos presenciales externos a la app. El sistema gestiona llaves, emparejamientos y progreso de participantes profesionalmente.
 
-### ‚ôüÔ∏è Editor de Posiciones FEN
-Editor completo para crear y modificar posiciones de ajedrez manualmente. Accesible desde el bot√≥n "Editor FEN" en la barra de herramientas del tablero.
+### ?? Editor de Posiciones FEN
+Editor completo para crear y modificar posiciones de ajedrez manualmente. Accesible desde el botÛn "Editor FEN" en la barra de herramientas del tablero.
 
 **Funciones principales:**
-*   **Piezas Drag & Drop:** Arrastra piezas desde la paleta y su√©ltalas en el tablero. Haz clic en una pieza en la paleta para seleccionarla y clic en una casilla para colocarla.
-*   **Selector de Turno:** Alterna entre Blancas y Negras para definir a qui√©n le toca jugar.
-*   **Opciones de Enroque:** Casillas de verificaci√≥n para enroque corto/largo de ambos bandos.
-*   **Control de Pe√≥n al Paso:** Campo para especificar la casilla de captura al paso.
-*   **Presetos de Posiciones:** Carga posiciones iniciales comunes (Posici√≥n Inicial, Siciliana, Ruy L√≥pez, etc.) con un solo clic.
+*   **Piezas Drag & Drop:** Arrastra piezas desde la paleta y suÈltalas en el tablero. Haz clic en una pieza en la paleta para seleccionarla y clic en una casilla para colocarla.
+*   **Selector de Turno:** Alterna entre Blancas y Negras para definir a quiÈn le toca jugar.
+*   **Opciones de Enroque:** Casillas de verificaciÛn para enroque corto/largo de ambos bandos.
+*   **Control de PeÛn al Paso:** Campo para especificar la casilla de captura al paso.
+*   **Presetos de Posiciones:** Carga posiciones iniciales comunes (PosiciÛn Inicial, Siciliana, Ruy LÛpez, etc.) con un solo clic.
 *   **Vaciar Tablero:** Limpia todas las piezas del tablero para empezar de cero.
 *   **Carga FEN:** Carga posiciones desde una cadena FEN pegada o escribida manualmente.
 
-**Gesti√≥n de Variantes (Capturas de Posici√≥n):**
+**GestiÛn de Variantes (Capturas de PosiciÛn):**
 *   **Guardar Variante:** Captura el estado actual del tablero como una variante con nombre personalizado.
-*   **Navegaci√≥n de Variantes:** Usa las flechas ‚Üê ‚Üí para recorrer tus variantes guardadas (√≠ndice X de N).
-*   **Comparar Modo:** Activa el modo comparaci√≥n para resaltar visualmente las diferencias entre dos variantes (casillas diferentes se marcan en azul en el tablero).
-*   **Reconstrucci√≥n (Replay):** Carga una variante y reproduce los movimientos paso a paso desde la posici√≥n inicial, √∫til para estudiar c√≥mo se lleg√≥ a esa posici√≥n.
-*   **Borrar Variantes:** Elimina variantes individuales con el bot√≥n üóëÔ∏è.
+*   **NavegaciÛn de Variantes:** Usa las flechas ? ? para recorrer tus variantes guardadas (Ìndice X de N).
+*   **Comparar Modo:** Activa el modo comparaciÛn para resaltar visualmente las diferencias entre dos variantes (casillas diferentes se marcan en azul en el tablero).
+*   **ReconstrucciÛn (Replay):** Carga una variante y reproduce los movimientos paso a paso desde la posiciÛn inicial, ˙til para estudiar cÛmo se llegÛ a esa posiciÛn.
+*   **Borrar Variantes:** Elimina variantes individuales con el botÛn ???.
 
 **Capturas de Pantalla del Tablero:**
 *   **Formato:** Selecciona PNG o JPG antes de capturar.
-*   **Descarga:** Haz clic en "üì∑ Capturar" para descargar una imagen del tablero actual.
-*   **Tecla R√°pida:** Presiona Shift+S para capturar directamente.
+*   **Descarga:** Haz clic en "?? Capturar" para descargar una imagen del tablero actual.
+*   **Tecla R·pida:** Presiona Shift+S para capturar directamente.
 
-> **Nota:** Las variantes se guardan manualmente. No se crean autom√°ticamente al cargar presetos.
+> **Nota:** Las variantes se guardan manualmente. No se crean autom·ticamente al cargar presetos.
 
-### üìä Anal√≠ticas y Gesti√≥n de Datos
-*   **Anal√≠ticas en Tiempo Real:** Gr√°ficos de evaluaci√≥n y estad√≠sticas de partida impulsados por *Recharts*.
-*   **Gesti√≥n de PGN Avanzada:** Historial de jugadas completo. Capacidad para:
+### ?? AnalÌticas y GestiÛn de Datos
+*   **AnalÌticas en Tiempo Real:** Gr·ficos de evaluaciÛn y estadÌsticas de partida impulsados por *Recharts*.
+*   **GestiÛn de PGN Avanzada:** Historial de jugadas completo. Capacidad para:
     - Guardar partidas en formato PGN con encabezados personalizados
     - Cargar partidas de terceros para estudio
-    - Reproducci√≥n autom√°tica con control de velocidad
-    - Extracci√≥n autom√°tica de nombres de jugadores
-    - Adici√≥n de comentarios did√°cticos
+    - ReproducciÛn autom·tica con control de velocidad
+    - ExtracciÛn autom·tica de nombres de jugadores
+    - AdiciÛn de comentarios did·cticos
 
-### üß© Herramientas de Entrenamiento Especializadas
-*   **Modo Libre:** Movimiento libre de piezas ideal para observar progresos, corregir equivocaciones o configurar posiciones espec√≠ficas.
-*   **Piezas Invencibles:** Modo de entrenamiento para ejercitar la memoria visual. Opci√≥n de revelar posici√≥n parcial o total del tablero.
-*   **Chess960 (Fischer Random):** Disponible para modos M√°quina vs. M√°quina y Humano vs. M√°quina (debe activarse previamente en la configuraci√≥n).
-*   **Entrenamiento de Jaque Mate:** Ejercicios espec√≠ficos combinando distintas piezas para mejorar la precisi√≥n en finales.
+### ?? Herramientas de Entrenamiento Especializadas
+*   **Modo Libre:** Movimiento libre de piezas ideal para observar progresos, corregir equivocaciones o configurar posiciones especÌficas.
+*   **Piezas Invencibles:** Modo de entrenamiento para ejercitar la memoria visual. OpciÛn de revelar posiciÛn parcial o total del tablero.
+*   **Chess960 (Fischer Random):** Disponible para modos M·quina vs. M·quina y Humano vs. M·quina (debe activarse previamente en la configuraciÛn).
+*   **Entrenamiento de Jaque Mate:** Ejercicios especÌficos combinando distintas piezas para mejorar la precisiÛn en finales.
 
-> **Recomendaci√≥n para entusiastas de motores:**  
-> Active la opci√≥n de **"Juego Infinito"** para observar partidas continuas entre motores, ideal para an√°lisis pasivo y estudio de aperturas.
+> **RecomendaciÛn para entusiastas de motores:**  
+> Active la opciÛn de **"Juego Infinito"** para observar partidas continuas entre motores, ideal para an·lisis pasivo y estudio de aperturas.
 
-> **Recomendaci√≥n para aprendices de ajedrez:**
+> **RecomendaciÛn para aprendices de ajedrez:**
 > Comience con el **Modo Aventura "Las 3000 Noches"** para una experiencia narrativa que gradualmente aumenta la dificultad mientras aprende estrategias avanzadas.
 
 ---
 
-## üß† An√°lisis Maestro con IA
+## ?? An·lisis Maestro con IA
 
-El **An√°lisis Maestro** es el sistema de an√°lisis post-partida m√°s completo de GM-3000. Revisa cada jugada con motores de ajedrez y luego genera una explicaci√≥n en lenguaje natural usando modelos de IA avanzados, con soporte para lectura por voz.
+El **An·lisis Maestro** es el sistema de an·lisis post-partida m·s completo de GM-3000. Revisa cada jugada con motores de ajedrez y luego genera una explicaciÛn en lenguaje natural usando modelos de IA avanzados, con soporte para lectura por voz.
 
-### Modos de An√°lisis
+### Modos de An·lisis
 
-| Modo | Descripci√≥n | Requiere Motor Local |
+| Modo | DescripciÛn | Requiere Motor Local |
 | :--- | :--- | :---: |
-| **An√°lisis R√°pido** | Evaluaci√≥n por jugada con Stockfish a profundidad moderada. Clasifica cada jugada (Brillante, Muy Buena, Mejor Jugada, Buena, Imprecisi√≥n, Error, Error Grave) y genera comentarios. | ‚úÖ |
-| **An√°lisis Profundo** | Mayor profundidad de c√°lculo para una evaluaci√≥n m√°s precisa y detallada. Ideal para partidas importantes. | ‚úÖ |
-| **An√°lisis en Nube** | Usa las API de chess-api.com y Lichess Cloud Eval para obtener evaluaciones sin requerir el motor local. | ‚ùå |
-| **Explorador de Aperturas** | Explora la teor√≠a de aperturas con datos de la base de datos Lichess. Muestra frecuencias, tasas de victoria y l√≠neas principales. | ‚ùå |
+| **An·lisis R·pido** | EvaluaciÛn por jugada con Stockfish a profundidad moderada. Clasifica cada jugada (Brillante, Muy Buena, Mejor Jugada, Buena, ImprecisiÛn, Error, Error Grave) y genera comentarios. | ? |
+| **An·lisis Profundo** | Mayor profundidad de c·lculo para una evaluaciÛn m·s precisa y detallada. Ideal para partidas importantes. | ? |
+| **An·lisis en Nube** | Usa las API de chess-api.com y Lichess Cloud Eval para obtener evaluaciones sin requerir el motor local. | ? |
+| **Explorador de Aperturas** | Explora la teorÌa de aperturas con datos de la base de datos Lichess. Muestra frecuencias, tasas de victoria y lÌneas principales. | ? |
 
-### Progreso de An√°lisis en Tiempo Real
+### Progreso de An·lisis en Tiempo Real
 
-Durante el an√°lisis, el porcentaje de progreso se muestra tanto en el bot√≥n de "An√°lisis Maestro" como dentro del cartel de resultado del juego (Jaque Mate, Tablas, etc.), con una barra de progreso visual y el texto animado "Analizando X%".
+Durante el an·lisis, el porcentaje de progreso se muestra tanto en el botÛn de "An·lisis Maestro" como dentro del cartel de resultado del juego (Jaque Mate, Tablas, etc.), con una barra de progreso visual y el texto animado "Analizando X%".
 
 ---
 
 ### Proveedores de IA y Modelos Soportados
 
-El an√°lisis en lenguaje natural es impulsado por m√∫ltiples proveedores de IA. Todos utilizan la API compatible con OpenAI Chat Completions. Configure su API Key desde el panel de administraci√≥n de APIs dentro del overlay de An√°lisis Maestro.
+El an·lisis en lenguaje natural es impulsado por m˙ltiples proveedores de IA. Todos utilizan la API compatible con OpenAI Chat Completions. Configure su API Key desde el panel de administraciÛn de APIs dentro del overlay de An·lisis Maestro.
 
-#### Google AI Studio (Gemini) ‚Äî API Key gratuita
-| Modelo | Descripci√≥n |
+#### Google AI Studio (Gemini) ó API Key gratuita
+| Modelo | DescripciÛn |
 | :--- | :--- |
 | `gemini-2.5-flash` | Gratis, 1M tokens de contexto. Recomendado para uso general. |
-| `gemini-2.5-flash-lite` | Gratis, l√≠mites de uso m√°s altos. |
-| `gemini-2.0-flash` | Gratis, versi√≥n legacy. |
+| `gemini-2.5-flash-lite` | Gratis, lÌmites de uso m·s altos. |
+| `gemini-2.0-flash` | Gratis, versiÛn legacy. |
 
 Obtener API Key: [aistudio.google.com](https://aistudio.google.com/apikey)
 
-#### OpenRouter ‚Äî API Key gratuita
-| Modelo | Descripci√≥n |
+#### OpenRouter ó API Key gratuita
+| Modelo | DescripciÛn |
 | :--- | :--- |
-| `openrouter/free` | Auto-Router gratuito: selecciona autom√°ticamente el mejor modelo disponible. |
+| `openrouter/free` | Auto-Router gratuito: selecciona autom·ticamente el mejor modelo disponible. |
 | `qwen/qwen3-235b-a22b:free` | Qwen3 235B MoE, 128K contexto. |
 | `meta-llama/llama-4-maverick:free` | Llama 4 Maverick, 1M contexto. |
 | `deepseek/deepseek-r1:free` | DeepSeek R1, razonamiento avanzado. |
@@ -278,34 +278,34 @@ Obtener API Key: [aistudio.google.com](https://aistudio.google.com/apikey)
 Obtener API Key: [openrouter.ai/keys](https://openrouter.ai/keys)
 
 #### NVIDIA NIM
-| Modelo | Descripci√≥n |
+| Modelo | DescripciÛn |
 | :--- | :--- |
-| `nvidia/nemotron-3-ultra-550b-a55b` | Nemotron 3 Ultra 550B ‚Äî el m√°s potente. |
+| `nvidia/nemotron-3-ultra-550b-a55b` | Nemotron 3 Ultra 550B ó el m·s potente. |
 | `deepseek-ai/deepseek-v4-pro` | DeepSeek V4 Pro, razonamiento avanzado. |
-| `deepseek-ai/deepseek-v4-flash` | DeepSeek V4 Flash, r√°pido. |
+| `deepseek-ai/deepseek-v4-flash` | DeepSeek V4 Flash, r·pido. |
 | `minimax-m3` / `minimax-m2.7` | MiniMax, modelos generales. |
-| `mistral-medium-3.5-128b` | Mistral Medium 3.5, 128B par√°metros. |
-| `step-3.7-flash` | Step 3.7 Flash, r√°pido. |
+| `mistral-medium-3.5-128b` | Mistral Medium 3.5, 128B par·metros. |
+| `step-3.7-flash` | Step 3.7 Flash, r·pido. |
 | `kimi-k2.6` | Kimi K2.6, razonamiento. |
 | `glm-5.1` | GLM 5.1, general. |
-| `gemma-4-31b-it` | Gemma 4 31B, r√°pido. |
+| `gemma-4-31b-it` | Gemma 4 31B, r·pido. |
 | `nvidia/nemotron-3-nano-omni-30b-a3b-reasoning` | Nemotron 3 Nano, multimodal. |
 | `diffusiongemma-26b-a4b-it` | Diffusion Gemma 26B, especializado. |
-| `nvidia/chatterbox-multilingual-tts` | Chatterbox TTS Multilingual, generaci√≥n de voz. |
+| `nvidia/chatterbox-multilingual-tts` | Chatterbox TTS Multilingual, generaciÛn de voz. |
 
-#### Cerebras ‚Äî Inferencia Ultra-R√°pida
-| Modelo | Descripci√≥n |
+#### Cerebras ó Inferencia Ultra-R·pida
+| Modelo | DescripciÛn |
 | :--- | :--- |
-| `gpt-oss-120b` | GPT-OSS 120B, ultra-r√°pido con 128K contexto. |
+| `gpt-oss-120b` | GPT-OSS 120B, ultra-r·pido con 128K contexto. |
 | `qwen-3-235b` | Qwen3 235B, razonamiento potente. |
-| `llama-3.3-70b` | Llama 3.3 70B, r√°pido y general. |
+| `llama-3.3-70b` | Llama 3.3 70B, r·pido y general. |
 
 #### Together AI
-| Modelo | Descripci√≥n |
+| Modelo | DescripciÛn |
 | :--- | :--- |
-| `meta-llama/Meta-Llama-3.1-405B-Instruct-Turbo` | Llama 3.1 405B ‚Äî el modelo m√°s grande. |
-| `meta-llama/Llama-3.3-70B-Instruct-Turbo` | Llama 3.3 70B, r√°pido y econ√≥mico. |
-| `MiniMax/MiniMax-M2.7` | MiniMax M2.7, 230B par√°metros. |
+| `meta-llama/Meta-Llama-3.1-405B-Instruct-Turbo` | Llama 3.1 405B ó el modelo m·s grande. |
+| `meta-llama/Llama-3.3-70B-Instruct-Turbo` | Llama 3.3 70B, r·pido y econÛmico. |
+| `MiniMax/MiniMax-M2.7` | MiniMax M2.7, 230B par·metros. |
 | `Qwen/Qwen3.6-Plus` | Qwen 3.6 Plus, balanceado. |
 
 #### API Personalizada (OpenAI-compatible)
@@ -313,157 +313,157 @@ Soporte para cualquier endpoint compatible con la API de OpenAI Chat Completions
 
 ---
 
-### Sistema de Text-to-Speech (TTS) ‚Äî Lectura por Voz
+### Sistema de Text-to-Speech (TTS) ó Lectura por Voz
 
-GM-3000 incluye un sistema TTS avanzado para escuchar el an√°lisis en voz alta. Soporta **dos motores** con prioridad autom√°tica:
+GM-3000 incluye un sistema TTS avanzado para escuchar el an·lisis en voz alta. Soporta **dos motores** con prioridad autom·tica:
 
-#### Motor Principal: edge-tts (Neural) ‚Äî Exclusivo de escritorio
-Voces neuronales de alta calidad de Microsoft Edge, con entonaci√≥n natural y expresiva.
+#### Motor Principal: edge-tts (Neural) ó Exclusivo de escritorio
+Voces neuronales de alta calidad de Microsoft Edge, con entonaciÛn natural y expresiva.
 
 | Voz | Idioma | ID |
 | :--- | :--- | :--- |
-| **Dalia** | Espa√±ol (M√©xico) | `es-MX-DaliaNeural` |
-| **Elvira** | Espa√±ol (Espa√±a) | `es-ES-ElviraNeural` |
-| **Jenny** | Ingl√©s (EEUU) | `en-US-JennyNeural` |
-| +50 voces m√°s | Espa√±ol, Ingl√©s, otros | Cargadas din√°micamente |
+| **Dalia** | EspaÒol (MÈxico) | `es-MX-DaliaNeural` |
+| **Elvira** | EspaÒol (EspaÒa) | `es-ES-ElviraNeural` |
+| **Jenny** | InglÈs (EEUU) | `en-US-JennyNeural` |
+| +50 voces m·s | EspaÒol, InglÈs, otros | Cargadas din·micamente |
 
 - Acceso al listado completo de voces neuronales disponibles (filtradas por idioma)
-- Control de velocidad (0.5x ‚Äî 2.0x), volumen y pausa/reanudaci√≥n
+- Control de velocidad (0.5x ó 2.0x), volumen y pausa/reanudaciÛn
 - Descarga del audio como archivo MP3
-- Barra de reproducci√≥n con posici√≥n y duraci√≥n
+- Barra de reproducciÛn con posiciÛn y duraciÛn
 
-#### Motor de Respaldo: Web Speech API ‚Äî Disponible en web y escritorio
-S√≠ntesis de voz del navegador, con detecci√≥n autom√°tica de voces en espa√±ol. Usado como fallback cuando edge-tts no est√° disponible.
+#### Motor de Respaldo: Web Speech API ó Disponible en web y escritorio
+SÌntesis de voz del navegador, con detecciÛn autom·tica de voces en espaÒol. Usado como fallback cuando edge-tts no est· disponible.
 
-> **Nota:** El motor TTS edge-tts con voces neuronales es **exclusivo de la versi√≥n de escritorio**. La versi√≥n web utiliza Web Speech API.
-
----
-
-### ‚ö†Ô∏è Funciones Exclusivas de la Versi√≥n de Escritorio
-
-Las siguientes funcionalidades **solo est√°n disponibles** en la versi√≥n de escritorio (Electron):
-
-- üß† **An√°lisis con IA en lenguaje natural** ‚Äî An√°lisis general y t√©cnico de partidas completas usando modelos de IA avanzados. Incluye clasificaci√≥n por jugada, explicaciones estrat√©gicas y resumen narrativo.
-- üîä **Lectura por voz del an√°lisis (TTS Neural)** ‚Äî Escucha el an√°lisis completo con voces neuronales realistas de edge-tts (Dalia, Elvira, Jenny y m√°s). Control de velocidad, volumen, pausa y descarga MP3.
-- üåê **Conexi√≥n LAN** ‚Äî Juega en red local sin Internet con sincronizaci√≥n en tiempo real y confirmaci√≥n manual del anfitri√≥n.
-- ‚öôÔ∏è **Motores locales avanzados** ‚Äî Ejecuci√≥n nativa de Stockfish, Ailed, Nexus, Atlas.1 y otros motores con m√°ximo rendimiento v√≠a Web Workers dedicados.
-- üìÇ **Carga de PGN desde archivo** ‚Äî Sube archivos .pgn directamente para analizar con IA.
-- üíæ **Descarga de audio TTS como MP3** ‚Äî Exporta el an√°lisis le√≠do como archivo de audio para escuchar offline.
-
-> **Recomendaci√≥n:** Para disfrutar de la experiencia completa, descargue la versi√≥n de escritorio. La versi√≥n web funciona como demo limitada.
+> **Nota:** El motor TTS edge-tts con voces neuronales es **exclusivo de la versiÛn de escritorio**. La versiÛn web utiliza Web Speech API.
 
 ---
 
-## üåê Conexi√≥n LAN (Multiplayer Local)
+### ?? Funciones Exclusivas de la VersiÛn de Escritorio
 
-GM-3000 incluye un **Servidor de Relevo Integrado** que permite jugar partidas multijugador sin necesidad de servidores externos o conexi√≥n a Internet, siempre que los dispositivos est√©n en la misma red local.
+Las siguientes funcionalidades **solo est·n disponibles** en la versiÛn de escritorio (Electron):
+
+- ?? **An·lisis con IA en lenguaje natural** ó An·lisis general y tÈcnico de partidas completas usando modelos de IA avanzados. Incluye clasificaciÛn por jugada, explicaciones estratÈgicas y resumen narrativo.
+- ?? **Lectura por voz del an·lisis (TTS Neural)** ó Escucha el an·lisis completo con voces neuronales realistas de edge-tts (Dalia, Elvira, Jenny y m·s). Control de velocidad, volumen, pausa y descarga MP3.
+- ?? **ConexiÛn LAN** ó Juega en red local sin Internet con sincronizaciÛn en tiempo real y confirmaciÛn manual del anfitriÛn.
+- ?? **Motores locales avanzados** ó EjecuciÛn nativa de Stockfish, Ailed, Nexus, Atlas.1 y otros motores con m·ximo rendimiento vÌa Web Workers dedicados.
+- ?? **Carga de PGN desde archivo** ó Sube archivos .pgn directamente para analizar con IA.
+- ?? **Descarga de audio TTS como MP3** ó Exporta el an·lisis leÌdo como archivo de audio para escuchar offline.
+
+> **RecomendaciÛn:** Para disfrutar de la experiencia completa, descargue la versiÛn de escritorio. La versiÛn web funciona como demo limitada.
+
+---
+
+## ?? ConexiÛn LAN (Multiplayer Local)
+
+GM-3000 incluye un **Servidor de Relevo Integrado** que permite jugar partidas multijugador sin necesidad de servidores externos o conexiÛn a Internet, siempre que los dispositivos estÈn en la misma red local.
 
 ### Protocolo de Funcionamiento:
 
-1.  **Host (Anfitri√≥n):** Al iniciar el modo LAN, la aplicaci√≥n levanta autom√°ticamente un servidor en el puerto `3001`. El anfitri√≥n puede consultar su direcci√≥n IP local dentro de la configuraci√≥n de red de la aplicaci√≥n.
-2.  **Invitado (Cliente):** Otros jugadores pueden unirse a la sala ingresando la direcci√≥n IP del anfitri√≥n.
-3.  **Sistema de Confirmaci√≥n (Seguridad):** Cuando un invitado intenta conectar:
-    - El servidor notifica al anfitri√≥n de la solicitud de conexi√≥n
-    - El anfitri√≥n debe **confirmar expl√≠citamente** al invitado (no hay aceptaci√≥n autom√°tica)
-    - Solo despu√©s de la confirmaci√≥n se sincroniza la partida
-    - El invitado no puede interactuar hasta que se complete la confirmaci√≥n
-4.  **Sincronizaci√≥n Total:** El sistema sincroniza en tiempo real:
+1.  **Host (AnfitriÛn):** Al iniciar el modo LAN, la aplicaciÛn levanta autom·ticamente un servidor en el puerto `3001`. El anfitriÛn puede consultar su direcciÛn IP local dentro de la configuraciÛn de red de la aplicaciÛn.
+2.  **Invitado (Cliente):** Otros jugadores pueden unirse a la sala ingresando la direcciÛn IP del anfitriÛn.
+3.  **Sistema de ConfirmaciÛn (Seguridad):** Cuando un invitado intenta conectar:
+    - El servidor notifica al anfitriÛn de la solicitud de conexiÛn
+    - El anfitriÛn debe **confirmar explÌcitamente** al invitado (no hay aceptaciÛn autom·tica)
+    - Solo despuÈs de la confirmaciÛn se sincroniza la partida
+    - El invitado no puede interactuar hasta que se complete la confirmaciÛn
+4.  **SincronizaciÛn Total:** El sistema sincroniza en tiempo real:
     *   Estado del tablero (FEN).
     *   Historial de movimientos.
     *   Relojes de juego.
-    *   Configuraci√≥n de la partida.
+    *   ConfiguraciÛn de la partida.
     *   Cambios de estado durante la partida.
-5.  **Detecci√≥n Autom√°tica:** Incluye una funci√≥n de "Ping" para verificar la disponibilidad de salas abiertas en la red local.
+5.  **DetecciÛn Autom·tica:** Incluye una funciÛn de "Ping" para verificar la disponibilidad de salas abiertas en la red local.
 
-### Caracter√≠sticas de Seguridad LAN:
-*   ‚úÖ Confirmaci√≥n manual del anfitri√≥n para cada conexi√≥n
-*   ‚úÖ Validaci√≥n de entrada en todos los endpoints
-*   ‚úÖ Sincronizaci√≥n de estado para evitar manipulaciones
-*   ‚úÖ Relojes independientes con verificaci√≥n cruzada
-*   ‚úÖ Historial completo de movimientos verificado
-*   ‚úÖ **Mejoras de Seguridad v3.3.0:** Sanitizaci√≥n de datos de red y protecci√≥n contra inyecciones en el servidor de relevo.
+### CaracterÌsticas de Seguridad LAN:
+*   ? ConfirmaciÛn manual del anfitriÛn para cada conexiÛn
+*   ? ValidaciÛn de entrada en todos los endpoints
+*   ? SincronizaciÛn de estado para evitar manipulaciones
+*   ? Relojes independientes con verificaciÛn cruzada
+*   ? Historial completo de movimientos verificado
+*   ? **Mejoras de Seguridad v3.3.0:** SanitizaciÛn de datos de red y protecciÛn contra inyecciones en el servidor de relevo.
 
-### üîÑ Compatibilidad entre Versiones:
-Debido a las mejoras en la l√≥gica de sincronizaci√≥n y protocolos de seguridad en la versi√≥n 3.3.0, la comunicaci√≥n con versiones anteriores (v3.1.6 o inferiores) puede presentar discrepancias. 
+### ?? Compatibilidad entre Versiones:
+Debido a las mejoras en la lÛgica de sincronizaciÛn y protocolos de seguridad en la versiÛn 3.3.0, la comunicaciÛn con versiones anteriores (v3.1.6 o inferiores) puede presentar discrepancias. 
 
-> **Recomendaci√≥n Crucial:** Si desea jugar contra un usuario que utiliza una versi√≥n anterior de GM-3000, **se recomienda que la sala sea creada (Host) desde la versi√≥n m√°s antigua**. Esto asegura que el protocolo de comunicaci√≥n sea el esperado por el cliente antiguo y mantiene la estabilidad de la partida.
+> **RecomendaciÛn Crucial:** Si desea jugar contra un usuario que utiliza una versiÛn anterior de GM-3000, **se recomienda que la sala sea creada (Host) desde la versiÛn m·s antigua**. Esto asegura que el protocolo de comunicaciÛn sea el esperado por el cliente antiguo y mantiene la estabilidad de la partida.
 
 ---
 
-## ‚ú® Mejoras en la Versi√≥n 3.3.0
+## ? Mejoras en la VersiÛn 3.3.0
 
 ### Panel de Resumen de Partida
-*   ‚úÖ Nuevo panel anclado al panel de configuraci√≥n (misma unidad visual, dividido)
-*   ‚úÖ Resumen r√°pido de la configuraci√≥n: motor de cada bando, ELO/profundidad y ritmo de juego
-*   ‚úÖ Bot√≥n **INICIAR PARTIDA** grande, con textura y dise√±o rojo/negro, siempre visible
-*   ‚úÖ Se elimin√≥ el bot√≥n de pantalla completa flotante (queda solo el del panel lateral)
+*   ? Nuevo panel anclado al panel de configuraciÛn (misma unidad visual, dividido)
+*   ? Resumen r·pido de la configuraciÛn: motor de cada bando, ELO/profundidad y ritmo de juego
+*   ? BotÛn **INICIAR PARTIDA** grande, con textura y diseÒo rojo/negro, siempre visible
+*   ? Se eliminÛ el botÛn de pantalla completa flotante (queda solo el del panel lateral)
 
 ### Motor Maia 2
-*   ‚úÖ 8 niveles ELO discretos: **400, 600, 800, 1000, 1200, 1500, 1800 y 2100**
-*   ‚úÖ El nivel elegido **s√≠ afecta la fuerza real**: se traduce a profundidad de c√°lculo y `Skill Level` del motor
-*   ‚úÖ Selector de niveles en Blancas, Negras y Modo Estudio
-*   ‚úÖ Modo Progresivo: el ELO ahora define la fuerza real del rival (antes era decorativo)
+*   ? 8 niveles ELO discretos: **400, 600, 800, 1000, 1200, 1500, 1800 y 2100**
+*   ? El nivel elegido **sÌ afecta la fuerza real**: se traduce a profundidad de c·lculo y `Skill Level` del motor
+*   ? Selector de niveles en Blancas, Negras y Modo Estudio
+*   ? Modo Progresivo: el ELO ahora define la fuerza real del rival (antes era decorativo)
 
 ### Interfaz de Usuario
-*   ‚úÖ El banner de cabecera se oculta solo a los 4 segundos de iniciar la partida
-*   ‚úÖ Marco del tablero en negro puro
-*   ‚úÖ Bot√≥n **Finalizar Modo Estudio** en el modal de fin de partida y en el panel lateral
-*   ‚úÖ Tablero correctamente centrado en pantalla completa
+*   ? El banner de cabecera se oculta solo a los 4 segundos de iniciar la partida
+*   ? Marco del tablero en negro puro
+*   ? BotÛn **Finalizar Modo Estudio** en el modal de fin de partida y en el panel lateral
+*   ? Tablero correctamente centrado en pantalla completa
 
 ---
 
-## ‚ú® Mejoras en la Versi√≥n 3.2.0
+## ? Mejoras en la VersiÛn 3.2.0
 
 ### Editor de Posiciones FEN
-*   ‚úÖ Editor completo con drag & drop de piezas desde paleta
-*   ‚úÖ Presets de posiciones comunes (Siciliana, Ruy L√≥pez, Caro-Kann, etc.)
-*   ‚úÖ Guardado manual de variantes con navegaci√≥n ‚Üê ‚Üí y comparaci√≥n visual
-*   ‚úÖ Modo reconstrucci√≥n para reproducir movimientos paso a paso
-*   ‚úÖ Resaltado visual de diferencias entre variantes (casillas en azul)
-*   ‚úÖ Captura de pantalla del tablero en PNG o JPG
+*   ? Editor completo con drag & drop de piezas desde paleta
+*   ? Presets de posiciones comunes (Siciliana, Ruy LÛpez, Caro-Kann, etc.)
+*   ? Guardado manual de variantes con navegaciÛn ? ? y comparaciÛn visual
+*   ? Modo reconstrucciÛn para reproducir movimientos paso a paso
+*   ? Resaltado visual de diferencias entre variantes (casillas en azul)
+*   ? Captura de pantalla del tablero en PNG o JPG
 
 ### Interfaz de Usuario
-*   ‚úÖ Espaciado responsivo mejorado en pantallas peque√±as (m√≥viles y tablets)
-*   ‚úÖ Tama√±o de tablero por defecto: "Ajustar Pantalla" para experiencia √≥ptima
-*   ‚úÖ Modal de fin de partida con mayor transparencia (95%) para mejor legibilidad
-*   ‚úÖ Bot√≥n de Aventura con texto claro: "Presiona para Ingresar"
-*   ‚úÖ Sistema de confirmaci√≥n al salir de Aventura (previene p√©rdidas accidentales)
+*   ? Espaciado responsivo mejorado en pantallas pequeÒas (mÛviles y tablets)
+*   ? TamaÒo de tablero por defecto: "Ajustar Pantalla" para experiencia Ûptima
+*   ? Modal de fin de partida con mayor transparencia (95%) para mejor legibilidad
+*   ? BotÛn de Aventura con texto claro: "Presiona para Ingresar"
+*   ? Sistema de confirmaciÛn al salir de Aventura (previene pÈrdidas accidentales)
 
-### PGN y An√°lisis
-*   ‚úÖ Extracci√≥n autom√°tica de nombres de jugadores desde encabezados PGN
-*   ‚úÖ Visualizaci√≥n mejorada de nombres en el tablero (Jugador Blancas vs. Motores Negras)
+### PGN y An·lisis
+*   ? ExtracciÛn autom·tica de nombres de jugadores desde encabezados PGN
+*   ? VisualizaciÛn mejorada de nombres en el tablero (Jugador Blancas vs. Motores Negras)
 
 ### Modo Aventura
-*   ‚úÖ 4 Jefes con personalidades √∫nicas y ELO progresivo
-*   ‚úÖ 9 rangos nobiliarios basados en "Almas Cosechadas"
-*   ‚úÖ Contador global de batallas con hitos cada 100 victorias
-*   ‚úÖ 6 tipos de misiones narrativas con mec√°nicas complejas
-*   ‚úÖ Ajuste din√°mico de motor seg√∫n ELO del jugador
-*   ‚úÖ Sistema de guardado/carga de progreso
+*   ? 4 Jefes con personalidades ˙nicas y ELO progresivo
+*   ? 9 rangos nobiliarios basados en "Almas Cosechadas"
+*   ? Contador global de batallas con hitos cada 100 victorias
+*   ? 6 tipos de misiones narrativas con mec·nicas complejas
+*   ? Ajuste din·mico de motor seg˙n ELO del jugador
+*   ? Sistema de guardado/carga de progreso
 
 ### Seguridad y Estabilidad
-*   ‚úÖ Sistema de confirmaci√≥n manual en modo LAN
-*   ‚úÖ Validaci√≥n mejorada de entrada en todos los puntos de contacto
-*   ‚úÖ Sincronizaci√≥n robusta de estado en partidas LAN
-*   ‚úÖ **Protocolo de Compatibilidad:** Optimizaciones para interactuar con versiones previas del motor.
+*   ? Sistema de confirmaciÛn manual en modo LAN
+*   ? ValidaciÛn mejorada de entrada en todos los puntos de contacto
+*   ? SincronizaciÛn robusta de estado en partidas LAN
+*   ? **Protocolo de Compatibilidad:** Optimizaciones para interactuar con versiones previas del motor.
 
 ---
 
-## üõ†Ô∏è Stack Tecnol√≥gico
+## ??? Stack TecnolÛgico
 
 *   **Core Frontend:** React 19 + Vite + TypeScript.
 *   **Desktop Wrapper:** Electron + Electron Forge (Empaquetado multiplataforma para Windows, Linux y macOS).
-*   **L√≥gica de Ajedrez:** Chess.js (validaci√≥n de movimientos y reglas est√°ndar FIDE).
+*   **LÛgica de Ajedrez:** Chess.js (validaciÛn de movimientos y reglas est·ndar FIDE).
 *   **Motores de IA:** 
-    - Stockfish.js (ejecutado v√≠a Web Worker para no bloquear la UI)
-    - Motores nativos propios (Ailed, Nexus, Atlas.1) + motores de la comunidad (Obsidian, Maia) con l√≥gica optimizada en TypeScript
-*   **UI/UX:** Tailwind CSS, Framer Motion (animaciones fluidas), Lucide React (iconograf√≠a).
+    - Stockfish.js (ejecutado vÌa Web Worker para no bloquear la UI)
+    - Motores nativos propios (Ailed, Nexus, Atlas.1) + motores de la comunidad (Obsidian, Maia) con lÛgica optimizada en TypeScript
+*   **UI/UX:** Tailwind CSS, Framer Motion (animaciones fluidas), Lucide React (iconografÌa).
 *   **Redes:** Node.js Express Server (servidor de relevo LAN integrado en el proceso principal de Electron).
-*   **Visualizaci√≥n:** Recharts (gr√°ficas de an√°lisis), Canvas API (render del tablero).
+*   **VisualizaciÛn:** Recharts (gr·ficas de an·lisis), Canvas API (render del tablero).
 
 ---
 
-## üì¶ Instalaci√≥n y Desarrollo
+## ?? InstalaciÛn y Desarrollo
 
 Para contribuir o ejecutar el proyecto en un entorno de desarrollo local:
 
@@ -490,7 +490,7 @@ Para contribuir o ejecutar el proyecto en un entorno de desarrollo local:
     npm run dev
     ```
 
-4.  **Ejecutar aplicaci√≥n Desktop (Electron):**
+4.  **Ejecutar aplicaciÛn Desktop (Electron):**
     ```bash
     npm run electron:start
     ```
@@ -510,25 +510,25 @@ Para contribuir o ejecutar el proyecto en un entorno de desarrollo local:
 
 
 
-## üåê Limitaciones de la Versi√≥n Web
+## ?? Limitaciones de la VersiÛn Web
 
-La versi√≥n web (demo en navegador) tiene las siguientes limitaciones respecto a la versi√≥n de escritorio:
+La versiÛn web (demo en navegador) tiene las siguientes limitaciones respecto a la versiÛn de escritorio:
 
-- **An√°lisis con IA en lenguaje natural** ‚Äî No disponible en la versi√≥n web. Para obtener an√°lisis profundos de partidas con inteligencia artificial (evaluaci√≥n por jugada, an√°lisis general y t√©cnico), instale la versi√≥n de escritorio.
-- **Lectura por voz del an√°lisis (TTS Neural)** ‚Äî No disponible en la versi√≥n web. Para escuchar el an√°lisis con voces neuronales realistas (edge-tts), instale la versi√≥n de escritorio. La versi√≥n web solo ofrece la s√≠ntesis de voz b√°sica del navegador (Web Speech API).
-- **Conexi√≥n LAN** ‚Äî No disponible en la versi√≥n web. Para jugar en red local, instale la versi√≥n de escritorio.
-- **Motores locales avanzados** ‚Äî Algunos motores de ajedrez avanzados requieren la versi√≥n de escritorio para funcionar correctamente.
-- **Carga de PGN desde archivo** ‚Äî No disponible en la versi√≥n web.
-- **Descarga de audio TTS** ‚Äî No disponible en la versi√≥n web.
-
----
-
-## üìÑ Licencia
-
-Este proyecto est√° bajo la licencia **MIT**. 
-
-Para leer los t√©rminos completos, consulte el archivo [`LICENSE`](https://github.com/ElalChico/GM-3000/blob/main/LICENSE) en este repositorio.
+- **An·lisis con IA en lenguaje natural** ó No disponible en la versiÛn web. Para obtener an·lisis profundos de partidas con inteligencia artificial (evaluaciÛn por jugada, an·lisis general y tÈcnico), instale la versiÛn de escritorio.
+- **Lectura por voz del an·lisis (TTS Neural)** ó No disponible en la versiÛn web. Para escuchar el an·lisis con voces neuronales realistas (edge-tts), instale la versiÛn de escritorio. La versiÛn web solo ofrece la sÌntesis de voz b·sica del navegador (Web Speech API).
+- **ConexiÛn LAN** ó No disponible en la versiÛn web. Para jugar en red local, instale la versiÛn de escritorio.
+- **Motores locales avanzados** ó Algunos motores de ajedrez avanzados requieren la versiÛn de escritorio para funcionar correctamente.
+- **Carga de PGN desde archivo** ó No disponible en la versiÛn web.
+- **Descarga de audio TTS** ó No disponible en la versiÛn web.
 
 ---
-*GM-3000 ‚Äî Board de Auto-Entrenamiento.*
+
+## ?? Licencia
+
+Este proyecto est· bajo la licencia **MIT**. 
+
+Para leer los tÈrminos completos, consulte el archivo [`LICENSE`](https://github.com/ElalChico/GM-3000/blob/main/LICENSE) en este repositorio.
+
+---
+*GM-3000 ó Board de Auto-Entrenamiento.*
 
