@@ -15,8 +15,8 @@ La aplicación integra potentes motores de análisis, análisis con inteligencia
 
 ## 🌐 Versión Online (Demo Web)
 
-> **🎉 Versión 3.2.0 ya disponible en [gm-3000.web.app](https://gm-3000.web.app)**  
-> Prueba la aplicación directamente desde tu navegador con las últimas mejoras en interfaz, editor FEN, seguridad LAN y Modo Aventura.  
+> **🎉 Versión 3.3.0 ya disponible en [gm-3000.web.app](https://gm-3000.web.app)**  
+> Prueba la aplicación directamente desde tu navegador con las últimas mejoras: panel de resumen de partida, niveles ELO reales en Maia 2 y Modo Estudio con salida propia.  
 > ⚠️ **Nota:** La funcionalidad de conexión LAN para jugar en red local, el análisis con IA en lenguaje natural y la lectura por voz del análisis con voces realistas **solo están disponibles en la versión de escritorio**. Para disfrutar de todas las funciones, descarga el instalador.
 
 ---
@@ -25,14 +25,14 @@ La aplicación integra potentes motores de análisis, análisis con inteligencia
 
 Si desea utilizar todas las funciones, incluyendo el modo LAN y los motores locales, descargue la versión de escritorio:
 
-### ✨ Última Versión 3.2.0
+### ✨ Última Versión 3.3.0
 
 | Tipo de Instalador | Enlace de Descarga (MEGA) | Enlace de Descarga (GitHub) | Descripción |
 | :--- | :--- | :--- | :--- |
-| **Portable (.ZIP)** | [Descargar ZIP - MEGA](https://mega.nz/file/TKohWb5a#p7I0hM3ou5rZQbJYjG3XqvMq1GS-HpL24TTjaxjyX2k) | [GitHub Release](https://github.com/ElalChico/GM-3000/releases/download/v3.2.0/GM-3000-win32-x64-3.2.0.zip) | No requiere instalación. Descomprimir y ejecutar. Ideal para USB o pruebas rápidas. |
-| **Instalador (.EXE 64-bit)** | [Descargar Setup en MEGA](https://mega.nz/file/3GoVVTiJ#cfnmvTtIZj_Xn8c4PrtiYU41UkdCNc-8FTO2JK-GKhI) | [GitHub Release](https://github.com/ElalChico/GM-3000/releases/download/v3.2.0/GM-3000.Setup.exe) | Instalador tradicional para Windows. Integra accesos directos y configuraciones de sistema. |
+| **Portable (.ZIP)** | [Descargar ZIP - MEGA](https://mega.nz/file/TKohWb5a#p7I0hM3ou5rZQbJYjG3XqvMq1GS-HpL24TTjaxjyX2k) | [GitHub Release](https://github.com/ElalChico/GM-3000/releases/download/v3.3.0/GM-3000-win32-x64-3.3.0.zip) | No requiere instalación. Descomprimir y ejecutar. Ideal para USB o pruebas rápidas. |
+| **Instalador (.EXE 64-bit)** | [Descargar Setup en MEGA](https://mega.nz/file/3GoVVTiJ#cfnmvTtIZj_Xn8c4PrtiYU41UkdCNc-8FTO2JK-GKhI) | [GitHub Release](https://github.com/ElalChico/GM-3000/releases/download/v3.3.0/GM-3000.Setup.exe) | Instalador tradicional para Windows. Integra accesos directos y configuraciones de sistema. |
 
-> **Nota:** Los enlaces de MEGA deben subirse manualmente. Los enlaces de GitHub Release apuntan a la versión 3.2.0.
+> **Nota:** Los enlaces de MEGA deben subirse manualmente. Los enlaces de GitHub Release apuntan a la versión 3.3.0.
 
 ### 📦 Versión Anterior 2.1.9
 
@@ -381,12 +381,34 @@ GM-3000 incluye un **Servidor de Relevo Integrado** que permite jugar partidas m
 *   ✅ Sincronización de estado para evitar manipulaciones
 *   ✅ Relojes independientes con verificación cruzada
 *   ✅ Historial completo de movimientos verificado
-*   ✅ **Mejoras de Seguridad v3.2.0:** Sanitización de datos de red y protección contra inyecciones en el servidor de relevo.
+*   ✅ **Mejoras de Seguridad v3.3.0:** Sanitización de datos de red y protección contra inyecciones en el servidor de relevo.
 
 ### 🔄 Compatibilidad entre Versiones:
-Debido a las mejoras en la lógica de sincronización y protocolos de seguridad en la versión 3.2.0, la comunicación con versiones anteriores (v3.1.6 o inferiores) puede presentar discrepancias. 
+Debido a las mejoras en la lógica de sincronización y protocolos de seguridad en la versión 3.3.0, la comunicación con versiones anteriores (v3.1.6 o inferiores) puede presentar discrepancias. 
 
 > **Recomendación Crucial:** Si desea jugar contra un usuario que utiliza una versión anterior de GM-3000, **se recomienda que la sala sea creada (Host) desde la versión más antigua**. Esto asegura que el protocolo de comunicación sea el esperado por el cliente antiguo y mantiene la estabilidad de la partida.
+
+---
+
+## ✨ Mejoras en la Versión 3.3.0
+
+### Panel de Resumen de Partida
+*   ✅ Nuevo panel anclado al panel de configuración (misma unidad visual, dividido)
+*   ✅ Resumen rápido de la configuración: motor de cada bando, ELO/profundidad y ritmo de juego
+*   ✅ Botón **INICIAR PARTIDA** grande, con textura y diseño rojo/negro, siempre visible
+*   ✅ Se eliminó el botón de pantalla completa flotante (queda solo el del panel lateral)
+
+### Motor Maia 2
+*   ✅ 8 niveles ELO discretos: **400, 600, 800, 1000, 1200, 1500, 1800 y 2100**
+*   ✅ El nivel elegido **sí afecta la fuerza real**: se traduce a profundidad de cálculo y `Skill Level` del motor
+*   ✅ Selector de niveles en Blancas, Negras y Modo Estudio
+*   ✅ Modo Progresivo: el ELO ahora define la fuerza real del rival (antes era decorativo)
+
+### Interfaz de Usuario
+*   ✅ El banner de cabecera se oculta solo a los 4 segundos de iniciar la partida
+*   ✅ Marco del tablero en negro puro
+*   ✅ Botón **Finalizar Modo Estudio** en el modal de fin de partida y en el panel lateral
+*   ✅ Tablero correctamente centrado en pantalla completa
 
 ---
 
