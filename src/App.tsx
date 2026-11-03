@@ -842,6 +842,10 @@ const [blackEngineType, setBlackEngineType] = useState<string>(() => {
     const saved = localStorage.getItem("chess_isSoundEnabled");
     return saved === null ? true : saved === "true";
   });
+  const [sfxVolume, setSfxVolume] = useState(() => {
+    const saved = localStorage.getItem("chess_sfxVolume");
+    return saved ? parseFloat(saved) : 0.7;
+  });
   const [isEngineVisible, setIsEngineVisible] = useState(false);
 
   const [isAssistModeEnabled, setIsAssistModeEnabled] = useState(false);
@@ -2381,12 +2385,14 @@ const triggerHomeAnimation = useCallback(() => {
       const audio = audioCacheRef.current[id];
       if (audio) {
         audio.currentTime = 0;
+        // Aplicar volumen: hover_mode usa 0.5, el resto usa sfxVolume
+        audio.volume = isHomeSound ? 0.5 : sfxVolume;
         audio.play().catch(() => { });
       }
     } catch (e) {
       // Ignore audio errors
     }
-  }, []);
+  }, [sfxVolume]);
 
   // --- Lógica del Reloj ---
   const formatTime = (seconds: number) => {
@@ -3242,7 +3248,7 @@ const triggerHomeAnimation = useCallback(() => {
     setIsSyncing(false);
     setIsLoadedPgn(false);
 
-    playAudio("start");
+    // playAudio("start"); // Eliminado: sonido de colocación de piezas al inicio
 
     // Sincronizar motores y reanudar
     const resumeAfterSync = async () => {
@@ -5027,7 +5033,7 @@ const triggerHomeAnimation = useCallback(() => {
       setBoardOrientation("black");
     }
 
-    playAudio("start");
+    // playAudio("start"); // Eliminado: sonido de colocación de piezas al inicio
 
     const startAfterSync = async () => {
       try {
@@ -8816,6 +8822,27 @@ onTimeUpdate={(e) => {
                           />
                         </button>
                       </div>
+                      {isSoundEnabled && (
+                        <div className="mt-3">
+                          <div className="flex items-center justify-between mb-1">
+                            <span className="text-[10px] text-slate-400 font-semibold">Volumen Efectos</span>
+                            <span className="text-[10px] text-emerald-400 font-mono">{Math.round(sfxVolume * 100)}%</span>
+                          </div>
+                          <input
+                            type="range"
+                            min="0"
+                            max="1"
+                            step="0.05"
+                            value={sfxVolume}
+                            onChange={(e) => {
+                              const vol = parseFloat(e.target.value);
+                              setSfxVolume(vol);
+                              localStorage.setItem("chess_sfxVolume", vol.toString());
+                            }}
+                            className="w-full h-1.5 cursor-pointer accent-emerald-500 bg-slate-800 rounded-full appearance-none"
+                          />
+                        </div>
+                      )}
                       {currentGameMode === "normal" && !activeAdventureEnemy && (
                         <div className="flex items-center justify-between mt-3">
                           <span className="text-[10px] text-slate-400 font-semibold">
