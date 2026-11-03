@@ -1953,6 +1953,15 @@ const [adventureMusicVolume, setAdventureMusicVolume] = useState(() => {
   const boardContainerRef = useRef<HTMLDivElement>(null);
   const appContainerRef = useRef<HTMLDivElement>(null);
 
+  // El banner de cabecera aparece al iniciar la partida y se oculta solo a los pocos segundos
+  useEffect(() => {
+    if (!hasStarted || showMainScreen || isFullscreen) return;
+    const timer = setTimeout(() => {
+      setIsHeaderVisible(false);
+    }, 4000);
+    return () => clearTimeout(timer);
+  }, [hasStarted, showMainScreen, isFullscreen]);
+
   // Estado de análisis del motor
   const [evalScore, setEvalScore] = useState(0);
 
@@ -7404,7 +7413,7 @@ onTimeUpdate={(e) => {
 
                     {!showMentalMode && <div className={cn(
                       "w-full aspect-square shadow-[0_25px_50px_-12px_rgba(0,0,0,0.5)] border-4 touch-none relative chess-container-wrapper mx-auto flex items-start justify-center p-1.5 sm:p-2",
-                      currentGameMode === "adventure" ? "border-amber-900/60 bg-transparent" : "border-[#2d3748] bg-[#2d3748]",
+                      currentGameMode === "adventure" ? "border-amber-900/60 bg-transparent" : "border-black bg-black",
                       isInvisiblePieces && "invisible-pieces",
                       !hasStarted && !showFreeMode && freeModeStage !== 'config' && "pointer-events-none opacity-70"
                     )}
@@ -7748,6 +7757,20 @@ onTimeUpdate={(e) => {
                         >
                           {language === "es" ? "Cambiar Ajustes" : "Change Settings"}
                         </button>
+                        {showFreeMode && freeModeStage !== 'config' && (
+                          <button
+                            onClick={() => {
+                              stopGame();
+                              setShowFreeMode(false);
+                              setFreeModeStage('config');
+                              setIsConfigSidebarOpen(true);
+                            }}
+                            className="w-full py-3 bg-gradient-to-b from-rose-950/80 to-black border border-rose-900/60 hover:from-rose-900/80 text-rose-300 hover:text-rose-100 rounded-2xl text-[10px] font-black transition-all uppercase tracking-widest flex items-center justify-center gap-2"
+                          >
+                            <LogOut className="w-3.5 h-3.5" />
+                            {language === "es" ? "Finalizar Modo Estudio" : "Exit Study Mode"}
+                          </button>
+                        )}
                       </div>
           )}
           </div>
@@ -7907,6 +7930,19 @@ onTimeUpdate={(e) => {
                       >
                         <Handshake className="w-3.5 h-3.5" /> {language === "es" ? "Tablas" : "Draw"}
                       </button>
+                      {showFreeMode && freeModeStage !== 'config' && (
+                        <button
+                          onClick={() => {
+                            stopGame();
+                            setShowFreeMode(false);
+                            setFreeModeStage('config');
+                            setIsConfigSidebarOpen(true);
+                          }}
+                          className="flex items-center gap-1.5 px-3 py-1.5 bg-gradient-to-b from-rose-950 to-black hover:from-rose-900 text-rose-300 hover:text-rose-100 border border-rose-900/70 rounded-lg transition-all text-[10px] font-bold uppercase tracking-wider shadow-sm"
+                        >
+                          <LogOut className="w-3.5 h-3.5" /> {language === "es" ? "Finalizar Estudio" : "Exit Study"}
+                        </button>
+                      )}
                       <div className="flex place-items-center">
                         {Object.keys(moveComments).length > 0 && Object.keys(moveComments).length === history.length && !isAnalyzing && (
                           <button
@@ -8404,20 +8440,25 @@ onTimeUpdate={(e) => {
                   <button
                     onClick={startGame}
                     className={cn(
-                      "w-full py-5 text-teal-100 rounded-xl text-base font-black tracking-widest uppercase transition-all flex flex-col justify-center items-center gap-1.5 shadow-lg border active:scale-95",
-                      appTheme === "matrix" ? "bg-emerald-900 hover:bg-emerald-800 border-emerald-500/50 shadow-emerald-900/50" :
-                        appTheme === "nebula" ? "bg-purple-800 hover:bg-purple-700 shadow-purple-900/50 border-purple-500/50" :
-                          appTheme === "linux" ? "bg-orange-700 hover:bg-orange-600 border-orange-500/50 shadow-orange-900/50" :
-                            appTheme === "pure-black" ? "bg-slate-800 hover:bg-slate-700 border-slate-500/50" :
-                              "bg-teal-700 hover:bg-teal-600 border-teal-500/50 shadow-[0_0_20px_rgba(20,184,166,0.3)]",
+                      "group relative w-full py-6 rounded-xl overflow-hidden text-white font-black tracking-widest uppercase transition-all flex flex-col justify-center items-center gap-2 border-2 border-red-900/80 hover:border-red-500 active:scale-[0.98] shadow-[0_12px_35px_-12px_rgba(220,38,38,0.75)] hover:shadow-[0_14px_45px_-10px_rgba(239,68,68,0.85)]",
                       (whitePlayer === "human" && blackPlayer === "human" && lanStatus === "connected" && lanRole !== "host") ? "opacity-50 cursor-not-allowed pointer-events-none" : ""
                     )}
+                    style={{
+                      backgroundImage: "repeating-linear-gradient(135deg, rgba(0,0,0,0.45) 0px, rgba(0,0,0,0.45) 5px, rgba(153,27,27,0.35) 5px, rgba(153,27,27,0.35) 10px), linear-gradient(180deg, #991b1b 0%, #5c0d0d 45%, #0a0a0a 100%)"
+                    }}
                     disabled={whitePlayer === "human" && blackPlayer === "human" && lanStatus === "connected" && lanRole !== "host"}
                   >
-                    <PlayCircle className="w-8 h-8" />
-                    {whitePlayer === "human" && blackPlayer === "human" && lanStatus === "connected" && lanRole !== "host"
-                      ? (language === "es" ? "ESPERANDO AL HOST..." : "WAITING FOR HOST...")
-                      : (language === "es" ? "INICIAR PARTIDA" : "START GAME")}
+                    <span className="absolute inset-0 bg-gradient-to-t from-transparent via-red-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                    <span className="absolute inset-x-4 top-0 h-px bg-gradient-to-r from-transparent via-red-400/60 to-transparent" />
+                    <PlayCircle className="w-9 h-9 relative z-10 text-red-100 drop-shadow-[0_2px_6px_rgba(0,0,0,0.9)] group-hover:scale-110 transition-transform duration-300" />
+                    <span className="relative z-10 text-base leading-tight drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)]">
+                      {whitePlayer === "human" && blackPlayer === "human" && lanStatus === "connected" && lanRole !== "host"
+                        ? (language === "es" ? "ESPERANDO AL HOST..." : "WAITING FOR HOST...")
+                        : (language === "es" ? "INICIAR PARTIDA" : "START GAME")}
+                    </span>
+                    <span className="relative z-10 text-[8px] font-bold tracking-[0.3em] text-red-200/70 uppercase">
+                      {language === "es" ? "Configuración lista" : "Configuration ready"}
+                    </span>
                   </button>
                 </div>
               </div>
